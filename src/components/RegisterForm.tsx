@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   instructions: {
-    fontSize: 18,  // Aumenté el tamaño de la fuente
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     color: '#1226A9',
     textAlign: 'center',
   },
@@ -99,13 +100,14 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomWidth: 1,
     borderColor: '#333',
-    paddingVertical: 12,  // Aumenté el padding para que se vean más grandes
-    marginBottom: 24,  // Aumenté el espacio entre los campos
-    fontSize: 18,  // Aumenté el tamaño de la fuente en los inputs
+    paddingVertical: 12,
+    marginBottom: 24,
+    fontSize: 18,
+    fontFamily: 'Inter_400Regular',
   },
   registerButton: {
     backgroundColor: '#1226A9',
-    padding: 18,  // Aumenté el padding para hacerlo más grande
+    padding: 18,
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
@@ -114,13 +116,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#F3F4F8',
     fontFamily: 'Inter_700Bold',
-    fontSize: 18,  // Aumenté el tamaño del texto en el botón
+    fontSize: 18,
   },
   loginLink: {
     color: '#2D43B3',
     fontFamily: 'Inter_400Regular',
     marginTop: 5,
-    fontSize: 16,  // Aumenté el tamaño del texto en el link
+    fontSize: 16,
   },
 });
 

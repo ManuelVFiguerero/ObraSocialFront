@@ -1,13 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import Logo from '../assets/images/icons/MainLogo.png';
 
 const UserDetails = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>Hola, Manuel!</Text>
       <View style={styles.infoBox}>
-        <Text style={styles.name}>MANUEL VICENTE FIGUEROERO</Text>
-        <Text style={styles.dni}>20 448123 9 21</Text>
+        <View style={styles.infoPerson}>
+          <Text style={styles.name}>MANUEL VICENTE FIGUEROERO</Text>
+          <Text style={styles.dni}>20 448123 9 21</Text>
+        </View>
+        <View>
+          <Image source={Logo} style={styles.logo}/>
+        </View>
       </View>
     </View>
   );
@@ -15,28 +21,44 @@ const UserDetails = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#4D6EC5',
     padding: 20,
-    borderBottomLeftRadius: 60,
-    borderBottomRightRadius: 60,
     marginBottom: 30,
-    alignItems: 'center',
+    marginTop: 40,
+    flexDirection: 'column',
+    
   },
   greeting: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontFamily: 'Inter_700Bold',
+    marginBottom: 30,
   },
   infoBox: {
+    backgroundColor: '#1226A9',
     alignItems: 'center',
+    minHeight: 80,
+    borderRadius: 24,
+    elevation: 6,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  infoPerson: {
+    flexDirection: 'column',
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    borderRadius: 60,
   },
   name: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#F3F4F8',
+    fontSize: 14,
+    marginBottom: 15
   },
   dni: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontSize: 16,
   },
 });

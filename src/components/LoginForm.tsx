@@ -51,7 +51,7 @@ const LoginForm = () => {
         <Text style={styles.loginButtonText}>Iniciar sesión</Text>
       </TouchableOpacity>
 
-      {/* Botón de recuperación de contraseña */}
+      
       <TouchableOpacity 
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('RecoveryPassword')}
@@ -59,7 +59,7 @@ const LoginForm = () => {
         <Text style={styles.recoveryText}>Recuperar usuario</Text>
       </TouchableOpacity>
 
-      {/* Botón para crear un nuevo usuario */}
+      
       <TouchableOpacity 
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('Register')} 
@@ -100,9 +100,8 @@ const styles = StyleSheet.create({
   instructionText: {
     flex: 1,
     color: '#1226A9',
-    fontWeight: 'bold',
     fontSize: 18,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Inter_700Bold',
     flexWrap: 'wrap',
     textAlign: 'center',
     width: '100%'
@@ -111,9 +110,10 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomWidth: 2,
     borderColor: '#aaa',
-    paddingVertical: 12,  // Aumento el padding vertical para que el campo sea más grande
-    marginBottom: 16,  // Aumento el espacio entre los campos
-    fontSize: 18,  // Aumento el tamaño de la fuente
+    paddingVertical: 12, 
+    marginBottom: 16, 
+    fontSize: 18,
+    fontFamily: 'Inter_400Regular',
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: '#1226A9',
-    paddingVertical: 16,  // Aumento el padding para hacerlo más grande
+    paddingVertical: 16,
     borderRadius: 10,
     marginTop: 30,
     width: '100%',
@@ -130,22 +130,23 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: '#F3F4F8',
-    fontWeight: 'bold',
-    fontSize: 20,  // Aumento el tamaño del texto
+    fontFamily: 'Inter_700Bold',
+    fontSize: 20,
   },
   recoveryButton: {
-    marginTop: 16,  // Aumento el espacio entre los botones
+    marginTop: 16,
     backgroundColor: '#2D43B3',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,  // Hago los botones más grandes con bordes redondeados
+    borderRadius: 10,
     width: '80%',
     alignItems: 'center', 
     justifyContent: 'center',
   },
   recoveryText: {
     color: '#F3F4F8',
-    fontSize: 18,  // Aumento el tamaño del texto en los botones
+    fontSize: 18,
+    fontFamily: 'Inter_400Regular',
   },
 });
 
