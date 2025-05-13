@@ -7,35 +7,37 @@ const RecoveryForm = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.formContainer}>
 
       <Text style={styles.title}>Recuperación de datos</Text>
-      
-      <Text style={styles.label}>Ingresa tu mail *</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={[styles.button, styles.cancelButton]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.buttonText}>Cancelar</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.button, styles.submitButton]}
-          onPress={() => console.log('Enviar recuperación')}
-        >
-          <Text style={styles.buttonText}>Enviar</Text>
-        </TouchableOpacity>
+      <View style={styles.inputView}>
+        <Text style={styles.label}>Ingresa tu mail *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={[styles.button, styles.cancelButton]}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.buttonTextCancel}>Cancelar</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.button, styles.submitButton]}
+            onPress={() => console.log('Enviar recuperación')}
+          >
+            <Text style={styles.buttonTextSubmit}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
 
       <TouchableOpacity 
         style={styles.backLink}
@@ -48,31 +50,46 @@ const RecoveryForm = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
+  formContainer: {
+    backgroundColor: '#F3F4F8',
+    borderRadius: 16,
+    padding: 28,
+    width: '90%',
+    maxWidth: 350,
+    maxHeight: '70%',
+    flex: 1,  
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    elevation: 6,
+    marginTop: 40,
+    flexDirection: 'column'
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1A237E',
+    fontSize: 28,  
+    fontFamily: 'Inter_700Bold',
+    color: '#1226A9',
     marginBottom: 30,
     textAlign: 'center',
+  },
+  inputView: {
+    flexDirection: 'column',
+    width: '100%'
   },
   label: {
     fontSize: 16,
     color: '#333',
-    marginBottom: 8,
-    fontWeight: '600',
+    fontFamily: 'Inter_400Regular',
+    marginBottom: 5
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ddd',
     borderRadius: 8,
     padding: 12,
     marginBottom: 25,
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+    width: '100%'
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -87,23 +104,30 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   cancelButton: {
-    backgroundColor: '#E0E0E0',
+    borderWidth: 2, 
+    borderColor: '#1226A9',
   },
   submitButton: {
-    backgroundColor: '#1A237E',
+    backgroundColor: '#1226A9',
   },
-  buttonText: {
-    fontWeight: 'bold',
+  buttonTextSubmit: {
+    fontFamily: 'Inter_700Bold',
     fontSize: 16,
+    color: '#F3F4F8'
+  },
+  buttonTextCancel: {
+    fontFamily: 'Inter_700Bold',
+    fontSize: 16,
+    color: '#1226A9'
   },
   backLink: {
     marginTop: 15,
     alignItems: 'center',
   },
   backLinkText: {
-    color: '#1A237E',
+    color: '#2D43B3',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Inter_700Bold',
   },
 });
 

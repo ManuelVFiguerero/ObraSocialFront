@@ -1,30 +1,31 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import RegisterForm from '../components/RegisterForm';
-import Header from '../components/Header';
+import BackgroundLayout from './BackgroundLayout';
 
 const RegisterScreen = () => {
   return (
-    <View style={styles.container}>
-      <Header title="Registrarse" />
-      <View style={styles.formWrapper}>
-        <RegisterForm />
+    <BackgroundLayout>
+      <View style={styles.container}>
+        <Text style={styles.title}>Registrarse</Text>
+          <RegisterForm />
       </View>
-    </View>
+    </BackgroundLayout>
   );
 };
 
 const styles = StyleSheet.create({
+    title: {
+    fontSize: 28,
+    color: '#F3F4F8',
+    fontFamily: 'Inter_700Bold'
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'transparent',
     alignItems: 'center',
-  },
-  formWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 150,
-  },
+    justifyContent: 'center'
+  }
 });
 
 export default RegisterScreen;

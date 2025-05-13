@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, Switch, Image
 } from 'react-native';
-import Logo from '../assets/images/icons/MainLogo.png';  // Asegúrate de que esta imagen esté optimizada para un tamaño mayor
+import Logo from '../assets/images/icons/MainLogo.png';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types'; 

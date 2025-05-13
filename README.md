@@ -10,6 +10,7 @@ Android mobile application developed using React Native for medical appointment 
  - React Navigation
  - Axios
  - Android Studio
+ - Expo
 
 ## ⚙️ Prerequisites
 

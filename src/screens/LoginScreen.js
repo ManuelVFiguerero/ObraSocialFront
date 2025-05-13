@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text} from 'react-native';
 import LoginForm from '../components/LoginForm';
-import Header from '../components/Header';
 import BackgroundLayout from './BackgroundLayout';
 
 

@@ -14,37 +14,29 @@ const RegisterForm = () => {
       <View style={styles.titleContainer}>
         <Text style={styles.welcomeText}>¡Hola!</Text>
         <Text style={styles.subtitle}>Te damos la bienvenida</Text>
-      </View>
-
-      <View style={styles.instructionsContainer}>
         <Text style={styles.instructions}>
         Para registrarte, es necesario que completes los campos solicitados.
         </Text>
       </View>
 
-      <View style={styles.separator} />
-
-      <Text style={styles.sectionTitle}>Usuario*</Text>
       <TextInput
         style={styles.input}
-        placeholder="Usuario"
+        placeholder="Usuario*"
         value={username}
         onChangeText={setUsername}
       />
 
-      <Text style={styles.inputLabel}>Email *</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Email*"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
       />
 
-      <Text style={styles.inputLabel}>Contraseña*</Text>
       <TextInput
         style={styles.input}
-        placeholder="Contraseña"
+        placeholder="Contraseña*"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -63,29 +55,36 @@ const RegisterForm = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#F3F4F8',
     borderRadius: 16,
     padding: 28,
     width: '90%',
+    maxWidth: 350,
+    maxHeight: '70%',
+    flex: 1,  
+    justifyContent: 'space-between',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    elevation: 6,
+    marginTop: 40,
+    flexDirection: 'column'
   },
   titleContainer: {
+    flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 25,
     width: '100%',
   },
   welcomeText: {
-    fontSize: 28,  // Aumenté el tamaño de la fuente
-    fontWeight: 'bold',
-    color: '#1A237E',
+    fontSize: 28,  
+    fontFamily: 'Inter_700Bold',
+    color: '#1226A9',
   },
   subtitle: {
-    fontSize: 18,  // Aumenté el tamaño de la fuente
-    color: '#1A237E',
+    fontSize: 18,  
+    fontFamily: 'Inter_700Bold',
+    color: '#1226A9',
+    marginBottom: 15
   },
   instructionsContainer: {
     width: '100%',
@@ -93,40 +92,19 @@ const styles = StyleSheet.create({
   },
   instructions: {
     fontSize: 18,  // Aumenté el tamaño de la fuente
-    color: '#666',
+    color: '#1226A9',
     textAlign: 'center',
-    lineHeight: 26, 
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#eee',
-    marginVertical: 20,
-    width: '100%',
-  },
-  sectionTitle: {
-    fontSize: 20,  // Aumenté el tamaño de la fuente
-    fontWeight: '600',
-    color: '#1A237E',
-    marginBottom: 20,
-    width: '100%',
-  },
-  inputLabel: {
-    fontSize: 18,  // Aumenté el tamaño de la fuente
-    fontWeight: '600',
-    color: '#1A237E',
-    marginBottom: 8,
-    width: '100%',
   },
   input: {
     width: '100%',
     borderBottomWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#333',
     paddingVertical: 12,  // Aumenté el padding para que se vean más grandes
     marginBottom: 24,  // Aumenté el espacio entre los campos
     fontSize: 18,  // Aumenté el tamaño de la fuente en los inputs
   },
   registerButton: {
-    backgroundColor: '#1A237E',
+    backgroundColor: '#1226A9',
     padding: 18,  // Aumenté el padding para hacerlo más grande
     borderRadius: 8,
     width: '100%',
@@ -134,14 +112,14 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: '#F3F4F8',
+    fontFamily: 'Inter_700Bold',
     fontSize: 18,  // Aumenté el tamaño del texto en el botón
   },
   loginLink: {
-    color: '#1A237E',
-    fontWeight: '600',
-    marginTop: 15,
+    color: '#2D43B3',
+    fontFamily: 'Inter_400Regular',
+    marginTop: 5,
     fontSize: 16,  // Aumenté el tamaño del texto en el link
   },
 });
