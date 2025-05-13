@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, Switch, Image
 } from 'react-native';
-import Logo from '../assets/MainLogo.png';  // Asegúrate de que esta imagen esté optimizada para un tamaño mayor
+import Logo from '../assets/images/icons/MainLogo.png';  // Asegúrate de que esta imagen esté optimizada para un tamaño mayor
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types'; 
@@ -56,7 +56,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('RecoveryPassword')}
       >
-        <Text style={styles.recoveryText}>🔑 Recuperar usuario</Text>
+        <Text style={styles.recoveryText}>Recuperar usuario</Text>
       </TouchableOpacity>
 
       {/* Botón para crear un nuevo usuario */}
@@ -64,7 +64,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('Register')} 
       >
-        <Text style={styles.recoveryText}>👤 Crear nuevo usuario</Text>
+        <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,41 +72,40 @@ const LoginForm = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#F3F4F8',
     borderRadius: 16,
     padding: 28,
     width: '90%',
     maxWidth: 350,
-    flex: 1,  // Esto hará que el formulario ocupe más espacio en la pantalla
-    justifyContent: 'center', // Asegura que el contenido esté centrado verticalmente
+    maxHeight: '70%',
+    flex: 1,  
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
     elevation: 6,
-    marginTop: 40,  // Asegura que el formulario no esté pegado al top
-    zIndex: 1,
+    marginTop: 40,
   },
   logoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 25,
-    gap: 20,  // Se incrementó el espacio entre el logo y el texto
+    alignItems: 'flex-start',
+    marginBottom: 50,
+    gap: 20,  
   },
   logo: {
-    width: 120,  // Aumenté el tamaño de la imagen
-    height: 120,
+    backgroundColor: '#000000',
+    alignItems: 'flex-start',
+    width: 80,
+    height: 80,
     borderRadius: 60,
   },
   instructionText: {
-    color: '#1A237E',
-    fontWeight: 'bold',
-    fontSize: 22,  // Aumento el tamaño del texto de la instrucción
     flex: 1,
+    color: '#1226A9',
+    fontWeight: 'bold',
+    fontSize: 18,
+    fontFamily: 'Inter_400Regular',
     flexWrap: 'wrap',
-    textAlign: 'center',  // Centrado del texto
-    marginBottom: 20,  // Aumento el margen inferior para que no esté pegado al logo
+    textAlign: 'center',
+    width: '100%'
   },
   input: {
     width: '100%',
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loginButton: {
-    backgroundColor: '#1A237E',
+    backgroundColor: '#1226A9',
     paddingVertical: 16,  // Aumento el padding para hacerlo más grande
     borderRadius: 10,
     marginTop: 30,
@@ -130,13 +129,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginButtonText: {
-    color: 'white',
+    color: '#F3F4F8',
     fontWeight: 'bold',
     fontSize: 20,  // Aumento el tamaño del texto
   },
   recoveryButton: {
     marginTop: 16,  // Aumento el espacio entre los botones
-    backgroundColor: '#5C6BC0',
+    backgroundColor: '#2D43B3',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,  // Hago los botones más grandes con bordes redondeados
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   recoveryText: {
-    color: 'white',
+    color: '#F3F4F8',
     fontSize: 18,  // Aumento el tamaño del texto en los botones
   },
 });
