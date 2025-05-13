@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
+
+//TODO: Habría que mostrar un mensaje cuando el usuario de click a "Enviar"
 const RecoveryForm = () => {
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
   backLinkText: {
     color: '#2D43B3',
     fontSize: 16,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Inter_400Regular',
   },
 });
 

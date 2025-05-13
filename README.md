@@ -1,4 +1,4 @@
-# 🧑🏻‍⚕️ Apointments Mangamnent for Healthcare App
+# 🧑🏻‍⚕️ Appointments Mangamnent for Healthcare App
 
 Android mobile application developed using React Native for medical appointment management
 
