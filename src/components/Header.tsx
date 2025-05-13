@@ -14,6 +14,10 @@ const Header = ({ title = 'Iniciar sesión' }) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    position: 'absolute', // El header se pone sobre el formulario
+    top: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#4D6EC5',
     width: '100%',
     height: 180,
@@ -22,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingBottom: 20,
-    zIndex: 1,
+    zIndex: 0, // Se coloca detrás del formulario
   },
   headerText: {
     color: 'white',
@@ -33,3 +37,5 @@ const styles = StyleSheet.create({
 });
 
 export default Header;
+
+

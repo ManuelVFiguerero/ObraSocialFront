@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   formWrapper: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 150,
   },
 });
 

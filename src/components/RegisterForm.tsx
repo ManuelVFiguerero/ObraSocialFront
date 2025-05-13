@@ -18,13 +18,12 @@ const RegisterForm = () => {
 
       <View style={styles.instructionsContainer}>
         <Text style={styles.instructions}>
-        Para registrarte, es necesario  completes los campos solicitados.
+        Para registrarte, es necesario que completes los campos solicitados.
         </Text>
       </View>
 
       <View style={styles.separator} />
 
-      
       <Text style={styles.sectionTitle}>Usuario*</Text>
       <TextInput
         style={styles.input}
@@ -51,7 +50,6 @@ const RegisterForm = () => {
         secureTextEntry
       />
 
-      
       <TouchableOpacity style={styles.registerButton}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
@@ -77,27 +75,27 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
     width: '100%',
   },
   welcomeText: {
-    fontSize: 24,
+    fontSize: 28,  // Aumenté el tamaño de la fuente
     fontWeight: 'bold',
     color: '#1A237E',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,  // Aumenté el tamaño de la fuente
     color: '#1A237E',
   },
   instructionsContainer: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 25,
   },
   instructions: {
-    fontSize: 16,
+    fontSize: 18,  // Aumenté el tamaño de la fuente
     color: '#666',
     textAlign: 'center',
-    lineHeight: 24, 
+    lineHeight: 26, 
   },
   separator: {
     height: 1,
@@ -106,44 +104,45 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,  // Aumenté el tamaño de la fuente
     fontWeight: '600',
     color: '#1A237E',
-    marginBottom: 15,
+    marginBottom: 20,
     width: '100%',
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 18,  // Aumenté el tamaño de la fuente
     fontWeight: '600',
     color: '#1A237E',
-    marginBottom: 5,
+    marginBottom: 8,
     width: '100%',
   },
   input: {
     width: '100%',
     borderBottomWidth: 1,
     borderColor: '#ddd',
-    paddingVertical: 8,
-    marginBottom: 20,
-    fontSize: 16,
+    paddingVertical: 12,  // Aumenté el padding para que se vean más grandes
+    marginBottom: 24,  // Aumenté el espacio entre los campos
+    fontSize: 18,  // Aumenté el tamaño de la fuente en los inputs
   },
   registerButton: {
     backgroundColor: '#1A237E',
-    padding: 15,
+    padding: 18,  // Aumenté el padding para hacerlo más grande
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 15,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,  // Aumenté el tamaño del texto en el botón
   },
   loginLink: {
     color: '#1A237E',
     fontWeight: '600',
-    marginTop: 10,
+    marginTop: 15,
+    fontSize: 16,  // Aumenté el tamaño del texto en el link
   },
 });
 
