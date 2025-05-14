@@ -7,7 +7,7 @@ export default function NavBar({ selectedIcon }) {
     <View style={styles.bottomNavBar}>
       <NavBarButton selected={selectedIcon === 'home'} btnIcon={'home'} screen={'Home'} />
       <NavBarButton selected={selectedIcon === 'person'} btnIcon={'person'} screen={'Profile'} />
-      <NavBarButton selected={selectedIcon === 'badge'} btnIcon={'badge'} screen={'Login'} />
+      <NavBarButton selected={selectedIcon === 'badge'} btnIcon={'badge'} screen={'Credential'} />
       <NavBarButton selected={selectedIcon === 'notifications'} btnIcon={'notifications'} screen={'Login'} />
       <NavBarButton selected={selectedIcon === 'logout'} btnIcon={'logout'} screen={'Login'} />
     </View>
