@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: 300,
-    height: 300,
     alignItems: 'center',
     elevation: 6,
   },

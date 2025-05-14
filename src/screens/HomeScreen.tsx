@@ -17,7 +17,7 @@ const HomeScreen = () => {
           <UserDetails />
           <View style={styles.actionButtons}>
             {/*TODO: Cambiar la propiedad "screen" por las screens correctas*/}
-            <ActionButton btnName={'Cargar obra social'} btnIcon={'attach-file'} screen={'Login'}/>
+            <ActionButton btnName={'Cargar obra social'} btnIcon={'attach-file'} screen={'SocialHealth'}/>
             <ActionButton btnName={'Historial Medico'} btnIcon={'folder-open'} screen={'Login'}/>
             <ActionButton btnName={'Acerca de nosotros'} btnIcon={'info'} screen={'Login'}/>
             <ActionButton btnName={'Reservar turnos'} btnIcon={'add'} screen={'Login'}/>

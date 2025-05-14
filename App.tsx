@@ -6,7 +6,7 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import RecoveryScreen from './src/screens/RecoveryScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-import Toast from 'react-native-toast-message';
+import SocialHealthScreen from './src/screens/SocialHealthScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +41,10 @@ export default function App() {
         <Stack.Screen
           name="Profile"
           component={ProfileScreen}
+        />
+        <Stack.Screen
+          name="SocialHealth"
+          component={SocialHealthScreen}
         />
       </Stack.Navigator>
     </NavigationContainer> 

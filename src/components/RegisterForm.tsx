@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 6,
     marginTop: 40,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    
   },
   titleContainer: {
     flexDirection: 'column',
