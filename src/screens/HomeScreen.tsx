@@ -1,87 +1,155 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
 import UserDetails from '../components/UserDetails';
-import BackgroundLayout from './BackgroundLayout';
 import ActionButton from '../components/ActionButton';
 import Appointment from '../components/Appointment';
-import NavBarButton from '../components/NavBarButton';
 import NavBar from '../components/NavBar';
-const HomeScreen = () => {
-  const [appointments, setAppointments] = useState([]);
 
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width - 40;
+
+// Valores clonados del AboutUsScreen
+const HEADER_HEIGHT = 160;
+const HEADER_RADIUS = 80;
+
+const HomeScreen = () => {
+  const [appointments] = useState([]);
 
   return (
-    <BackgroundLayout>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <UserDetails />
-          <View style={styles.actionButtons}>
-            {/*TODO: Cambiar la propiedad "screen" por las screens correctas*/}
-            <ActionButton btnName={'Cargar obra social'} btnIcon={'attach-file'} screen={'SocialHealth'}/>
-            <ActionButton btnName={'Historial Medico'} btnIcon={'folder-open'} screen={'Login'}/>
-            <ActionButton btnName={'Acerca de nosotros'} btnIcon={'info'} screen={'Login'}/>
-            <ActionButton btnName={'Reservar turnos'} btnIcon={'add'} screen={'Login'}/>
-            <ActionButton btnName={'Buscar por ubicación'} btnIcon={'search'} screen={'Login'}/>
-            <ActionButton btnName={'Contactanos'} btnIcon={'mail'} screen={'Login'}/>            
-          </View>
-          <Text style={styles.appointmentTitle}>Mis turnos</Text>
-          <View style={styles.appointments}>
-            {appointments.length < 1 ? (
-              <View style={styles.noAppointments}>
-                <Text style={styles.noAppointmentsText}>No hay turnos próximos</Text>
-              </View>
-            ) : (appointments.map(appointment => (
-                <Appointment />
-              ))
-            )}
-          </View>
-        </ScrollView>
-        <NavBar selectedIcon={'home'}/>
+    <View style={styles.screen}>
+      <StatusBar barStyle="light-content" backgroundColor="#4D6EC5" />
+
+      {/* HEADER (fijo) */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Hola, Manuel!</Text>
       </View>
-    </BackgroundLayout>
+
+      {/* CONTENIDO: ScrollView arranca justo bajo el header */}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+      >
+        <UserDetails />
+
+        <View style={styles.actionButtons}>
+          <ActionButton
+            btnName="Cargar obra social"
+            btnIcon="attach-file"
+            screen="SocialHealth"
+          />
+          <ActionButton
+            btnName="Historial médico"
+            btnIcon="folder-open"
+            screen="History"
+          />
+          <ActionButton
+            btnName="Acerca de nosotros"
+            btnIcon="info"
+            screen="AboutUs"
+          />
+          <ActionButton
+            btnName="Reservar turnos"
+            btnIcon="add"
+            screen="BookAppointment"
+          />
+          <ActionButton
+            btnName="Buscar por ubicación"
+            btnIcon="search"
+            screen="Map"
+          />
+          <ActionButton
+            btnName="Contáctanos"
+            btnIcon="mail"
+            screen="Contact"
+          />
+        </View>
+
+        <Text style={styles.appointmentTitle}>Mis turnos</Text>
+        <View style={styles.appointments}>
+          {appointments.length === 0 ? (
+            <View style={styles.noAppointments}>
+              <Text style={styles.noAppointmentsText}>
+                No hay turnos próximos
+              </Text>
+            </View>
+          ) : (
+            appointments.map((appt) => (
+              <Appointment key={appt.id} {...appt} />
+            ))
+          )}
+        </View>
+      </ScrollView>
+
+      <NavBar selectedIcon="home" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    height: HEADER_HEIGHT,
+    backgroundColor: '#4D6EC5',
+    borderBottomLeftRadius: HEADER_RADIUS,
+    borderBottomRightRadius: HEADER_RADIUS,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingTop: 40,
+    paddingHorizontal: 20,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 35,
+    fontWeight: 'bold',
+  },
+  scrollView: {
+    flex: 1,        // ocupa el espacio restante tras el header
+    marginTop: 0,   // sin margin negativo
   },
   content: {
-    flexGrow: 1,
+    marginTop: 20,     // espacio ligero tras el header
     paddingHorizontal: 20,
-    //paddingBottom: 50,  // NOTE: Esto tiene un proposito??
+    paddingBottom: 60,  // deja espacio para la NavBar
   },
   actionButtons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginBottom: 30
+    marginVertical: 20,
+    marginTop: 10,
   },
   appointmentTitle: {
     fontSize: 20,
-    fontFamily: 'Inter_700Bold',
+    fontWeight: '700',
     color: '#111',
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   appointments: {
-    flexDirection: 'column',
-    margin: 20
+    marginBottom: 20,
   },
   noAppointments: {
-    width: '100%',
+    width: CARD_WIDTH,
     padding: 20,
     backgroundColor: '#F3F4F8',
     borderRadius: 10,
-    marginBottom: 30,
+    alignSelf: 'center',
     alignItems: 'center',
   },
   noAppointmentsText: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    width: '100%'
   },
 });
 

@@ -6,7 +6,9 @@ import NavBar from '../components/NavBar';
 import SocialHealthForm from '../components/SocialHealthForm';
 
 
-/*NOTE: El formulario es lo suficientemente chico como para que los elementos entren y lo suficientemente grande para que quede atrás del NavBar
+/*NOTE: El formulario es lo suficientemente chico 
+como para que los elementos entren y lo suficientemente 
+grande para que quede atrás del NavBar
 Dios se apiade de quien quiera corregirlo.*/
 const SocialHealthScreen = () => {
 

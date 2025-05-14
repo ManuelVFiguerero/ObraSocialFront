@@ -1,66 +1,61 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import Logo from '../assets/images/icons/MainLogo.png';
+
+const { width } = Dimensions.get('window');
 
 const UserDetails = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>Hola, Manuel!</Text>
       <View style={styles.infoBox}>
         <View style={styles.infoPerson}>
-          <Text style={styles.name}>MANUEL VICENTE FIGUEROERO</Text>
+          <Text style={styles.name}>MANUEL VICENTE FIGUERERO</Text>
           <Text style={styles.dni}>20 448123 9 21</Text>
         </View>
-        <View>
-          <Image source={Logo} style={styles.logo}/>
-        </View>
+        <Image source={Logo} style={styles.logo} />
       </View>
     </View>
   );
 };
 
+const BOX_WIDTH = width - 40;  // deja 20px de margen a cada lado
+
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    marginBottom: 30,
-    marginTop: 40,
-    flexDirection: 'column',
-    
-  },
-  greeting: {
-    color: '#F3F4F8',
-    fontSize: 22,
-    fontFamily: 'Inter_700Bold',
-    marginBottom: 30,
+    marginTop: 10,
+    marginBottom: 20,
+    alignItems: 'center',         // centra el box horizontalmente
   },
   infoBox: {
-    backgroundColor: '#1226A9',
-    alignItems: 'center',
-    minHeight: 80,
-    borderRadius: 24,
-    elevation: 6,
+    width: BOX_WIDTH,             // ancho más grande
+    backgroundColor: '#4D6EC5',
+    borderRadius: 16,
+    paddingVertical: 24,          // padding superior/inferior aumentado
+    paddingHorizontal: 20,        // padding izquierdo/derecho aumentado
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: 15,
-    paddingRight: 15
   },
   infoPerson: {
-    flexDirection: 'column',
-  },
-  logo: {
-    width: 60,
-    height: 60,
-    borderRadius: 60,
+    flex: 1,
+    paddingRight: 10,
   },
   name: {
-    color: '#F3F4F8',
-    fontSize: 14,
-    marginBottom: 15
+    color: '#fff',
+    fontSize: 18,                 // fuente más grande
+    fontWeight: '600',
+    marginBottom: 4,
   },
   dni: {
-    color: '#F3F4F8',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 16,                 // fuente más grande
+  },
+  logo: {
+    width: 60,                    // logo más grande
+    height: 60,
+    borderRadius: 30,
   },
 });
 
 export default UserDetails;
+

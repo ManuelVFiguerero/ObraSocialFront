@@ -7,6 +7,7 @@ import Logo from '../assets/images/icons/MainLogo.png';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types'; 
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -56,7 +57,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('RecoveryPassword')}
       >
-        <Text style={styles.recoveryText}>Recuperar usuario</Text>
+        <Text style={styles.recoveryText}>🔑 Recuperar usuario</Text>
       </TouchableOpacity>
 
       
@@ -64,7 +65,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('Register')} 
       >
-        <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
+        <Text style={styles.recoveryText}>👤 Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );

@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SocialHealthScreen from './src/screens/SocialHealthScreen';
 import CredentialScreen from './src/screens/CredentialScreen';
+import AboutUsScreen from './src/screens/AboutUs';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,10 @@ export default function App() {
         <Stack.Screen
           name="Credential"
           component={CredentialScreen}
+        />
+        <Stack.Screen 
+          name="AboutUs"
+          component={AboutUsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer> 

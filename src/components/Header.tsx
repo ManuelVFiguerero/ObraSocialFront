@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 60,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingBottom: 20,
+    paddingBottom: 0,
+    padding:100,
     zIndex: 0, // Se coloca detrás del formulario
   },
   headerText: {
