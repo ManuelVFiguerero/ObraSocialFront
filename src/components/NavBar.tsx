@@ -1,4 +1,3 @@
-// src/components/NavBar.tsx
 import React from 'react';
 import {
   View,
@@ -8,13 +7,22 @@ import {
   Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import {
+  useNavigation,
+  CommonActions,
+  NavigationProp,
+} from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width / 5;
 
-export type NavBarKey = 'home' | 'person' | 'credential' | 'notifications' | 'logout';
+export type NavBarKey =
+  | 'home'
+  | 'person'
+  | 'credential'
+  | 'notifications'
+  | 'logout';
 
 interface NavBarProps {
   selectedIcon: NavBarKey;
@@ -27,14 +35,28 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
     key: NavBarKey;
     icon: keyof typeof MaterialIcons.glyphMap;
     label: string;
-    screen: keyof RootStackParamList;
+    screen?: keyof RootStackParamList;
   }> = [
     { key: 'home',         icon: 'home',          label: 'Inicio',         screen: 'Home' },
     { key: 'person',       icon: 'person',        label: 'Perfil',         screen: 'Profile' },
     { key: 'credential',   icon: 'badge',         label: 'Credencial',     screen: 'Credential' },
     { key: 'notifications',icon: 'notifications', label: 'Alertas',        screen: 'Notifications' },
-    { key: 'logout',       icon: 'logout',        label: 'Cerrar ses.',    screen: 'Login' },
+    { key: 'logout',       icon: 'logout',        label: 'Cerrar sesión' },  // logout no define screen
   ];
+
+  const handlePress = (itemKey: NavBarKey, screen?: keyof RootStackParamList) => {
+    if (itemKey === 'logout') {
+      // reset navigation stack to Login (evita "perderse" en el historial)
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+      );
+    } else if (screen) {
+      navigation.navigate(screen);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -49,7 +71,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
               styles.item,
               isCred && styles.credentialWrapper,
             ]}
-            onPress={() => navigation.navigate(item.screen)}
+            onPress={() => handlePress(item.key, item.screen)}
             activeOpacity={0.7}
           >
             {isCred ? (
@@ -85,7 +107,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
   );
 }
 
-const BAR_HEIGHT = 90;
+const BAR_HEIGHT = 100;   // antes 90
 const CIRCLE_SIZE = 60;
 
 const styles = StyleSheet.create({
@@ -98,6 +120,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+    paddingBottom: 10,   // espacio inferior extra
   },
   item: {
     width: ITEM_WIDTH,
@@ -141,5 +164,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#2D43B3',
   },
 });
+
 
 
