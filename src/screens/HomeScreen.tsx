@@ -5,6 +5,7 @@ import BackgroundLayout from './BackgroundLayout';
 import ActionButton from '../components/ActionButton';
 import Appointment from '../components/Appointment';
 import NavBarButton from '../components/NavBarButton';
+import NavBar from '../components/NavBar';
 const HomeScreen = () => {
   const [appointments, setAppointments] = useState([]);
 
@@ -35,13 +36,7 @@ const HomeScreen = () => {
             )}
           </View>
         </ScrollView>
-        <View style={styles.bottomNavBar}>
-            <NavBarButton btnIcon={'home'} screen={'Login'}/>
-            <NavBarButton btnIcon={'person'} screen={'Login'}/>
-            <NavBarButton btnIcon={'badge'} screen={'Login'}/>
-            <NavBarButton btnIcon={'notifications'} screen={'Login'}/>
-            <NavBarButton btnIcon={'logout'} screen={'Login'}/>
-        </View>
+        <NavBar selectedIcon={'home'}/>
       </View>
     </BackgroundLayout>
   );
@@ -88,18 +83,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%'
   },
-  bottomNavBar: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    //backgroundColor: '#F3F4F8',
-    backgroundColor: '#F3F4F8',
-    height: 60,
-    position: 'absolute',
-    bottom: 48, //Posicion absoluta para que no se superponga con los botones de Android
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }
 });
 
 export default HomeScreen;
