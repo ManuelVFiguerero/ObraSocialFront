@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image, TextInput, TouchableOpacity} from 'react-native';
-import UserDetails from '../components/UserDetails';
+import { View, StyleSheet, Text, ScrollView, Image, TextInput, TouchableOpacity, ToastAndroid} from 'react-native';
 import BackgroundLayout from './BackgroundLayout';
-import ActionButton from '../components/ActionButton';
-import Appointment from '../components/Appointment';
-import NavBarButton from '../components/NavBarButton';
 import NavBar from '../components/NavBar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import ConfirmationModal from '../components/ConfirmationModal';
+import Toast from 'react-native-toast-message';
 
 //Datos para testear
 const userData = {
@@ -32,6 +30,7 @@ const ProfileScreen = () => {
     const [phone, setPhone] = useState(userData.telefono);
     const [mail, setMail] = useState(userData.mail)
     const [address, setAddress] = useState(userData.domicilio);
+    const [deleteAccountVisible, setDeleteAccountVisible] = useState(false)
     const navigation = useNavigation();
     
 
@@ -40,7 +39,6 @@ const ProfileScreen = () => {
     //TODO: DNI tiene que tener formato (xx.xxx.xxx)
     //TODO: Telefono tiene que tener formato
     //TODO: Falta la funcionalidad de Actualizar contraseña y eliminar cuenta
-    
 
     return (
         <BackgroundLayout>
@@ -107,18 +105,6 @@ const ProfileScreen = () => {
                           <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
                         </View>
 
-                        <View style={styles.inputWrapper}>
-                          <TextInput
-                            style={styles.input}
-                            placeholder={phone}
-                            value={phone}
-                            onChangeText={setPhone}
-                            keyboardType="numeric"
-                            autoCapitalize="none"
-                          />
-                          <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
-                        </View>
-
                     </View>
                     <View style={styles.personalData}>
                         <Text style={styles.infoTitles}>Datos de contacto</Text>
@@ -145,18 +131,7 @@ const ProfileScreen = () => {
                           />
                           <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
                         </View>
-
-                        <View style={styles.inputWrapper}>
-                          <TextInput
-                            style={styles.input}
-                            placeholder={address}
-                            value={address}
-                            onChangeText={setAddress}
-                            keyboardType="default"
-                            autoCapitalize="none"
-                          />
-                          <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
-                        </View>                         
+                      
                     </View>                        
                     <View style={styles.personalData}>
                             <Text style={styles.infoTitles}>Domicilio</Text>
@@ -178,11 +153,22 @@ const ProfileScreen = () => {
                     <Text style={styles.updatePassword}>Actualizar Contraseña</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <TouchableOpacity onPress={() => setDeleteAccountVisible(true)}>
                     <Text style={styles.deleteAccount}>Eliminar Cuenta</Text>
                   </TouchableOpacity>        
                 </View>
             </ScrollView>
+            <ConfirmationModal
+            visible={deleteAccountVisible}
+            type={'warning'}
+            title={'Estas a punto de eliminar tu cuenta'}
+            message={'Una vez elimines tu cuenta, todos tus datos se perderán y tendrás que volver a vincular tu correo'}
+            onConfirm={() =>{
+              navigation.navigate('Login')
+              ToastAndroid.show('Cuenta eliminada exitosamente', ToastAndroid.SHORT)
+            }}
+            onClose={() => setDeleteAccountVisible(false)}
+            />
             <NavBar selectedIcon={'person'}/>
         </BackgroundLayout>
     )
@@ -191,8 +177,6 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
     container: {
       flexGrow: 1,  
-      //paddingVertical: 40,
-      //paddingHorizontal: 20,
       paddingBottom: 200,
     },
     title: {

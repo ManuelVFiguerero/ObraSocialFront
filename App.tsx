@@ -6,6 +6,7 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import RecoveryScreen from './src/screens/RecoveryScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +43,7 @@ export default function App() {
           component={ProfileScreen}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer> 
   );
 }
 
