@@ -28,13 +28,14 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     width: BOX_WIDTH,             // ancho más grande
-    backgroundColor: '#4D6EC5',
+    backgroundColor: '#1226A9',
     borderRadius: 16,
     paddingVertical: 24,          // padding superior/inferior aumentado
     paddingHorizontal: 20,        // padding izquierdo/derecho aumentado
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    elevation: 6
   },
   infoPerson: {
     flex: 1,

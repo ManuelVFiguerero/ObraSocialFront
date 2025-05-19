@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#4D6EC5',
+    backgroundColor: '#2D43B3',
     borderBottomLeftRadius: HEADER_RADIUS,
     borderBottomRightRadius: HEADER_RADIUS,
     justifyContent: 'center',
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontSize: 35,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
   },
   scrollView: {
     flex: 1,        // ocupa el espacio restante tras el header

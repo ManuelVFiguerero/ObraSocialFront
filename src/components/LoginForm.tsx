@@ -57,7 +57,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('RecoveryPassword')}
       >
-        <Text style={styles.recoveryText}>🔑 Recuperar usuario</Text>
+        <Text style={styles.recoveryText}>Recuperar usuario</Text>
       </TouchableOpacity>
 
       
@@ -65,7 +65,7 @@ const LoginForm = () => {
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('Register')} 
       >
-        <Text style={styles.recoveryText}>👤 Crear nuevo usuario</Text>
+          <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
-    marginTop: 40,
   },
   logoRow: {
     flexDirection: 'row',

@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image, TextInput, TouchableOpacity, ToastAndroid} from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Image, TextInput, TouchableOpacity, ToastAndroid, Dimensions} from 'react-native';
 import BackgroundLayout from './BackgroundLayout';
 import NavBar from '../components/NavBar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ConfirmationModal from '../components/ConfirmationModal';
 import Toast from 'react-native-toast-message';
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width - 40;
+
+// Valores clonados del AboutUsScreen
+const HEADER_HEIGHT = 160;
+const HEADER_RADIUS = 80;
+
 
 //Datos para testear
 const userData = {
@@ -41,11 +49,12 @@ const ProfileScreen = () => {
     //TODO: Falta la funcionalidad de Actualizar contraseña y eliminar cuenta
 
     return (
-        <BackgroundLayout>
-            <View style={styles.title}>
+      <>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.screen}>
+            <View style={styles.header}>
                 <Text style={styles.titleText}>Tus datos</Text>
             </View>
-            <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.generalInfo}>
                     <Image source={profilePic} style={styles.profilePic}/>
                     <View style={styles.usernameField}>
@@ -157,7 +166,6 @@ const ProfileScreen = () => {
                     <Text style={styles.deleteAccount}>Eliminar Cuenta</Text>
                   </TouchableOpacity>        
                 </View>
-            </ScrollView>
             <ConfirmationModal
             visible={deleteAccountVisible}
             type={'warning'}
@@ -169,12 +177,26 @@ const ProfileScreen = () => {
             }}
             onClose={() => setDeleteAccountVisible(false)}
             />
-            <NavBar selectedIcon={'person'}/>
-        </BackgroundLayout>
+        </View>
+      </ScrollView>
+      <NavBar selectedIcon={'person'}/>
+      </>
     )
 }
 
 const styles = StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: '#f5f5f5',
+    },
+    header: {
+      height: HEADER_HEIGHT,
+      backgroundColor: '#2D43B3',
+      borderBottomLeftRadius: HEADER_RADIUS,
+      borderBottomRightRadius: HEADER_RADIUS,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     container: {
       flexGrow: 1,  
       paddingBottom: 200,
