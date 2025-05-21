@@ -1,20 +1,27 @@
 import React from 'react';
-import { View, StyleSheet} from 'react-native';
+import { SafeAreaView,View, StyleSheet} from 'react-native';
 import RecoveryForm from '../components/RecoveryForm';
-import BackgroundLayout from './BackgroundLayout';
+import Header from '../components/Header';
 
 
 const RecoveryScreen = () => {
   return (
-    <BackgroundLayout>
+      <SafeAreaView style={styles.screen}>
+      {/* Header fijo con título */}
+      <Header title="" />
+
       <View style={styles.container}>
         <RecoveryForm />
       </View>
-    </BackgroundLayout>
+      </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -24,5 +31,3 @@ const styles = StyleSheet.create({
 });
 
 export default RecoveryScreen;
-
-
