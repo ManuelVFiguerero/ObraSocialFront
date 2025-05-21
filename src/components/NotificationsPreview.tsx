@@ -1,7 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const NotificationsPreview = ({ defaultMessage, messages, seeMore={}}) => {
+interface NotificationsPreviewProps {
+  defaultMessage: string;
+  messages: string[];
+  seeMore: () => void;
+}
+
+const NotificationsPreview: React.FC<NotificationsPreviewProps> = ({
+  defaultMessage,
+  messages,
+  seeMore,
+}) => {
   return (
     <View style={styles.container}>
       {messages.length > 0 ? (
@@ -9,22 +19,27 @@ const NotificationsPreview = ({ defaultMessage, messages, seeMore={}}) => {
           {messages.slice(0, 2).map((msg, index) => (
             <View key={index} style={styles.messageContainer}>
               <View style={styles.textMessageContainer}>
-                <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textDefault}>{msg}</Text>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.textDefault}
+                >
+                  {msg}
+                </Text>
               </View>
               <View style={styles.separator} />
             </View>
           ))}
-            <TouchableOpacity onPress={seeMore}>
-                <Text style={styles.seeMore}>Ver más</Text>
-            </TouchableOpacity>
+          <TouchableOpacity onPress={seeMore}>
+            <Text style={styles.seeMore}>Ver más</Text>
+          </TouchableOpacity>
         </>
       ) : (
         <Text style={styles.textDefault}>{defaultMessage}</Text>
       )}
     </View>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -34,14 +49,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 6
-  },
-  textMessage: {
-    flexWrap: 'nowrap',
-    fontSize: 16,
-    textAlign: 'center',
-    width: '100%',
-    fontFamily: 'Inter_400Regular',    
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
   },
   messageContainer: {
     width: '100%',
@@ -55,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
     width: '100%',
     marginTop: 8,
-    marginBottom: 8
+    marginBottom: 8,
   },
   textDefault: {
     fontSize: 16,
@@ -66,11 +77,10 @@ const styles = StyleSheet.create({
   },
   seeMore: {
     fontSize: 16,
-    color: '#2D43B3', // azul típico de enlaces
+    color: '#2D43B3',
     textAlign: 'center',
-    textDecorationLine: 'underline'
-  }
-})
+    textDecorationLine: 'underline',
+  },
+});
 
-
-export default NotificationsPreview
+export default NotificationsPreview;

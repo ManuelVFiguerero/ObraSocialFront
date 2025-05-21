@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import BackgroundLayout from './BackgroundLayout';
-import Logo from '../assets/images/icons/MainLogo.png';
+import Logo from '../assets/icons/MainLogo.png';
 import NavBar from '../components/NavBar';
 import SocialHealthForm from '../components/SocialHealthForm';
 

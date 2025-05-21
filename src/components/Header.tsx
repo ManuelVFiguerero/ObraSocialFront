@@ -1,12 +1,26 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  HEADER_HEIGHT,
+  HEADER_RADIUS,
+  HEADER_BG_COLOR,
+  HEADER_TEXT_COLOR,
+  HEADER_TITLE_SIZE,
+} from '../utils/theme';
 
-const Header = ({ title = 'Iniciar sesión' }) => {
+interface HeaderProps {
+  title?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ title = 'Iniciar sesión' }) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.headerContainer, { paddingTop: insets.top + 20 }]}>
+    <View style={[
+      styles.headerContainer,
+      { paddingTop: insets.top + 20 },
+    ]}>
       <Text style={styles.headerText}>{title}</Text>
     </View>
   );
@@ -14,29 +28,27 @@ const Header = ({ title = 'Iniciar sesión' }) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    position: 'absolute', // El header se pone sobre el formulario
+    position: 'absolute',       // para solaparse bajo el formulario
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#4D6EC5',
-    width: '100%',
-    height: 180,
-    borderBottomLeftRadius: 60,
-    borderBottomRightRadius: 60,
+    height: HEADER_HEIGHT,
+    backgroundColor: HEADER_BG_COLOR,
+    borderBottomLeftRadius: HEADER_RADIUS,
+    borderBottomRightRadius: HEADER_RADIUS,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingBottom: 0,
-    padding:100,
-    zIndex: 0, // Se coloca detrás del formulario
+    zIndex: 0,                  // detrás del formulario
   },
   headerText: {
-    color: 'white',
-    fontSize: 24,
+    color: HEADER_TEXT_COLOR,
+    fontSize: HEADER_TITLE_SIZE,
     fontWeight: 'bold',
-    marginTop: 30,
+    marginTop: 20,
   },
 });
 
 export default Header;
+
 
 

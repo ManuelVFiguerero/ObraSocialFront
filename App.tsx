@@ -10,6 +10,8 @@ import SocialHealthScreen from './src/screens/SocialHealthScreen';
 import CredentialScreen from './src/screens/CredentialScreen';
 import AboutUsScreen from './src/screens/AboutUs';
 import NotificationsScreen from './src/screens/NotificationsScreen';
+import Toast from 'react-native-toast-message';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,7 @@ export default function App() {
     return null;
   }
   return (
+    <>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen 
@@ -63,7 +66,9 @@ export default function App() {
         />
         
       </Stack.Navigator>
-    </NavigationContainer> 
+    </NavigationContainer>
+    <Toast />
+    </> 
   );
 }
 

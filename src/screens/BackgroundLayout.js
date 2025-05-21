@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet } from 'react-native';
 const BackgroundLayout = ({ children }) => {
   return (
     <ImageBackground
-      source={require('../assets/images/backgrounds/MainBackground.jpg')}
+      source={require('../assets/backgrounds/MainBackground.jpg')}
       style={styles.background}
       resizeMode="cover"
     >
