@@ -57,17 +57,17 @@ const HomeScreen = () => {
           <ActionButton
             btnName="Reservar turnos"
             btnIcon="add"
-            screen="BookAppointment"
+            screen="ReserveAppointment"
           />
           <ActionButton
             btnName="Buscar por ubicación"
             btnIcon="search"
-            screen="Map"
+            screen="ReserveAppointmentLocation"
           />
           <ActionButton
             btnName="Contáctanos"
             btnIcon="mail"
-            screen="Contact"
+            screen="ContactUs"
           />
         </View>
 

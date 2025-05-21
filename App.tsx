@@ -11,7 +11,9 @@ import CredentialScreen from './src/screens/CredentialScreen';
 import AboutUsScreen from './src/screens/AboutUs';
 import NotificationsScreen from './src/screens/NotificationsScreen';
 import Toast from 'react-native-toast-message';
-
+import ReserveAppointmentLocationScreen from './src/screens/ReserveAppointmentLocationScreen';
+import ReserveAppointmentScreen from './src/screens/ReserveAppointmentScreen';
+import ContactUsScreen from './src/screens/ContactUsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,7 +66,18 @@ export default function App() {
           name="AboutUs"
           component={AboutUsScreen}
         />
-        
+        <Stack.Screen 
+          name="ReserveAppointmentLocation"
+          component={ReserveAppointmentLocationScreen}
+        />
+        <Stack.Screen 
+          name="ReserveAppointment"
+          component={ReserveAppointmentScreen}
+        />
+        <Stack.Screen 
+          name="ContactUs"
+          component={ContactUsScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     <Toast />
