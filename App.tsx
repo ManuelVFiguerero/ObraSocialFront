@@ -27,6 +27,7 @@ import NotificationsScreen from './src/screens/NotificationsScreen';
 import ReserveAppointmentLocationScreen from './src/screens/ReserveAppointmentLocationScreen';
 import ReserveAppointmentScreen from './src/screens/ReserveAppointmentScreen';
 import ContactUsScreen from './src/screens/ContactUsScreen';
+import AllNotificationsScreen from './src/screens/AllNotificationsScreen';
 
 // Tu logo circular
 import Logo from './src/assets/icons/MainLogo.png';

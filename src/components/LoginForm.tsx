@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     color: '#F3F4F8',
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
+    textAlign: 'center'
   },
 });
 

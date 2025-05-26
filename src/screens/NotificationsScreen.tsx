@@ -11,6 +11,12 @@ import {
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import NotificationsPreview from '../components/NotificationsPreview';
+import AllNotificationsScreen from './AllNotificationsScreen';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types'; 
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const { width } = Dimensions.get('window');
 // Ajusta estos valores a los que uses en tu tema
@@ -23,9 +29,12 @@ const testMessages: string[] = [
   'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris',
 ];
 
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AllNotifications'>;
+
 const NotificationsScreen: React.FC = () => {
-  const handleSeeMore = () => {
-    // navegación a la pantalla de detalles
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const handleSeeMore = (type) => {
+   navigation.navigate('AllNotifications', {type})
   };
 
   return (
@@ -43,7 +52,7 @@ const NotificationsScreen: React.FC = () => {
           <NotificationsPreview
             defaultMessage="Ya has visto todas las notificaciones"
             messages={testMessages}
-            seeMore={handleSeeMore}
+            seeMore={() => handleSeeMore('New')}
           />
         </View>
 
@@ -52,7 +61,7 @@ const NotificationsScreen: React.FC = () => {
           <NotificationsPreview
             defaultMessage="No tienes notificaciones"
             messages={[testMessages[0]]}
-            seeMore={handleSeeMore}
+            seeMore={() => handleSeeMore('Read')}
           />
         </View>
 
@@ -61,7 +70,7 @@ const NotificationsScreen: React.FC = () => {
           <NotificationsPreview
             defaultMessage="No hay noticias para mostrar"
             messages={testMessages}
-            seeMore={handleSeeMore}
+            seeMore={() => handleSeeMore('Announcement')}
           />
         </View>
       </ScrollView>
@@ -77,7 +86,7 @@ const NotificationsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F3F4F8',
   },
   scrollView: {
     flex: 1,
@@ -91,7 +100,7 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#F3F4F8',
     borderRadius: 10,
     marginBottom: 20,
     padding: 10,
