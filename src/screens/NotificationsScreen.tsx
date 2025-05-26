@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerTitle: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontSize: 26,
     fontWeight: 'bold',
   },
@@ -123,11 +123,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   notificationContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F3F4F8',
     borderRadius: 10,
     padding: 12,
     marginBottom: 20,
-    elevation: 2,
   },
   notificationHeader: {
     fontSize: 18,

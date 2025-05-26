@@ -98,7 +98,7 @@ const ProfileScreen: React.FC = () => {
         </View>
 
         <View style={styles.accountOptions}>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
             <Text style={styles.updatePassword}>Actualizar contraseña</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setDeleteVisible(true)}>
@@ -124,7 +124,7 @@ const ProfileScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f5f5f5' },
+  screen: { flex: 1, backgroundColor: '#F3F4F8' },
   scrollView: { flex: 1, zIndex: 0 },
   content: { paddingHorizontal: 20, paddingBottom: 20 },
   generalInfo: { alignItems: 'center', marginBottom: 20 },

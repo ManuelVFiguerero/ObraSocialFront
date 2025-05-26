@@ -48,7 +48,7 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
 
   const headerTitle = useMemo(() => {
     if (type === 'New') return 'Notificaciones nuevas';
-    if (type === 'Read') return 'Notificaciones leídas';
+    if (type === 'Read') return 'Todas las notificaciones';
     return 'Noticias';
   }, [type]);
 

@@ -34,6 +34,7 @@ import MedicalHistoryScreen from './src/screens/MedicalHistoryScreen';
 import Logo from './src/assets/icons/MainLogo.png';
 import StudyDetailScreen from './src/screens/StudyDetailScreen';
 import ConsultDetailScreen from './src/screens/ConsultDetailScreen';
+import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync();
@@ -106,13 +107,14 @@ export default function App() {
               <Stack.Screen name="Credential" component={CredentialScreen} />
               <Stack.Screen name="Notifications" component={NotificationsScreen} />
               <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-              <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen}/>
-              <Stack.Screen name="ReserveAppointment"component={ReserveAppointmentScreen}/>
+              <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen} />
+              <Stack.Screen name="ReserveAppointment" component={ReserveAppointmentScreen} />
               <Stack.Screen name="ContactUs" component={ContactUsScreen} />
               <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
               <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
-              <Stack.Screen name="ConsultDetail"   component={ConsultDetailScreen} />
-              <Stack.Screen name="StudyDetail"     component={StudyDetailScreen} />
+              <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
+              <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
+              <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
             </Stack.Navigator>
           </NavigationContainer>
         )}
