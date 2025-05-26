@@ -28,9 +28,12 @@ import ReserveAppointmentLocationScreen from './src/screens/ReserveAppointmentLo
 import ReserveAppointmentScreen from './src/screens/ReserveAppointmentScreen';
 import ContactUsScreen from './src/screens/ContactUsScreen';
 import AllNotificationsScreen from './src/screens/AllNotificationsScreen';
+import MedicalHistoryScreen from './src/screens/MedicalHistoryScreen';
 
 // Tu logo circular
 import Logo from './src/assets/icons/MainLogo.png';
+import StudyDetailScreen from './src/screens/StudyDetailScreen';
+import ConsultDetailScreen from './src/screens/ConsultDetailScreen';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync();
@@ -107,6 +110,9 @@ export default function App() {
               <Stack.Screen name="ReserveAppointment"component={ReserveAppointmentScreen}/>
               <Stack.Screen name="ContactUs" component={ContactUsScreen} />
               <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
+              <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
+              <Stack.Screen name="ConsultDetail"   component={ConsultDetailScreen} />
+              <Stack.Screen name="StudyDetail"     component={StudyDetailScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         )}

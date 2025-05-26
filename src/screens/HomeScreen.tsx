@@ -47,7 +47,7 @@ const HomeScreen = () => {
           <ActionButton
             btnName="Historial médico"
             btnIcon="folder-open"
-            screen="History"
+            screen="MedicalHistory"
           />
           <ActionButton
             btnName="Acerca de nosotros"
