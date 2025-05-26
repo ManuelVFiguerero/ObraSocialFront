@@ -62,6 +62,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
     <View style={styles.container}>
       {navItems.map(item => {
         const isSelected = item.key === selectedIcon;
+        const label = item.key === 'logout' ? 'Cerrar sesión' : item.label;
         const isCred    = item.key === 'credential';
 
         return (
@@ -94,12 +95,12 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
                 color={isSelected ? '#2D43B3' : '#777'}
               />
             )}
-
-            <Text style={[styles.label, isSelected && styles.labelSelected]}>
-              {item.label}
-            </Text>
-
-            {!isCred && isSelected && <View style={styles.underline} />}
+         <Text
+           style={[styles.label, isSelected && styles.labelSelected]}
+           numberOfLines={1}
+         >
+           {label}
+         </Text>
           </TouchableOpacity>
         );
       })}
@@ -118,12 +119,12 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd',
     height: BAR_HEIGHT,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingHorizontal: 10,
     paddingBottom: 10,   // espacio inferior extra
   },
   item: {
-    width: ITEM_WIDTH,
+    flex: 1,
     alignItems: 'center',
   },
   label: {
