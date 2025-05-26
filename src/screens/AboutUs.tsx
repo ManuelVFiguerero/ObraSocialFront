@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#4D6EC5',
+    backgroundColor:'#2D43B3',
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     justifyContent: 'center',

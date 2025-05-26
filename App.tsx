@@ -103,15 +103,10 @@ export default function App() {
               <Stack.Screen name="Credential" component={CredentialScreen} />
               <Stack.Screen name="Notifications" component={NotificationsScreen} />
               <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-              <Stack.Screen
-                name="ReserveAppointmentLocation"
-                component={ReserveAppointmentLocationScreen}
-              />
-              <Stack.Screen
-                name="ReserveAppointment"
-                component={ReserveAppointmentScreen}
-              />
+              <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen}/>
+              <Stack.Screen name="ReserveAppointment"component={ReserveAppointmentScreen}/>
               <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+              <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         )}
