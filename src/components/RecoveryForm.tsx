@@ -12,8 +12,6 @@ const RecoveryForm = () => {
   return (
     <View style={styles.formContainer}>
 
-      <Text style={styles.title}>Recuperación de datos</Text>
-
       <View style={styles.inputView}>
         <Text style={styles.label}>Ingresa tu mail *</Text>
         <TextInput
@@ -59,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 28,
     width: '90%',
     maxWidth: 350,
-    maxHeight: '70%',
+    maxHeight: '50%',
     flex: 1,  
     justifyContent: 'space-around',
     alignItems: 'center',

@@ -8,7 +8,7 @@ const RecoveryScreen = () => {
   return (
       <SafeAreaView style={styles.screen}>
       {/* Header fijo con título */}
-      <Header title="" />
+      <Header title="Recuperación de datos" />
 
       <View style={styles.container}>
         <RecoveryForm />

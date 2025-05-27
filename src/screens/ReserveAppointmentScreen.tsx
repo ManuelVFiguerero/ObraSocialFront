@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,20 +7,108 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import BackButton from '../components/BackButton';
 import NavBar from '../components/NavBar';
 import { RootStackParamList } from '../types';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
 const NAVBAR_HEIGHT = 90;
 const CIRCLE_SIZE = 60;
 
+const testSpecialities = [
+  'Ortopedia',
+  'Cardiología',
+  'Dermatología',
+  'Pediatría',
+  'Ginecología',
+  'Oftalmología',
+  'Neurología',
+  'Psicología',
+  'Otorrinolaringología',
+  'Endocrinología',
+  'Gastroenterología',
+  'Reumatología',
+  'Urología',
+  'Neumonología',
+  'Oncología',
+  'Medicina General',
+  'Traumatología',
+  'Nefrología',
+  'Hematología',
+  'Alergología'
+];
+
+const testHealthInsurances = [
+  'OSDE', 'Swiss Medical', 'Galeno', 'Medifé', 'Omint', 'Hospital Italiano', 'OSPEDYC',
+  'PAMI', 'IOMA', 'Union Personal', 'OSDEPYM', 'Accord Salud', 'Sancor Salud',
+  'Federada Salud', 'Prevención Salud', 'Luis Pasteur', 'Jerárquicos Salud',
+  'OSMECON', 'AMFFA', 'ASE Nacional'
+];
+
+
+
+
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [isSpecialityModalVisible, setIsSpecialityModalVisible] = useState(false);
+  const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
+  const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>([]);
+  const [selectedInsurances, setSelectedInsurances] = useState<string[]>([]);
+
+  const addSpeciality = (speciality: string) => {
+    if (!selectedSpecialities.includes(speciality)) {
+      setSelectedSpecialities([...selectedSpecialities, speciality]);
+    }
+  };
+
+  const addInsurance = (insurance: string) => {
+    if (!selectedInsurances.includes(insurance)) {
+      setSelectedInsurances([...selectedInsurances, insurance]);
+    }
+  };
+
+
+  const renderListModal = (
+    title: string,
+    items: string[],
+    onSelect: (value: string) => void,
+    onClose: () => void,
+    visible: boolean
+  ) => (
+    <Modal visible={visible} animationType="fade" transparent>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>{title}</Text>
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => {
+                  onSelect(item);
+                  onClose();
+                }}
+              >
+                <Text style={styles.modalItemText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity style={styles.modalCloseButton} onPress={onClose}>
+            <Text style={styles.modalCloseText}>Cerrar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
     <View style={styles.screen}>
@@ -36,49 +124,79 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             left: -CIRCLE_SIZE / 4,
           }}
         />
-        <Icon
-          name="hospital"
-          size={32}
-          color="#fff"
-          style={styles.headerIcon}
-        />
+        <Icon name="hospital" size={32} color="#fff" style={styles.headerIcon} />
         <Text style={styles.headerTitle}>
           Reservar turno de consulta médica
         </Text>
       </View>
 
-      {/* CONTENIDO SCROLLABLE (entre header y navbar) */}
+      {/* CONTENIDO */}
       <ScrollView
-        style={[
-          styles.scrollView,
-          { marginTop: HEADER_HEIGHT, marginBottom: NAVBAR_HEIGHT },
-        ]}
+        style={[styles.scrollView, { marginTop: HEADER_HEIGHT, marginBottom: NAVBAR_HEIGHT }]}
         contentContainerStyle={styles.content}
       >
         <View style={styles.filterContainer}>
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => { /* abrir selector de especialidad */ }}
+            onPress={() => setIsSpecialityModalVisible(true)}
           >
-            <Text style={styles.filterText}>Especialidad</Text>
-            <Icon name="plus" size={20} color="#fff" />
+            <Text style={styles.filterText}>
+              Especialidad
+            </Text>
+            <Icon name="plus" size={20} color="#F3F4F8" />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => { /* abrir selector de obra social */ }}
+            onPress={() => setIsInsuranceModalVisible(true)}
           >
-            <Text style={styles.filterText}>Obra social</Text>
-            <Icon name="plus" size={20} color="#fff" />
+            <Text style={styles.filterText}>
+              Obra social
+            </Text>
+            <Icon name="plus" size={20} color="#F3F4F8" />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => { /* abrir selector de profesional */ }}
+            onPress={() => { }}
           >
             <Text style={styles.filterText}>Profesional</Text>
-            <Icon name="search" size={20} color="#fff" />
+            <Icon name="search" size={20} color="#F3F4F8" />
           </TouchableOpacity>
+        </View>
+        <View style={styles.tagsContainer}>
+          {selectedSpecialities.map((item, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{item}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setSelectedSpecialities(prev =>
+                    prev.filter(speciality => speciality !== item)
+                  )
+                }
+              >
+                <MaterialIcons name='close' size={20} color='#F3F4F8' />
+              </TouchableOpacity>
+
+            </View>
+          ))
+          }
+          {selectedInsurances.map((item, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{item}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setSelectedInsurances(prev =>
+                    prev.filter(speciality => speciality !== item)
+                  )
+                }
+              >
+                <MaterialIcons name='close' size={20} color='#F3F4F8' />
+              </TouchableOpacity>
+
+            </View>
+          ))
+          }
         </View>
       </ScrollView>
 
@@ -86,15 +204,30 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
       <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>
         <NavBar selectedIcon="home" />
       </View>
+
+      {/* Modales */}
+      {renderListModal(
+        'Seleccionar especialidad',
+        testSpecialities,
+        addSpeciality,
+        () => setIsSpecialityModalVisible(false),
+        isSpecialityModalVisible
+      )}
+
+      {renderListModal(
+        'Seleccionar obra social',
+        testHealthInsurances,
+        addInsurance,
+        () => setIsInsuranceModalVisible(false),
+        isInsuranceModalVisible
+      )}
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
+  screen: { flex: 1, backgroundColor: '#F3F4F8' },
   header: {
     height: HEADER_HEIGHT,
     backgroundColor: '#2D43B3',
@@ -109,7 +242,7 @@ const styles = StyleSheet.create({
     top: HEADER_HEIGHT / 3.5,
   },
   headerTitle: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -131,7 +264,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#2D43B3',
+    backgroundColor: '#1226A9',
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -139,8 +272,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#F3F4F8',
+    fontSize: 20,
     fontWeight: '600',
   },
   navContainer: {
@@ -149,6 +282,59 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#000000aa',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  modalItem: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  modalItemText: {
+    fontSize: 16,
+  },
+  modalCloseButton: {
+    marginTop: 10,
+    alignSelf: 'flex-end',
+  },
+  modalCloseText: {
+    color: '#2D43B3',
+    fontWeight: 'bold',
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  tag: {
+    backgroundColor: '#2D43B3',
+    padding: 8,
+    borderRadius: 6,
+    marginBottom: 5,
+    width: 'auto',
+    flexDirection: 'row',
+    marginRight: 10
+  },
+  tagText: {
+    marginRight: 10,
+    color: '#F3F4F8',
+    fontSize: 16
+  }
 });
 
 export default ReserveAppointmentLocationScreen;
