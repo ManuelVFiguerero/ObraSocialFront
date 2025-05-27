@@ -21,7 +21,7 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F3F4F8',
   },
   formWrapper: {
     flex: 1,                   // ocupa todo el espacio restante

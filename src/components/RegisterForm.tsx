@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#999',
   },
   buttonText: {
-    color: '#fff',
+    color: '#F3F4F8',
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },

@@ -53,7 +53,15 @@ const testHealthInsurances = [
 ];
 
 
+const testAppointment = {
+  id: 1,
+  estado: 'DISPONIBLE', //CANCELADO - COMPLETADO - DISPONIBLE - RESERVADO
+  fecha: new Date(),
+  nombre: 'Hernandez Juan Ignacio',
+  especialidad: 'Traumatología',
+  ubicacion: 'Clinica Santa Isabel' //TODO: Falta la ubicacion y la obra social que trabaja el profesional en la BD 
 
+}
 
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -62,16 +70,21 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>([]);
   const [selectedInsurances, setSelectedInsurances] = useState<string[]>([]);
+  const [appointmentsAvailable, setAppointmentsAvailable] = useState<object[]>([]);
 
   const addSpeciality = (speciality: string) => {
     if (!selectedSpecialities.includes(speciality)) {
       setSelectedSpecialities([...selectedSpecialities, speciality]);
+
+      setAppointmentsAvailable([testAppointment])
     }
   };
 
   const addInsurance = (insurance: string) => {
     if (!selectedInsurances.includes(insurance)) {
       setSelectedInsurances([...selectedInsurances, insurance]);
+
+      setAppointmentsAvailable([testAppointment])
     }
   };
 
@@ -132,7 +145,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
 
       {/* CONTENIDO */}
       <ScrollView
-        style={[styles.scrollView, { marginTop: HEADER_HEIGHT, marginBottom: NAVBAR_HEIGHT }]}
+        style={[styles.scrollView, { marginTop: HEADER_HEIGHT - 160, marginBottom: NAVBAR_HEIGHT }]}
         contentContainerStyle={styles.content}
       >
         <View style={styles.filterContainer}>
@@ -169,26 +182,12 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{item}</Text>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
                   setSelectedSpecialities(prev =>
                     prev.filter(speciality => speciality !== item)
                   )
+                  setAppointmentsAvailable([])
                 }
-              >
-                <MaterialIcons name='close' size={20} color='#F3F4F8' />
-              </TouchableOpacity>
-
-            </View>
-          ))
-          }
-          {selectedInsurances.map((item, index) => (
-            <View key={index} style={styles.tag}>
-              <Text style={styles.tagText}>{item}</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  setSelectedInsurances(prev =>
-                    prev.filter(speciality => speciality !== item)
-                  )
                 }
               >
                 <MaterialIcons name='close' size={20} color='#F3F4F8' />
@@ -198,6 +197,60 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
           ))
           }
         </View>
+        <View style={styles.tagsContainer}>
+          {selectedInsurances.map((item, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{item}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedInsurances(prev =>
+                    prev.filter(speciality => speciality !== item)
+                  )
+                  setAppointmentsAvailable([])
+                }
+
+                }
+              >
+                <MaterialIcons name='close' size={20} color='#F3F4F8' />
+              </TouchableOpacity>
+
+            </View>
+          ))
+          }
+        </View>
+
+        <View style={styles.appointmentsContainer}>
+          {appointmentsAvailable.map((appointment, index) => (
+           <View style={{width: '100%'}}> 
+            <View key={index} style={styles.appointmentContainer}>
+              <View style={styles.appointmentTop}>
+                <Text style={styles.locationText}>{appointment.ubicacion}</Text>
+              </View>
+              <View style={styles.appointmentBottom}>
+                <View style={styles.appointmentLeft}>
+                  <View style={{ borderBottomColor: '#000', borderBottomWidth: 1, width: '100%', alignItems: 'center', padding: 10 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 700, textAlign: 'center' }}>{appointment.especialidad}</Text>
+                  </View>
+                  <View style={{ width: '100%', alignItems: 'center', padding: 10 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 700, textAlign: 'center' }}>{appointment.fecha.toLocaleString()}</Text>
+                  </View>
+                </View>
+                <View style={styles.appointmentRight}>
+                  <Text style={{ fontSize: 20, fontWeight: 700, textAlign: 'center' }}>{appointment.nombre}</Text>
+                </View>
+              </View>
+            </View>
+            <TouchableOpacity style={{ marginTop: 5, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text style={{color: '#2D43B3', fontWeight: 600}}>Reservar</Text>
+              <MaterialIcons name='add' size={20} color='#2D43B3'/>
+            </TouchableOpacity>
+            
+          </View>
+          ))
+          }
+        </View>
+        
+
       </ScrollView>
 
       {/* NAV BAR */}
@@ -319,7 +372,8 @@ const styles = StyleSheet.create({
   },
   tagsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    marginBottom: 5
   },
   tag: {
     backgroundColor: '#2D43B3',
@@ -334,6 +388,48 @@ const styles = StyleSheet.create({
     marginRight: 10,
     color: '#F3F4F8',
     fontSize: 16
+  },
+  appointmentsContainer: {
+    minHeight: 500,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  appointmentContainer: {
+    backgroundColor: '#F3F4F8',
+    borderColor: '#000',
+    borderRadius: 10,
+    elevation: 6,
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
+
+  },
+  appointmentTop: {
+    padding: 10,
+    borderBottomColor: '#000',
+    borderBottomWidth: 1,
+    width: '100%',
+    alignItems: 'flex-start'
+  },
+  locationText: {
+    color: '#2D43B3',
+    fontSize: 22
+  },
+  appointmentBottom: {
+    flexDirection: 'row',
+    width: '100%'
+  },
+  appointmentLeft: {
+    flexDirection: 'column',
+    width: '50%',
+    alignItems: 'center',
+    borderRightColor: '#000',
+    borderRightWidth: 1,
+  },
+  appointmentRight: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
