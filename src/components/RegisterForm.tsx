@@ -1,51 +1,134 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+// Asegúrate de que tu .env define:
+// API_URL=https://ms-spring-security-jwt-latest-3.onrender.com
+import { API_URL } from '@env';
 
-
-//TODO: La contraseña tendría que tener un botón para poder verla, al igual que como pasa en el Login
-const RegisterForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const RegisterForm: React.FC = () => {
+  const [name, setName]               = useState('');
+  const [surname, setSurname]         = useState('');
+  const [homeAddress, setHomeAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [username, setUsername]       = useState('');
+  const [email, setEmail]             = useState('');
+  const [password, setPassword]       = useState('');
+  const [loading, setLoading]         = useState(false);
   const navigation = useNavigation();
 
+  const allFilled =
+    !!name && !!surname && !!homeAddress && !!phoneNumber &&
+    !!username && !!email && !!password;
+
+  const handleRegister = async () => {
+    if (!allFilled) {
+      return Alert.alert('Error', 'Todos los campos son obligatorios');
+    }
+    setLoading(true);
+
+    // Construyo la URL completa para debug, evitando doble "/api"
+    const base = API_URL.replace(/\/$/, '');
+    const endpoint = base.endsWith('/api')
+      ? `${base}/auth/register`
+      : `${base}/api/auth/register`;
+    console.log('Registrando en:', endpoint);
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          surname,
+          home_address: homeAddress,
+          phone_number: phoneNumber,
+          username,
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // asumo que el backend devuelve { message: "..." } en errores
+        throw new Error(data.message || `Error ${res.status}`);
+      }
+
+      if (data.access_token) {
+        Toast.show({ type: 'success', text1: 'Registro exitoso' });
+        navigation.navigate('Login');
+      } else {
+        throw new Error('No recibimos token de registro');
+      }
+
+    } catch (err: any) {
+      console.warn('Error en registro:', err);
+      Alert.alert('Error', err.message || 'Falló el registro');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <View style={styles.formContainer}>
-      
-      <View style={styles.titleContainer}>
-        <Text style={styles.welcomeText}>¡Hola!</Text>
-        <Text style={styles.subtitle}>Te damos la bienvenida</Text>
-        <Text style={styles.instructions}>
-        Para registrarte, es necesario que completes los campos solicitados.
-        </Text>
-      </View>
+    <View style={styles.wrapper}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={styles.welcome}>¡Hola!</Text>
+          <Text style={styles.subtitle}>Te damos la bienvenida</Text>
+          <Text style={styles.instructions}>
+            Para registrarte, completa todos los campos.
+          </Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Usuario*"
-        value={username}
-        onChangeText={setUsername}
-      />
+        {[
+          { placeholder: 'Nombre*',    value: name,        setter: setName },
+          { placeholder: 'Apellido*',  value: surname,     setter: setSurname },
+          { placeholder: 'Dirección*', value: homeAddress, setter: setHomeAddress },
+          { placeholder: 'Teléfono*',  value: phoneNumber, setter: setPhoneNumber, keyboard: 'phone-pad' },
+          { placeholder: 'Usuario*',   value: username,    setter: setUsername,    autoCap: 'none' },
+          { placeholder: 'Email*',     value: email,       setter: setEmail,       keyboard: 'email-address', autoCap: 'none' },
+          { placeholder: 'Contraseña*',value: password,    setter: setPassword,    secure: true },
+        ].map((field, i) => (
+          <TextInput
+            key={i}
+            style={styles.input}
+            placeholder={field.placeholder}
+            placeholderTextColor="#999"
+            value={field.value}
+            onChangeText={field.setter}
+            keyboardType={field.keyboard as any}
+            autoCapitalize={field.autoCap as any}
+            secureTextEntry={field.secure}
+          />
+        ))}
+      </ScrollView>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email*"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña*"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity style={styles.registerButton}>
-        <Text style={styles.buttonText}>Registrarse</Text>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          (!allFilled || loading) && styles.buttonDisabled,
+        ]}
+        onPress={handleRegister}
+        disabled={!allFilled || loading}
+      >
+        {loading
+          ? <ActivityIndicator color="#fff" />
+          : <Text style={styles.buttonText}>Registrarse</Text>
+        }
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -55,78 +138,71 @@ const RegisterForm = () => {
   );
 };
 
+export default RegisterForm;
+
 const styles = StyleSheet.create({
-  formContainer: {
-    backgroundColor: '#F3F4F8',
-    borderRadius: 16,
-    padding: 28,
-    width: '90%',
-    maxWidth: 350,
-    maxHeight: '70%',
-    flex: 1,  
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    elevation: 6,
-    marginTop: 40,
-    flexDirection: 'column',
-    
-  },
-  titleContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 25,
+  wrapper: {
     width: '100%',
+    flex: 1,
+    justifyContent: 'space-between',
   },
-  welcomeText: {
-    fontSize: 28,  
+  scrollContent: {
+    paddingVertical: 10,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 20,
+    marginTop:150,
+    // si quieres levantar un poco el "¡Hola!"
+    // puedes ajustar marginTop aquí
+  },
+  welcome: {
+    fontSize: 28,
     fontFamily: 'Inter_700Bold',
     color: '#1226A9',
   },
   subtitle: {
-    fontSize: 18,  
+    fontSize: 18,
     fontFamily: 'Inter_700Bold',
     color: '#1226A9',
-    marginBottom: 15
-  },
-  instructionsContainer: {
-    width: '100%',
-    marginBottom: 25,
+    marginTop: 4,
   },
   instructions: {
     fontSize: 14,
     fontFamily: 'Inter_400Regular',
     color: '#1226A9',
     textAlign: 'center',
+    marginTop: 6,
   },
   input: {
     width: '100%',
     borderBottomWidth: 1,
-    borderColor: '#333',
-    paddingVertical: 12,
-    marginBottom: 24,
-    fontSize: 18,
+    borderColor: '#ccc',
+    paddingVertical: 8,
+    marginBottom: 16,
+    fontSize: 16,
     fontFamily: 'Inter_400Regular',
   },
-  registerButton: {
+  button: {
     backgroundColor: '#1226A9',
-    padding: 18,
+    paddingVertical: 14,
     borderRadius: 8,
-    width: '100%',
     alignItems: 'center',
-    marginVertical: 15,
+    marginHorizontal: 20,
+  },
+  buttonDisabled: {
+    backgroundColor: '#999',
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: '#fff',
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },
   loginLink: {
+    textAlign: 'center',
     color: '#2D43B3',
     fontFamily: 'Inter_400Regular',
-    marginTop: 5,
-    fontSize: 16,
+    marginTop: 12,
+    marginBottom: 20,
   },
 });
-
-export default RegisterForm;

@@ -1,23 +1,58 @@
+// src/components/LoginForm.tsx
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity,
-  StyleSheet, Switch, Image
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Switch,
+  Image,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../assets/icons/MainLogo.png';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types'; 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { RootStackParamList } from '../types';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
-const LoginForm = () => {
+const API_URL = 'https://ms-spring-security-jwt-latest-3.onrender.com/api/auth/login';
+
+const LoginForm: React.FC = () => {
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  const handleLogin = () => {
-    // Aquí se navega a la pantalla "Home" al presionar el botón
-    navigation.navigate('Home');
+  const handleLogin = async () => {
+    if (!user.trim() || !pass) {
+      return Alert.alert('Error', 'Usuario y contraseña son obligatorios');
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass }),
+      });
+      const body = await res.json();
+      if (res.ok && body.access_token) {
+        // Guardamos el token para futuras peticiones
+        await AsyncStorage.setItem('accessToken', body.access_token);
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('Login fallido', body.message || 'Credenciales inválidas');
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'No pudo conectarse al servidor');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,6 +68,8 @@ const LoginForm = () => {
         style={styles.input}
         placeholder="Usuario*"
         placeholderTextColor="#666"
+        value={user}
+        onChangeText={setUser}
       />
 
       <View style={styles.passwordContainer}>
@@ -41,31 +78,38 @@ const LoginForm = () => {
           placeholder="Contraseña*"
           placeholderTextColor="#666"
           secureTextEntry={!isPasswordVisible}
+          value={pass}
+          onChangeText={setPass}
         />
         <Switch
           value={isPasswordVisible}
-          onValueChange={() => setIsPasswordVisible(!isPasswordVisible)}
+          onValueChange={() => setIsPasswordVisible(v => !v)}
         />
       </View>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading
+          ? <ActivityIndicator color="#F3F4F8" />
+          : <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+        }
       </TouchableOpacity>
 
-      
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.recoveryButton}
         onPress={() => navigation.navigate('RecoveryPassword')}
       >
         <Text style={styles.recoveryText}>Recuperar usuario</Text>
       </TouchableOpacity>
 
-      
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.recoveryButton}
-        onPress={() => navigation.navigate('Register')} 
+        onPress={() => navigation.navigate('Register')}
       >
-          <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
+        <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,7 +123,7 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 350,
     maxHeight: '70%',
-    flex: 1,  
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
@@ -88,11 +132,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 50,
-    gap: 20,  
+    gap: 20,
   },
   logo: {
     backgroundColor: '#000000',
-    alignItems: 'flex-start',
     width: 80,
     height: 80,
     borderRadius: 60,
@@ -104,14 +147,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_700Bold',
     flexWrap: 'wrap',
     textAlign: 'center',
-    width: '100%'
+    width: '100%',
   },
   input: {
     width: '100%',
     borderBottomWidth: 2,
     borderColor: '#aaa',
-    paddingVertical: 12, 
-    marginBottom: 16, 
+    paddingVertical: 12,
+    marginBottom: 16,
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
   },
@@ -140,14 +183,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     width: '80%',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
   },
   recoveryText: {
     color: '#F3F4F8',
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
-    textAlign: 'center'
+    textAlign: 'center',
   },
 });
 

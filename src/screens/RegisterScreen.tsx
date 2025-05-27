@@ -6,7 +6,7 @@ import RegisterForm from '../components/RegisterForm';
 const RegisterScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.screen}>
-      {/* Header fijo con título */}
+      {/* Header fijo en la parte superior */}
       <Header title="Registrarse" />
 
       {/* Contenedor principal fijo */}
@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
