@@ -128,15 +128,15 @@ export default function App() {
 const styles = StyleSheet.create({
   loader: {
     ...StyleSheet.absoluteFillObject,  // cubre TODO, incluso la barra de estado
-    backgroundColor: '#4D6EC5',
+    backgroundColor: '#2D43B3',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logoWrapper: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: '#fff',
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    backgroundColor: '#2D43B3',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 100,
+    borderRadius: 100
   },
   loaderText: {
     color: '#fff',

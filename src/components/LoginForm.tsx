@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 60,
+    elevation: 12
   },
   instructionText: {
     flex: 1,
