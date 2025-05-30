@@ -89,8 +89,8 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
+    <View
+      style={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
@@ -100,7 +100,7 @@ const RegisterForm: React.FC = () => {
           Para registrarte, completa todos los campos.
         </Text>
       </View>
-      <View style={styles.inputscontainer}>
+      <ScrollView contentContainerStyle={styles.inputscontainer}>
         {/* Otros campos */}
         {[
           { placeholder: 'Nombre*', value: name, setter: setName },
@@ -154,7 +154,7 @@ const RegisterForm: React.FC = () => {
           />
         </View>
 
-      </View>
+      </ScrollView>
       <View style={styles.buttons}>
         <TouchableOpacity
           style={[
@@ -174,7 +174,7 @@ const RegisterForm: React.FC = () => {
           <Text style={styles.loginLink}>¿Ya tenés cuenta? Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -189,7 +189,8 @@ const styles = StyleSheet.create({
     borderColor: '#666',
     borderWidth: 1,
     marginTop: 180,
-    paddingBottom: 200,
+    maxHeight:600, 
+    //paddingBottom: 200,
     elevation: 6
   },
   header: {
