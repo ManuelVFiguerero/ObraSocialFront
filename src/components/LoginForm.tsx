@@ -43,6 +43,9 @@ const LoginForm: React.FC = () => {
       if (res.ok && body.access_token) {
         // Guardamos el token para futuras peticiones
         await AsyncStorage.setItem('accessToken', body.access_token);
+        await AsyncStorage.setItem('username', user);
+        console.log('🔥 Token guardado en AsyncStorage:', body.access_token);
+        console.log('👤 Username guardado en AsyncStorage:', user);
         navigation.navigate('Home');
       } else {
         Alert.alert('Login fallido', body.message || 'Credenciales inválidas');

@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
   Image,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import ConfirmationModal from '../components/ConfirmationModal';
 import Toast from 'react-native-toast-message';
 import { RootStackParamList } from '../types';
+import { api } from '../api/Client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
 const NAVBAR_HEIGHT = 90;
 
@@ -27,29 +25,53 @@ interface UserData {
   username: string;
   nombres: string;
   apellidos: string;
-  nacimiento: string;
-  dni: string;
   telefono: string;
   mail: string;
   domicilio: string;
 }
 
-const initialData: UserData = {
-  profilePic: require('../assets/images/testProfileImage.jpg'),
-  username: 'Julian_Alvarez',
-  nombres: 'Julian',
-  apellidos: 'Alvarez',
-  nacimiento: '13/05/25',
-  dni: '40300220',
-  telefono: '5492213011076',
-  mail: 'julianalvarez1@gmail.com',
-  domicilio: 'Libertad 1010, Retiro, Buenos Aires',
-};
-
 const ProfileScreen: React.FC = () => {
-  const [data, setData] = useState<UserData>(initialData);
+  const [data, setData] = useState<UserData>({
+    profilePic: require('../assets/images/fotoperfil.jpg'),
+    username: '',
+    nombres: '',
+    apellidos: '',
+    telefono: '',
+    mail: '',
+    domicilio: '',
+  });
+
   const [deleteVisible, setDeleteVisible] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const username = await AsyncStorage.getItem('username');
+        console.log('📦 Username obtenido de AsyncStorage:', username);
+        if (!username) return;
+
+        const res = await api.get(`/users/get-user-by-username?username=${username}`);
+        const profile = res.data;
+        console.log('📋 Perfil obtenido:', profile);
+
+        setData(prev => ({
+          ...prev,
+          username: profile.username,
+          nombres: profile.name,
+          apellidos: profile.surname,
+          telefono: profile.phone_number,
+          mail: profile.email,
+          domicilio: profile.home_address,
+        }));
+        await AsyncStorage.setItem('email', profile.email);
+      } catch (error) {
+        console.error('❌ Error al obtener perfil:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleDelete = () => {
     navigation.navigate('Login');
@@ -58,12 +80,9 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <View style={styles.screen}>
-      <Header title="Tus datos" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Header title="Tus datos" />
 
-      <ScrollView
-        style={[styles.scrollView, { marginTop: HEADER_HEIGHT, marginBottom: NAVBAR_HEIGHT }]}
-        contentContainerStyle={styles.content}
-      >
         <View style={styles.generalInfo}>
           <Image source={data.profilePic} style={styles.profilePic} />
           <Text style={styles.username}>{data.username}</Text>
@@ -71,28 +90,27 @@ const ProfileScreen: React.FC = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datos personales</Text>
-          {['nombres', 'apellidos', 'nacimiento', 'dni'].map((key) => (
-            <View key={key} style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={(data as any)[key]}
-                onChangeText={(text) => setData({ ...data, [key]: text })}
-              />
-              <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
+          {[
+            { label: 'Nombre', value: data.nombres },
+            { label: 'Apellido', value: data.apellidos },
+          ].map(({ label, value }) => (
+            <View key={label} style={styles.inputWrapper}>
+              <Text style={styles.label}>{label}</Text>
+              <Text style={styles.value}>{value}</Text>
             </View>
           ))}
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datos de contacto</Text>
-          {['telefono', 'mail', 'domicilio'].map((key) => (
-            <View key={key} style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={(data as any)[key]}
-                onChangeText={(text) => setData({ ...data, [key]: text })}
-              />
-              <MaterialIcons name="edit" size={20} color="#888" style={styles.icon} />
+          {[
+            { label: 'Teléfono', value: data.telefono },
+            { label: 'Correo electrónico', value: data.mail },
+            { label: 'Domicilio', value: data.domicilio },
+          ].map(({ label, value }) => (
+            <View key={label} style={styles.inputWrapper}>
+              <Text style={styles.label}>{label}</Text>
+              <Text style={styles.value}>{value}</Text>
             </View>
           ))}
         </View>
@@ -116,7 +134,7 @@ const ProfileScreen: React.FC = () => {
         onClose={() => setDeleteVisible(false)}
       />
 
-      <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>
+      <View style={styles.navContainer}>
         <NavBar selectedIcon="person" />
       </View>
     </View>
@@ -124,29 +142,60 @@ const ProfileScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F3F4F8' },
-  scrollView: { flex: 1, zIndex: 0 },
-  content: { paddingHorizontal: 20, paddingBottom: 20 },
+  screen: {
+    flex: 1,
+    backgroundColor: '#F3F4F8',
+  },
+  scrollContent: {
+    paddingTop: HEADER_HEIGHT + 10,
+    paddingHorizontal: 20,
+    paddingBottom: NAVBAR_HEIGHT + 40,
+  },
   generalInfo: { alignItems: 'center', marginBottom: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
   username: { fontSize: 20, fontFamily: 'Inter_700Bold', color: '#1226A9' },
   section: { marginBottom: 30 },
   sectionTitle: { fontSize: 20, fontFamily: 'Inter_700Bold', marginBottom: 10 },
-  inputWrapper: { position: 'relative', marginBottom: 20 },
-  input: {
+  inputWrapper: {
     borderWidth: 2,
     borderColor: '#ddd',
     borderRadius: 8,
     padding: 12,
-    fontSize: 16,
-    fontFamily: 'Inter_400Regular',
+    marginBottom: 20,
     backgroundColor: '#F3F4F8',
   },
-  icon: { position: 'absolute', right: 10, top: '50%', transform: [{ translateY: -10 }] },
-  accountOptions: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 40 },
-  updatePassword: { color: '#2D43B3', fontFamily: 'Inter_700Bold', fontSize: 16 },
-  deleteAccount: { color: '#B32D2F', fontFamily: 'Inter_700Bold', fontSize: 16 },
-  navContainer: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+  label: {
+    fontSize: 14,
+    color: '#888',
+    fontFamily: 'Inter_400Regular',
+    marginBottom: 4,
+  },
+  value: {
+    fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+    color: '#000',
+  },
+  accountOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
+  updatePassword: {
+    color: '#2D43B3',
+    fontFamily: 'Inter_700Bold',
+    fontSize: 16,
+  },
+  deleteAccount: {
+    color: '#B32D2F',
+    fontFamily: 'Inter_700Bold',
+    fontSize: 16,
+  },
+  navContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
 });
 
 export default ProfileScreen;
