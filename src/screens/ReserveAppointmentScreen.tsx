@@ -221,8 +221,8 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
 
         <View style={styles.appointmentsContainer}>
           {appointmentsAvailable.map((appointment, index) => (
-           <View style={{width: '100%'}}> 
-            <View key={index} style={styles.appointmentContainer}>
+           <View key={index} style={{width: '100%'}}> 
+            <View style={styles.appointmentContainer}>
               <View style={styles.appointmentTop}>
                 <Text style={styles.locationText}>{appointment.ubicacion}</Text>
               </View>
