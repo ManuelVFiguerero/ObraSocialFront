@@ -12,9 +12,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-// Asegúrate de que tu .env define:
-// API_URL=https://ms-spring-security-jwt-latest-3.onrender.com
-import { API_URL } from '@env';
+
+import { API_BASE_URL } from '@env';
 
 const RegisterForm: React.FC = () => {
   const [name, setName] = useState('');
@@ -45,7 +44,7 @@ const RegisterForm: React.FC = () => {
     }
 
     // Construyo la URL completa para debug, evitando doble "/api"
-    const base = API_URL.replace(/\/$/, '');
+    const base = API_BASE_URL.replace(/\/$/, '');
     const endpoint = base.endsWith('/api')
       ? `${base}/auth/register`
       : `${base}/api/auth/register`;

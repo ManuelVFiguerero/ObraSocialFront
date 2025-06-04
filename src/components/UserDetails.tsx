@@ -11,30 +11,39 @@ const UserDetails = () => {
   const [fullName, setFullName] = useState('');
   const [obraSocialNro, setObraSocialNro] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const username = await AsyncStorage.getItem('username');
-        const userId = await AsyncStorage.getItem('userId');
+useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      const username = await AsyncStorage.getItem('username');
+      const userId = await AsyncStorage.getItem('userId');
 
-        if (!username || !userId) return;
+      console.log('📦 Username:', username);
+      console.log('🧠 User ID:', userId);
 
-        // Obtener nombre y apellido
+      // Si hay username, obtenemos nombre + apellido
+      if (username) {
         const res = await api.get(`/users/get-user-by-username?username=${username}`);
         const user = res.data;
         setFullName(`${user.name} ${user.surname}`);
+      }
 
-        // Consultar obra social
+      // Si hay userId, consultamos obra social
+      if (userId) {
         const resOS = await api.get(`/api/obras-sociales/usuario/${userId}`);
         setObraSocialNro(resOS.data.numeroAfiliado || null);
-      } catch (error) {
-        console.error('❌ Error cargando datos del usuario:', error);
-        setObraSocialNro(null);  // por si falla
+      } else {
+        setObraSocialNro(null); // Si no hay userId, mostramos "Cargar obra social"
       }
-    };
 
-    fetchUserData();
-  }, []);
+    } catch (error) {
+      console.error('❌ Error cargando datos del usuario:', error);
+      setObraSocialNro(null);
+    }
+  };
+
+  fetchUserData();
+}, []);
+
 
   return (
     <View style={styles.container}>
@@ -44,7 +53,7 @@ const UserDetails = () => {
           {obraSocialNro ? (
             <Text style={styles.dni}>{obraSocialNro}</Text>
           ) : (
-            <Text style={styles.placeholder}>Cargar obra social</Text>
+            <Text style={styles.placeholder}>debes cargar tu obra social</Text>
           )}
         </View>
         <Image source={Logo} style={styles.logo} />

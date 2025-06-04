@@ -19,7 +19,13 @@ import { RootStackParamList } from '../types';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
-const API_URL = 'https://ms-spring-security-jwt-latest-3.onrender.com/api/auth/login';
+import { API_BASE_URL } from '@env';
+const base = API_BASE_URL.replace(/\/$/, '');
+const LOGIN_URL = base.endsWith('/api')
+  ? `${base}/auth/login`
+  : `${base}/api/auth/login`;
+
+
 
 const LoginForm: React.FC = () => {
   const [user, setUser] = useState('');
@@ -34,7 +40,7 @@ const LoginForm: React.FC = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch(LOGIN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: user, password: pass }),

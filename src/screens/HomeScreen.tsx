@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,31 +7,48 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserDetails from '../components/UserDetails';
 import ActionButton from '../components/ActionButton';
 import Appointment from '../components/Appointment';
 import NavBar from '../components/NavBar';
+import { Endpoints } from '../api/Endpoints';
+import { api } from '../api/Client';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40;
-
-// Valores clonados del AboutUsScreen
 const HEADER_HEIGHT = 160;
 const HEADER_RADIUS = 80;
 
 const HomeScreen = () => {
   const [appointments] = useState([]);
+  const [nombreUsuario, setNombreUsuario] = useState<string>('');
+
+  useEffect(() => {
+    const fetchNombre = async () => {
+      try {
+        const username = await AsyncStorage.getItem('username');
+        if (!username) return;
+
+        const res = await api.get(`${Endpoints.profile}?username=${username}`);
+        const { name } = res.data;
+        setNombreUsuario(name);
+      } catch (err) {
+        console.error('❌ Error al obtener nombre:', err);
+      }
+    };
+    fetchNombre();
+  }, []);
 
   return (
     <View style={styles.screen}>
       <StatusBar barStyle="light-content" backgroundColor="#4D6EC5" />
 
-      {/* HEADER (fijo) */}
+      {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.title}>Hola, Manuel!</Text>
+        <Text style={styles.title}>Hola, {nombreUsuario || 'usuario'}!</Text>
       </View>
 
-      {/* CONTENIDO: ScrollView arranca justo bajo el header */}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -39,36 +56,12 @@ const HomeScreen = () => {
         <UserDetails />
 
         <View style={styles.actionButtons}>
-          <ActionButton
-            btnName="Cargar obra social"
-            btnIcon="attach-file"
-            screen="SocialHealth"
-          />
-          <ActionButton
-            btnName="Historial médico"
-            btnIcon="folder-open"
-            screen="MedicalHistory"
-          />
-          <ActionButton
-            btnName="Acerca de nosotros"
-            btnIcon="info"
-            screen="AboutUs"
-          />
-          <ActionButton
-            btnName="Reservar turnos"
-            btnIcon="add"
-            screen="ReserveAppointment"
-          />
-          <ActionButton
-            btnName="Buscar por ubicación"
-            btnIcon="search"
-            screen="ReserveAppointmentLocation"
-          />
-          <ActionButton
-            btnName="Contáctanos"
-            btnIcon="mail"
-            screen="ContactUs"
-          />
+          <ActionButton btnName="Cargar obra social" btnIcon="attach-file" screen="SocialHealth" />
+          <ActionButton btnName="Historial médico" btnIcon="folder-open" screen="MedicalHistory" />
+          <ActionButton btnName="Acerca de nosotros" btnIcon="info" screen="AboutUs" />
+          <ActionButton btnName="Reservar turnos" btnIcon="add" screen="ReserveAppointment" />
+          <ActionButton btnName="Buscar por ubicación" btnIcon="search" screen="ReserveAppointmentLocation" />
+          <ActionButton btnName="Contáctanos" btnIcon="mail" screen="ContactUs" />
         </View>
 
         <Text style={styles.appointmentTitle}>Mis turnos</Text>
@@ -113,13 +106,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_700Bold',
   },
   scrollView: {
-    flex: 1,        // ocupa el espacio restante tras el header
-    marginTop: 0,   // sin margin negativo
+    flex: 1,
+    marginTop: 0,
   },
   content: {
-    marginTop: 20,     // espacio ligero tras el header
+    marginTop: 20,
     paddingHorizontal: 20,
-    paddingBottom: 60,  // deja espacio para la NavBar
+    paddingBottom: 60,
   },
   actionButtons: {
     flexDirection: 'row',
