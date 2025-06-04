@@ -98,18 +98,12 @@ const LoginForm: React.FC = () => {
         }
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.recoveryButton}
-        onPress={() => navigation.navigate('RecoveryPassword')}
-      >
-        <Text style={styles.recoveryText}>Recuperar usuario</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('RecoveryPassword')}>
+          <Text style={styles.recoveryLink}>¿Olvidaste tu usuario? recuperar contrasena</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.recoveryButton}
-        onPress={() => navigation.navigate('Register')}
-      >
-        <Text style={styles.recoveryText}>Crear nuevo usuario</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.registerLink}>¿No tienes usuario? Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -177,19 +171,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_700Bold',
     fontSize: 20,
   },
-  recoveryButton: {
-    marginTop: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  recoveryText: {
-    color: '#2D43B3',
-    fontSize: 18,
-    fontFamily: 'Inter_400Regular',
+  recoveryLink: {
     textAlign: 'center',
+    color: '#2D43B3',
+    fontFamily: 'Inter_400Regular',
+    marginTop: 40,
+    marginBottom: 20,
+  },
+  registerLink: {
+    textAlign: 'center',
+    color: '#2D43B3',
+    fontFamily: 'Inter_400Regular',
+    marginTop: 12,
+    marginBottom: 20,
   },
 });
 
