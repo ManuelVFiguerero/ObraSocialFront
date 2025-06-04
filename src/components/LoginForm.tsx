@@ -62,9 +62,6 @@ const LoginForm: React.FC = () => {
     <View style={styles.formContainer}>
       <View style={styles.logoRow}>
         <Image source={Logo} style={styles.logo} />
-        <Text style={styles.instructionText}>
-          Completa los campos solicitados para iniciar sesión
-        </Text>
       </View>
 
       <TextInput
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
   },
   logoRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 50,
     gap: 20,
   },
@@ -182,16 +179,14 @@ const styles = StyleSheet.create({
   },
   recoveryButton: {
     marginTop: 16,
-    backgroundColor: '#2D43B3',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   recoveryText: {
-    color: '#F3F4F8',
+    color: '#2D43B3',
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
     textAlign: 'center',

@@ -142,7 +142,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#2D43B3',
+    backgroundColor: '#F3F4F8',
+    borderColor: '#2D43B3',
+    borderWidth: 2,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -156,29 +158,29 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -8,
     left: 12,
-    backgroundColor: '#5C6BC0',
+    backgroundColor: '#2D43B3',
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   dateText: { 
-    color: '#fff', 
+    color: '#F3F4F8', 
     fontSize: 12, 
     fontWeight: '600' 
   },
   line: {
     marginTop: 24,
-    color: '#fff',
-    fontSize: 15,
+    color: '#2D43B3',
+    fontSize: 16,
     lineHeight: 22,
   },
   bold: { 
-    fontWeight: '600' 
+    fontWeight: '700' 
   },
   actionButton: {
     flexDirection: 'row',
     alignSelf: 'center',
-    backgroundColor: '#1A237E',
+    backgroundColor: '#1226A9',
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 8,
