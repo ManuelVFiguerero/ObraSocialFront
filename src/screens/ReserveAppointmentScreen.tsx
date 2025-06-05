@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,77 +17,97 @@ import NavBar from '../components/NavBar';
 import { RootStackParamList } from '../types';
 import { MaterialIcons } from '@expo/vector-icons';
 import AppointmentCard from '../components/AppointmentCard';
+import { api } from '../api/Client';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
 const NAVBAR_HEIGHT = 90;
 const CIRCLE_SIZE = 60;
 
-const testSpecialities = [
-  'Ortopedia',
-  'Cardiología',
-  'Dermatología',
-  'Pediatría',
-  'Ginecología',
-  'Oftalmología',
-  'Neurología',
-  'Psicología',
-  'Otorrinolaringología',
-  'Endocrinología',
-  'Gastroenterología',
-  'Reumatología',
-  'Urología',
-  'Neumonología',
-  'Oncología',
-  'Medicina General',
-  'Traumatología',
-  'Nefrología',
-  'Hematología',
-  'Alergología'
-];
-
-const testHealthInsurances = [
-  'OSDE', 'Swiss Medical', 'Galeno', 'Medifé', 'Omint', 'Hospital Italiano', 'OSPEDYC',
-  'PAMI', 'IOMA', 'Union Personal', 'OSDEPYM', 'Accord Salud', 'Sancor Salud',
-  'Federada Salud', 'Prevención Salud', 'Luis Pasteur', 'Jerárquicos Salud',
-  'OSMECON', 'AMFFA', 'ASE Nacional'
-];
-
-
-const testAppointment = {
-  id: 1,
-  estado: 'DISPONIBLE', //CANCELADO - COMPLETADO - DISPONIBLE - RESERVADO
-  fecha: new Date(),
-  nombre: 'Hernandez Juan Ignacio',
-  especialidad: 'Traumatología',
-  ubicacion: 'Clinica Santa Isabel' //TODO: Falta la ubicacion y la obra social que trabaja el profesional en la BD 
-
-}
 
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const [isSpecialityModalVisible, setIsSpecialityModalVisible] = useState(false);
-  const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
+  const [isProfessionalModalVisible, setIsProfessionalModalVisible] = useState(false);
   const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>([]);
-  const [selectedInsurances, setSelectedInsurances] = useState<string[]>([]);
-  const [appointmentsAvailable, setAppointmentsAvailable] = useState<object[]>([]);
+  const [selectedProfessional, setSelectedProfessional] = useState<string[]>([]);
+  const [filteredAppointments, setFilteredAppointments] = useState<object[]>([]);
+  const [specialities, setSpecialities] = useState<string[]>([]);
+  const [allAppointments, setAllAppointments] = useState<object[]>([]);
+  const [professionals, setProfessionals] = useState<string[]>([]);
 
   const addSpeciality = (speciality: string) => {
     if (!selectedSpecialities.includes(speciality)) {
       setSelectedSpecialities([...selectedSpecialities, speciality]);
 
-      setAppointmentsAvailable([testAppointment])
+      //setFilteredAppointments([...allAppointments.filter()])
     }
   };
 
-  const addInsurance = (insurance: string) => {
-    if (!selectedInsurances.includes(insurance)) {
-      setSelectedInsurances([...selectedInsurances, insurance]);
 
-      setAppointmentsAvailable([testAppointment])
+  const addProfessional = (professional: string) => {
+    if (!selectedProfessional.includes(professional)) {
+      setSelectedProfessional([...selectedProfessional, professional]);
+
     }
   };
+
+  useEffect(() => {
+    if (selectedSpecialities.length === 0 && selectedProfessional.length === 0) {
+      setFilteredAppointments([]);
+      return;
+    }
+    let filtered = allAppointments;
+
+    if (selectedSpecialities.length > 0) {
+      filtered = filtered.filter(app =>
+        selectedSpecialities.includes(app.especialidadProfesional)
+      );
+    }
+
+    if (selectedProfessional.length > 0) {
+      filtered = filtered.filter(app =>
+        selectedProfessional.includes(app.nombreProfesional)
+      );
+    }
+
+    setFilteredAppointments(filtered);
+  }, [selectedSpecialities, selectedProfessional,]);
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get('/api/profesionales');
+        const fetchedProfessionals = response.data;
+        setProfessionals(fetchedProfessionals.map(prof => prof.nombre));
+
+        // Extraer especialidades únicas
+        const uniqueSpecialities = Array.from(
+          new Set(fetchedProfessionals.map((prof: any) => prof.especialidad))
+        );
+        setSpecialities(uniqueSpecialities);
+
+        // Obtener los turnos disponibles por profesional
+        const fetchedAppointmentsNested = await Promise.all(
+          fetchedProfessionals.map((prof: any) =>
+            api.get(`/api/turnos/disponibles/${prof.id}`).then(res => res.data)
+          )
+        );
+
+        const appointments = fetchedAppointmentsNested.flat();
+        setAllAppointments(appointments);
+
+      } catch (error) {
+        console.error('❌ Error al obtener los profesionales o turnos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
 
 
   const renderListModal = (
@@ -162,20 +182,10 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
 
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => setIsInsuranceModalVisible(true)}
-          >
-            <Text style={styles.filterText}>
-              Obra social
-            </Text>
-            <Icon name="plus" size={20} color="#F3F4F8" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.filterButton}
-            onPress={() => { }}
+            onPress={() => setIsProfessionalModalVisible(true)}
           >
             <Text style={styles.filterText}>Profesional</Text>
-            <Icon name="search" size={20} color="#F3F4F8" />
+            <Icon name="plus" size={20} color="#F3F4F8" />
           </TouchableOpacity>
         </View>
         <View style={styles.tagsContainer}>
@@ -187,41 +197,37 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
                   setSelectedSpecialities(prev =>
                     prev.filter(speciality => speciality !== item)
                   )
-                  setAppointmentsAvailable([])
+                  //setFilteredAppointments([filteredAppointments.filter(app => app.especialidadProfesional !== item)])
                 }
                 }
               >
                 <MaterialIcons name='close' size={20} color='#F3F4F8' />
               </TouchableOpacity>
-
             </View>
           ))
           }
-        </View>
-        <View style={styles.tagsContainer}>
-          {selectedInsurances.map((item, index) => (
+          {selectedProfessional.map((item, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{item}</Text>
               <TouchableOpacity
                 onPress={() => {
-                  setSelectedInsurances(prev =>
-                    prev.filter(speciality => speciality !== item)
+                  setSelectedProfessional(prev =>
+                    prev.filter(prof => prof !== item)
                   )
-                  setAppointmentsAvailable([])
+                  //setFilteredAppointments([filteredAppointments.filter(app => app.especialidadProfesional !== item)])
                 }
-
                 }
               >
                 <MaterialIcons name='close' size={20} color='#F3F4F8' />
               </TouchableOpacity>
-
             </View>
           ))
           }
         </View>
 
+
         <View style={styles.appointmentsContainer}>
-          {appointmentsAvailable.map((appointment, index) => (
+          {filteredAppointments.map((appointment, index) => (
             <AppointmentCard key={index} appointment={appointment} />
           ))
           }
@@ -238,19 +244,19 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
       {/* Modales */}
       {renderListModal(
         'Seleccionar especialidad',
-        testSpecialities,
+        specialities,
         addSpeciality,
         () => setIsSpecialityModalVisible(false),
         isSpecialityModalVisible
       )}
-
       {renderListModal(
-        'Seleccionar obra social',
-        testHealthInsurances,
-        addInsurance,
-        () => setIsInsuranceModalVisible(false),
-        isInsuranceModalVisible
+        'Seleccionar profesional',
+        professionals,
+        addProfessional,
+        () => setIsProfessionalModalVisible(false),
+        isProfessionalModalVisible
       )}
+
 
     </View>
   );

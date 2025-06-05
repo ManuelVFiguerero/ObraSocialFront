@@ -10,10 +10,10 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserDetails from '../components/UserDetails';
 import ActionButton from '../components/ActionButton';
-import Appointment from '../components/Appointment';
 import NavBar from '../components/NavBar';
 import { Endpoints } from '../api/Endpoints';
 import { api } from '../api/Client';
+import AppointmentCard from '../components/AppointmentCard';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40;
@@ -21,11 +21,11 @@ const HEADER_HEIGHT = 160;
 const HEADER_RADIUS = 80;
 
 const HomeScreen = () => {
-  const [appointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [nombreUsuario, setNombreUsuario] = useState<string>('');
 
   useEffect(() => {
-    const fetchNombre = async () => {
+    const fetchUserData = async () => {
       try {
         const username = await AsyncStorage.getItem('username');
         if (!username) return;
@@ -33,11 +33,16 @@ const HomeScreen = () => {
         const res = await api.get(`${Endpoints.profile}?username=${username}`);
         const { name } = res.data;
         setNombreUsuario(name);
+
+        const userId = await AsyncStorage.getItem('userId');
+        const turnoRes = await api.get(`/api/turnos/${userId}`);
+        setAppointments([turnoRes.data].flat()); // <-- Puede que necesites cambiar esto
+
       } catch (err) {
         console.error('❌ Error al obtener nombre:', err);
       }
     };
-    fetchNombre();
+    fetchUserData();
   }, []);
 
   return (
@@ -73,8 +78,8 @@ const HomeScreen = () => {
               </Text>
             </View>
           ) : (
-            appointments.map((appt) => (
-              <Appointment key={appt.id} {...appt} />
+            appointments.map((appt, index) => (
+              <AppointmentCard appointment={appt} key={index} reservable={false} />
             ))
           )}
         </View>

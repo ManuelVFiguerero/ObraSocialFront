@@ -15,7 +15,7 @@ api.interceptors.request.use(
     if (token) {
       (config.headers as any)['Authorization'] = `Bearer ${token}`;
     }
-    console.log('🔄 Request Config:', config); // 👈 LOG 5
+    //console.log('🔄 Request Config:', config); // 👈 LOG 5
     return config;
   },
   error => {

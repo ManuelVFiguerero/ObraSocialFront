@@ -5,32 +5,32 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 // appointment.fecha.toLocaleString()
 
-const AppointmentCard = ({ appointment, reservable = true }) => {
+const AppointmentCard = ({ appointment, reservable = true, onReserve = () => {} }) => {
     return (
         <View style={styles.appointmentCard}>
             <View style={styles.topView}>
                 <View style={styles.viewContent}>
                     <MaterialIcons name='location-on' size={20} color='#2D43B3' />
-                    <Text style={styles.textIcon}>{appointment.ubicacion}</Text>
+                    <Text style={styles.textIcon}>Clinica Santa Clara</Text>
                 </View>
             </View>
             <View style={styles.middleView}>
                 <View style={styles.viewContent}>
                     <MaterialIcons name='person' size={20} color='#2D43B3' />
-                    <Text style={styles.textIcon}>{appointment.nombre}</Text>
+                    <Text style={styles.textIcon}>{appointment.nombreProfesional}</Text>
                 </View>
                 <View style={styles.viewContent}>
                     <MaterialIcons name='medication' size={20} color='#2D43B3' />
-                    <Text style={styles.textIcon}>{appointment.especialidad}</Text>
+                    <Text style={styles.textIcon}>{appointment.especialidadProfesional}</Text>
                 </View>
             </View>
             <View style={styles.bottomView}>
                 <View style={styles.viewContent}>
                     <MaterialIcons name='event' size={20} color='#2D43B3' />
-                    <Text style={styles.textIcon}>{appointment.fecha.toLocaleString()}</Text>
+                    <Text style={styles.textIcon}>{appointment.fecha}</Text>
                 </View>
                 {reservable ? 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={onReserve}>
                     <Text style={styles.textButton}>Reservar</Text>
                     <MaterialIcons name='add' size={20} color='#F3F4F8' />
                 </TouchableOpacity>
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 15,
-        paddingRight: 15
+        paddingRight: 15,
+        marginBottom: 15
     },
     topView: {
         width: '100%',
