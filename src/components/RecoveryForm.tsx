@@ -1,13 +1,41 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-
+import Toast from 'react-native-toast-message';
+import { API_BASE_URL } from '@env';
 
 //TODO: Habría que mostrar un mensaje cuando el usuario de click a "Enviar"
 const RecoveryForm = () => {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+
+  const handleSend = async () => {
+    if (!email) {
+      Toast.show({ type: 'error', text1: 'Debes ingresar un email' });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        Toast.show({ type: 'success', text1: data.message });
+        // Navegar a la pantalla de token, pasando el token (solo para debug, en prod se usa el mail)
+        navigation.navigate('RecoveryToken', { email });
+      } else {
+        Toast.show({ type: 'error', text1: data.message || 'Error al solicitar recuperación' });
+      }
+    } catch (e) {
+      Toast.show({ type: 'error', text1: 'Error de red' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.formContainer}>
@@ -26,15 +54,17 @@ const RecoveryForm = () => {
           <TouchableOpacity 
             style={[styles.button, styles.cancelButton]}
             onPress={() => navigation.goBack()}
+            disabled={loading}
           >
             <Text style={styles.buttonTextCancel}>Cancelar</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.button, styles.submitButton]}
-            onPress={() => console.log('Enviar recuperación')}
+            onPress={handleSend}
+            disabled={loading}
           >
-            <Text style={styles.buttonTextSubmit}>Enviar</Text>
+            <Text style={styles.buttonTextSubmit}>{loading ? 'Enviando...' : 'Enviar'}</Text>
           </TouchableOpacity>
         </View>
       </View>

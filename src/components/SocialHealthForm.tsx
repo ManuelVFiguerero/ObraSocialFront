@@ -8,25 +8,16 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { API_BASE_URL } from '@env';
-
-interface PickerItem {
-  label: string;
-  value: string;
-}
-
-const tipos: PickerItem[] = [
-  { label: 'Titular', value: 'titular' },
-  { label: 'Familiar', value: 'familiar' },
-  { label: 'Adherente', value: 'adherente' },
-];
 
 const base = API_BASE_URL.replace(/\/$/, '');
 const CREATE_OBRA_SOCIAL_URL = base.endsWith('/api')
@@ -54,6 +45,10 @@ const SocialHealthForm: React.FC = () => {
   };
 
   const handleSave = async () => {
+    if (!tipoAfiliado) {
+      Toast.show({ type: 'error', text1: 'Debes seleccionar un tipo de afiliado' });
+      return;
+    }
     try {
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('accessToken');
@@ -94,72 +89,94 @@ const SocialHealthForm: React.FC = () => {
   };
 
   return (
-    <View style={styles.formContainer}>
-      <Text style={styles.title}>Ingrese los datos de la obra social</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Ingrese los datos de la obra social</Text>
 
-      <View style={styles.inputView}>
-        <Text style={styles.label}>Nombre de la obra social</Text>
-        <TextInput
-          style={styles.input}
-          value={socialHealthName}
-          onChangeText={setSocialHealthName}
-          placeholder="Ej. OSDE"
-        />
-      </View>
-
-      <View style={styles.inputView}>
-        <Text style={styles.label}>Número de afiliado</Text>
-        <TextInput
-          style={styles.input}
-          value={affiliateNumber}
-          onChangeText={setAffiliateNumber}
-          keyboardType="number-pad"
-          placeholder="12345678"
-        />
-      </View>
-
-      <View style={styles.inputView}>
-        <Text style={styles.label}>Tipo de afiliado</Text>
-        <View style={styles.pickerContainer}>
-          <RNPickerSelect
-            onValueChange={setTipoAfiliado}
-            items={tipos}
-            placeholder={{ label: 'Seleccionar...', value: '' }}
-            value={tipoAfiliado}
-            style={{
-              inputIOS: styles.pickerText,
-              inputAndroid: styles.pickerText,
-            }}
+        <View style={styles.inputView}>
+          <Text style={styles.label}>Nombre de la obra social</Text>
+          <TextInput
+            style={styles.input}
+            value={socialHealthName}
+            onChangeText={setSocialHealthName}
+            placeholder="Ej. OSDE"
           />
         </View>
-      </View>
 
-      <View style={styles.inputView}>
-        <Text style={styles.label}>Fecha de alta</Text>
-        <Pressable onPress={showDatePicker} style={styles.dateWrapper}>
-          <Text style={styles.dateText}>
-            {startDate.toLocaleDateString()}
-          </Text>
-        </Pressable>
-        {showPicker && (
-          <DateTimePicker
-            value={startDate}
-            mode="date"
-            display="default"
-            onChange={onChangeDate}
+        <View style={styles.inputView}>
+          <Text style={styles.label}>Número de afiliado</Text>
+          <TextInput
+            style={styles.input}
+            value={affiliateNumber}
+            onChangeText={setAffiliateNumber}
+            keyboardType="number-pad"
+            placeholder="12345678"
           />
-        )}
-      </View>
+        </View>
 
-      <View style={styles.buttons}>
-        <TouchableOpacity style={[styles.button, styles.cancelBtn]} onPress={handleCancel}>
-          <Text style={styles.buttonText}>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.saveBtn]} onPress={handleSave}>
-          <Text style={styles.buttonText}>Guardar</Text>
-        </TouchableOpacity>
+        <View style={styles.inputView}>
+          <Text style={styles.label}>Tipo de afiliado</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={tipoAfiliado}
+              onValueChange={value => setTipoAfiliado(value)}
+              style={[styles.pickerText, {width: '100%'}]}
+              itemStyle={{ fontSize: 15 }}
+              dropdownIconColor="#1226A9"
+            >
+              <Picker.Item label="Seleccionar tipo de afiliado..." value="" color="#999" />
+              <Picker.Item label="Titular en relación de dependencia" value="Titular en relación de dependencia" />
+              <Picker.Item label="Monotributista" value="Monotributista" />
+              <Picker.Item label="Autónomo" value="Autónomo" />
+              <Picker.Item label="Jubilado / Pensionado" value="Jubilado / Pensionado" />
+              <Picker.Item label="Cónyuge o pareja conviviente" value="Cónyuge o pareja conviviente" />
+              <Picker.Item label="Hijo/a menor de 21 años" value="Hijo/a menor de 21 años" />
+              <Picker.Item label="Hijo/a estudiante" value="Hijo/a estudiante" />
+              <Picker.Item label="Hijo/a con discapacidad" value="Hijo/a con discapacidad" />
+              <Picker.Item label="Padre / Madre a cargo" value="Padre / Madre a cargo" />
+              <Picker.Item label="Nieto/a a cargo" value="Nieto/a a cargo" />
+              <Picker.Item label="Hermano/a a cargo" value="Hermano/a a cargo" />
+              <Picker.Item label="Afiliado voluntario" value="Afiliado voluntario" />
+              <Picker.Item label="Afiliado adherente" value="Afiliado adherente" />
+              <Picker.Item label="Beneficiario de plan social" value="Beneficiario de plan social" />
+            </Picker>
+          </View>
+          {!tipoAfiliado && (
+            <Text style={styles.errorText}>Debes seleccionar un tipo de afiliado</Text>
+          )}
+        </View>
+
+        <View style={styles.inputView}>
+          <Text style={styles.label}>Fecha de alta</Text>
+          <Pressable onPress={showDatePicker} style={styles.dateWrapper}>
+            <Text style={styles.dateText}>
+              {startDate.toLocaleDateString()}
+            </Text>
+          </Pressable>
+          {showPicker && (
+            <DateTimePicker
+              value={startDate}
+              mode="date"
+              display="default"
+              onChange={onChangeDate}
+            />
+          )}
+        </View>
+
+        <View style={styles.buttons}>
+          <TouchableOpacity style={[styles.button, styles.cancelBtn]} onPress={handleCancel}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.saveBtn, !tipoAfiliado && { opacity: 0.5 }]}
+            onPress={handleSave}
+            disabled={!tipoAfiliado}
+          >
+            <Text style={styles.buttonText}>Guardar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -199,14 +216,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ddd',
     borderRadius: 8,
-    paddingHorizontal: 10,
     backgroundColor: '#fff',
   },
   pickerText: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Inter_400Regular',
     color: '#000',
-    paddingVertical: 12,
   },
   dateWrapper: {
     width: '100%',
@@ -243,6 +258,12 @@ const styles = StyleSheet.create({
     color: '#F3F4F8',
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
+  },
+  errorText: {
+    color: '#B32D2F',
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+    marginTop: 4,
   },
 });
 

@@ -65,10 +65,17 @@ const RegisterForm: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
+      let data = null;
+      let text = await res.text();
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (jsonErr) {
+        console.error('Respuesta no es JSON:', text);
+        data = {};
+      }
 
       if (!res.ok) {
-        // asumo que el backend devuelve { message: "..." } en errores
+        console.error('Respuesta completa del backend:', data, text);
         throw new Error(data.message || `Error ${res.status}`);
       }
 
@@ -78,7 +85,6 @@ const RegisterForm: React.FC = () => {
       } else {
         throw new Error('No recibimos token de registro');
       }
-
     } catch (err: any) {
       console.warn('Error en registro:', err);
       Alert.alert('Error', err.message || 'Falló el registro');

@@ -12,6 +12,7 @@ export interface CredentialData {
   memberNumber: number;
   organization: string;
   dateSince: string;
+  tipoAfiliado?: string; // Nuevo campo para mostrar el tipo de afiliado
 }
 
 interface CredentialProps {
@@ -34,6 +35,12 @@ const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete })
           <Text style={styles.membNumberText}>NRO. SOCIO</Text>
           <Text style={styles.dateSince}>{credentialData.dateSince}</Text>
         </View>
+        {credentialData.tipoAfiliado && (
+          <View style={styles.tipoAfiliadoBox}>
+            <Text style={styles.tipoAfiliadoLabel}>Tipo de afiliado:</Text>
+            <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado}</Text>
+          </View>
+        )}
       </View>
       <View style={styles.delete}>
         <TouchableOpacity onPress={handleDelete} style={styles.deleteTouchable}>
@@ -114,6 +121,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
     color: '#F3F4F8',
+  },
+  tipoAfiliadoBox: {
+    marginTop: 10,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    padding: 8,
+    alignSelf: 'flex-start',
+  },
+  tipoAfiliadoLabel: {
+    color: '#F3F4F8',
+    fontFamily: 'Inter_700Bold',
+    fontSize: 14,
+  },
+  tipoAfiliadoValue: {
+    color: '#F3F4F8',
+    fontFamily: 'Inter_400Regular',
+    fontSize: 16,
   },
 });
 

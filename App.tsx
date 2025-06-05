@@ -35,6 +35,8 @@ import Logo from './src/assets/icons/MainLogo.png';
 import StudyDetailScreen from './src/screens/StudyDetailScreen';
 import ConsultDetailScreen from './src/screens/ConsultDetailScreen';
 import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
+import RecoveryScreenToken from './src/screens/RecoveryScreenToken';
+import RecoveryScreenNewPassword from './src/screens/RecoveryScreenNewPassword';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync();
@@ -115,6 +117,8 @@ export default function App() {
               <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
               <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
               <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
+              <Stack.Screen name="RecoveryToken" component={RecoveryScreenToken} />
+              <Stack.Screen name="RecoveryNewPassword" component={RecoveryScreenNewPassword} />
             </Stack.Navigator>
           </NavigationContainer>
         )}

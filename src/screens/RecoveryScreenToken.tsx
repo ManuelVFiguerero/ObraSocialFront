@@ -11,7 +11,7 @@ const RecoveryScreenToken = () => {
       <Header title="Recuperación de datos" />
 
       <View style={styles.container}>
-        <RecoveryTockenForm />
+        <RecoveryTokenForm />
       </View>
       </SafeAreaView>
   );
