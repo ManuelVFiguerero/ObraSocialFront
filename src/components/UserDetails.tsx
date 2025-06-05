@@ -29,8 +29,19 @@ useEffect(() => {
 
       // Si hay userId, consultamos obra social
       if (userId) {
-        const resOS = await api.get(`/api/obras-sociales/usuario/${userId}`);
-        setObraSocialNro(resOS.data.numeroAfiliado || null);
+        try {
+          const resOS = await api.get(`/api/obras-sociales/usuario/${userId}`);
+          setObraSocialNro(resOS.data.numeroAfiliado || null);
+        } catch (error: any) {
+          if (error.response && error.response.status === 404) {
+            // No tiene obra social, no mostrar error
+            setObraSocialNro(null);
+          } else {
+            // Otros errores sí se muestran
+            console.error('❌ Error cargando obra social:', error);
+            setObraSocialNro(null);
+          }
+        }
       } else {
         setObraSocialNro(null); // Si no hay userId, mostramos "Cargar obra social"
       }
@@ -53,7 +64,10 @@ useEffect(() => {
           {obraSocialNro ? (
             <Text style={styles.dni}>{obraSocialNro}</Text>
           ) : (
-            <Text style={styles.placeholder}>debes cargar tu obra social</Text>
+            <>
+              <Text style={styles.placeholder}>Aún no tienes una obra social cargada</Text>
+              <Text style={styles.subPlaceholder}>¡Carga tu obra social para ver tu número de afiliado!</Text>
+            </>
           )}
         </View>
         <Image source={Logo} style={styles.logo} />
@@ -97,6 +111,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontStyle: 'italic',
+  },
+  subPlaceholder: {
+    color: '#fff',
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginTop: 4,
   },
   logo: {
     width: 60,

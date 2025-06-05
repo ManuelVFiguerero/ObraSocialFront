@@ -73,9 +73,23 @@ const ProfileScreen: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleDelete = () => {
-    navigation.navigate('Login');
-    Toast.show({ type: 'success', text1: 'Cuenta eliminada exitosamente' });
+  const handleDelete = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      if (!userId) {
+        Toast.show({ type: 'error', text1: 'No se pudo identificar el usuario.' });
+        return;
+      }
+      // Llamada al backend para eliminar el usuario por ID
+      await api.delete(`/users/${userId}`);
+      // Limpiar datos locales y navegar al login
+      await AsyncStorage.clear();
+      navigation.navigate('Login');
+      Toast.show({ type: 'success', text1: 'Cuenta eliminada exitosamente' });
+    } catch (error) {
+      console.error('❌ Error al eliminar cuenta:', error);
+      Toast.show({ type: 'error', text1: 'Error al eliminar la cuenta' });
+    }
   };
 
   return (
