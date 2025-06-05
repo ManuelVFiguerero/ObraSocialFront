@@ -42,9 +42,26 @@ const LoginForm: React.FC = () => {
       });
       const body = await res.json();
       if (res.ok && body.access_token) {
-        // Guardamos el token para futuras peticiones
         await AsyncStorage.setItem('accessToken', body.access_token);
         await AsyncStorage.setItem('username', user);
+        if (body.id) {
+          await AsyncStorage.setItem('userId', String(body.id));
+          console.log('💾 userId guardado en AsyncStorage:', body.id);
+        } else {
+          // Si no viene el id, lo buscamos con el username
+          try {
+            const profileRes = await fetch(`${API_BASE_URL}/users/get-user-by-username?username=${user}`, {
+              headers: { 'Authorization': `Bearer ${body.access_token}` }
+            });
+            const profile = await profileRes.json();
+            if (profile.id) {
+              await AsyncStorage.setItem('userId', String(profile.id));
+              console.log('💾 userId obtenido y guardado:', profile.id);
+            }
+          } catch (e) {
+            console.warn('No se pudo obtener el userId después del login:', e);
+          }
+        }
         console.log('🔥 Token guardado en AsyncStorage:', body.access_token);
         console.log('👤 Username guardado en AsyncStorage:', user);
         navigation.navigate('Home');
