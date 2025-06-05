@@ -88,7 +88,7 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <ScrollView
+    <View
       style={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
@@ -173,7 +173,7 @@ const RegisterForm: React.FC = () => {
           <Text style={styles.loginLink}>¿Ya tenés cuenta? Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

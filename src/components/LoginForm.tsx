@@ -1,4 +1,3 @@
-// src/components/LoginForm.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -20,11 +19,7 @@ import { RootStackParamList } from '../types';
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 import { API_BASE_URL } from '@env';
-const base = API_BASE_URL.replace(/\/$/, '');
-const LOGIN_URL = base.endsWith('/api')
-  ? `${base}/auth/login`
-  : `${base}/api/auth/login`;
-
+const LOGIN_URL = `${API_BASE_URL}/api/auth/login`;
 
 
 const LoginForm: React.FC = () => {
@@ -194,7 +189,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginForm;
-
-
-
-

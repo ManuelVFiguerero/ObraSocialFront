@@ -7,12 +7,15 @@ import {
   Pressable,
   TouchableOpacity,
   Platform,
+  Alert,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
+import { API_BASE_URL } from '@env';
 
 interface PickerItem {
   label: string;
@@ -24,6 +27,11 @@ const tipos: PickerItem[] = [
   { label: 'Familiar', value: 'familiar' },
   { label: 'Adherente', value: 'adherente' },
 ];
+
+const base = API_BASE_URL.replace(/\/$/, '');
+const CREATE_OBRA_SOCIAL_URL = base.endsWith('/api')
+  ? `${base}/obras-sociales`
+  : `${base}/api/obras-sociales`;
 
 const SocialHealthForm: React.FC = () => {
   const [socialHealthName, setSocialHealthName] = useState('');
@@ -45,9 +53,44 @@ const SocialHealthForm: React.FC = () => {
     navigation.navigate('Home');
   };
 
-  const handleSave = () => {
-    navigation.navigate('Home');
-    Toast.show({ type: 'success', text1: 'Datos guardados exitosamente' });
+  const handleSave = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('accessToken');
+
+      if (!userId || !token) {
+        return Alert.alert('Error', 'No se pudo recuperar el ID del usuario o el token');
+      }
+
+      const payload = {
+        nombreObraSocial: socialHealthName,
+        numeroAfiliado: parseInt(affiliateNumber),
+        tipoAfiliado,
+        fechaAlta: startDate.toISOString().split('T')[0],
+        userId: parseInt(userId),
+      };
+
+      const res = await fetch(CREATE_OBRA_SOCIAL_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const body = await res.json();
+
+      if (!res.ok) {
+        throw new Error(body.mensaje || 'No se pudo crear la obra social');
+      }
+
+      Toast.show({ type: 'success', text1: 'Obra social cargada correctamente' });
+      navigation.navigate('Home');
+    } catch (err: any) {
+      console.error('❌ Error cargando obra social:', err);
+      Alert.alert('Error', err.message || 'Falló la carga de la obra social');
+    }
   };
 
   return (
@@ -79,7 +122,7 @@ const SocialHealthForm: React.FC = () => {
         <Text style={styles.label}>Tipo de afiliado</Text>
         <View style={styles.pickerContainer}>
           <RNPickerSelect
-            onValueChange={(val) => setTipoAfiliado(val)}
+            onValueChange={setTipoAfiliado}
             items={tipos}
             placeholder={{ label: 'Seleccionar...', value: '' }}
             value={tipoAfiliado}
@@ -204,4 +247,3 @@ const styles = StyleSheet.create({
 });
 
 export default SocialHealthForm;
-
