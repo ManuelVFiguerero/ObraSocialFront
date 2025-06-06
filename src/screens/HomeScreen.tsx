@@ -35,8 +35,8 @@ const HomeScreen = () => {
         setNombreUsuario(name);
 
         const userId = await AsyncStorage.getItem('userId');
-        const turnoRes = await api.get(`/api/turnos/${userId}`);
-        setAppointments([turnoRes.data].flat()); // <-- Puede que necesites cambiar esto
+        const turnoRes = await api.get(`/api/turnos/usuario/${userId}`);
+        setAppointments(turnoRes.data);
 
       } catch (err) {
         console.error('❌ Error al obtener nombre:', err);
@@ -79,7 +79,23 @@ const HomeScreen = () => {
             </View>
           ) : (
             appointments.map((appt, index) => (
-              <AppointmentCard appointment={appt} key={index} reservable={false} />
+              <AppointmentCard 
+                appointment={appt} 
+                key={index} 
+                reservable={false}
+                onCancel={async () => {
+                  try {
+                    const userId = await AsyncStorage.getItem('userId');
+                    if (!userId) return;
+                    await api.post(`/api/turnos/cancelar/${appt.id}?usuarioId=${userId}`);
+                    // Refrescar turnos
+                    const turnoRes = await api.get(`/api/turnos/usuario/${userId}`);
+                    setAppointments(turnoRes.data);
+                  } catch (error) {
+                    console.error('❌ Error al cancelar turno:', error);
+                  }
+                }}
+              />
             ))
           )}
         </View>

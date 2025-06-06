@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 // appointment.fecha.toLocaleString()
 
-const AppointmentCard = ({ appointment, reservable = true, onReserve = () => {} }) => {
+const AppointmentCard = ({ appointment, reservable = true, onReserve = () => {}, onCancel }) => {
     return (
         <View style={styles.appointmentCard}>
             <View style={styles.topView}>
@@ -34,7 +34,12 @@ const AppointmentCard = ({ appointment, reservable = true, onReserve = () => {} 
                     <Text style={styles.textButton}>Reservar</Text>
                     <MaterialIcons name='add' size={20} color='#F3F4F8' />
                 </TouchableOpacity>
-                : <></>}
+                : onCancel ? (
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#B32D2F'}]} onPress={onCancel}>
+                    <Text style={styles.textButton}>Cancelar</Text>
+                    <MaterialIcons name='close' size={20} color='#F3F4F8' />
+                  </TouchableOpacity>
+                ) : null}
             </View>
         </View>
     )
