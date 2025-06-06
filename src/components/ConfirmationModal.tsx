@@ -56,7 +56,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <MaterialIcons
             name={iconMap[type]}
             size={40}
-            color={colorMap[type]}
+            color={'#429B46'}
           />
           <Text style={[styles.title, { color: colorMap[type] }]}>
             {title}

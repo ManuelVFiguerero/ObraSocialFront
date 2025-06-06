@@ -9,6 +9,7 @@ import {
   Dimensions,
   Modal,
   FlatList,
+  ActivityIndicator
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -18,6 +19,8 @@ import { RootStackParamList } from '../types';
 import { MaterialIcons } from '@expo/vector-icons';
 import AppointmentCard from '../components/AppointmentCard';
 import { api } from '../api/Client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -35,12 +38,39 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   const [specialities, setSpecialities] = useState<string[]>([]);
   const [allAppointments, setAllAppointments] = useState<object[]>([]);
   const [professionals, setProfessionals] = useState<string[]>([]);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [successModal, setIsSuccessModalVisible] = useState(false);
+
+
+  const handleConfirmationReserve = async () => {
+    setLoading(true)
+    try {
+      const res = await api.post('/api/turnos/reservar',{
+        turnoId: selectedAppointment.id,
+        usuarioId: await AsyncStorage.getItem('userId')
+      })
+      setLoading(false)
+      setIsConfirmModalVisible(false)
+      setIsSuccessModalVisible(true)
+
+
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
+
+  const handleReservePress = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setIsConfirmModalVisible(true);
+  };
+
 
   const addSpeciality = (speciality: string) => {
     if (!selectedSpecialities.includes(speciality)) {
       setSelectedSpecialities([...selectedSpecialities, speciality]);
-
-      //setFilteredAppointments([...allAppointments.filter()])
     }
   };
 
@@ -228,10 +258,102 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
 
         <View style={styles.appointmentsContainer}>
           {filteredAppointments.map((appointment, index) => (
-            <AppointmentCard key={index} appointment={appointment} />
+            <AppointmentCard key={index} appointment={appointment} onReserve={() => handleReservePress(appointment)} />
           ))
           }
         </View>
+
+        <Modal
+          visible={isConfirmModalVisible}
+          transparent
+          animationType="fade"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent2}>
+              <View style={styles.modalTop}>
+                <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: '600' }}>¡Estas por reservar tu turno!</Text>
+              </View>
+              <View style={styles.modalMiddle}>
+                <View style={styles.modalMiddleInfo}>
+                  <View style={styles.modalMiddleSection}>
+                    <View style={styles.modalMiddleInfoText}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                        Profesional:
+                      </Text>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                        {selectedAppointment?.nombreProfesional}
+                      </Text>
+                    </View>
+                    <View style={styles.modalMiddleInfoEmote}>
+                      <MaterialIcons name='person' size={20} color='#1226A9' />
+                    </View>
+                  </View>
+                  <View style={styles.modalMiddleSection}>
+                    <View style={styles.modalMiddleInfoText}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                        Fecha:
+                      </Text>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                        {selectedAppointment?.fecha}
+                      </Text>
+                    </View>
+                    <View style={styles.modalMiddleInfoEmote}>
+                      <MaterialIcons name='event' size={20} color='#1226A9' />
+                    </View>
+                  </View>
+
+                  <View style={styles.modalMiddleSection}>
+                    <View style={styles.modalMiddleInfoText}>
+
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                        Ubicacion:
+                      </Text>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                        Clinica Santa Clara
+                      </Text>
+                    </View>
+                    <View style={styles.modalMiddleInfoEmote}>
+                      <MaterialIcons name='location-on' size={20} color='#1226A9' />
+                    </View>
+                  </View>
+
+                  <View style={styles.modalMiddleSection}>
+                    <View style={styles.modalMiddleInfoText}>
+
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                        Especialidad:
+                      </Text>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                        {selectedAppointment?.especialidadProfesional}
+                      </Text>
+                    </View>
+                    <View style={styles.modalMiddleInfoEmote}>
+                      <MaterialIcons name='medication' size={20} color='#1226A9' />
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.modalBottom}></View>
+                <View style={styles.buttons}>
+                  <TouchableOpacity style={styles.button} onPress={() => { setIsConfirmModalVisible(false) }}>
+                    <Text style={styles.buttonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, { backgroundColor: '#2D43B3' }]}
+                    onPress={() => { handleConfirmationReserve() }}
+                    disabled={loading}
+                  >
+                    {loading
+                      ? <ActivityIndicator color="#F3F4F8" />
+                      : <Text style={styles.buttonText}>Aceptar</Text>
+                    }
+
+                  </TouchableOpacity>
+                </View>
+                <View></View>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
 
       </ScrollView>
@@ -257,7 +379,22 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         isProfessionalModalVisible
       )}
 
-
+      {successModal 
+      ? <ConfirmationModal 
+      visible={successModal} 
+      type={'success'} 
+      title={'Tu turno fue reservado con éxito!'}
+      message={'El dia del turno, recorda presentarte una hora antes\nLos detalles del turno estan en la seccion “Mis turnos”'}
+      onConfirm={() => {
+        setIsSuccessModalVisible(false)
+        navigation.navigate('Home')
+      }}
+      onClose={() => {
+        setIsSuccessModalVisible(false)
+        navigation.navigate('Home')
+      }}/>
+      : <></>
+    }
     </View>
   );
 };
@@ -332,6 +469,13 @@ const styles = StyleSheet.create({
     padding: 20,
     maxHeight: '80%',
   },
+  modalContent2: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    height: '50%',
+
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -377,6 +521,60 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignItems: 'flex-start',
+  },
+  modalTop: {
+    width: '100%',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  modalMiddle: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    flex: 2,
+  },
+  modalMiddleInfo: {
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalMiddleSection: {
+    width: '100%',
+    flexDirection: 'row',
+
+  },
+  modalMiddleInfoText: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+    width: '80%'
+
+  },
+  modalMiddleInfoEmote: {
+    marginLeft: 20,
+    width: '20%'
+  },
+  modalBottom: {
+    flex: 1
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+
+  },
+  button: {
+    flex: 1,
+    backgroundColor: '#B32D2F',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 40,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#F3F4F8',
+    fontFamily: 'Inter_700Bold',
+    fontSize: 18,
   },
 });
 
