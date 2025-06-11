@@ -10,8 +10,11 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../types';
 
 const CredentialScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const [credentialData, setCredentialData] = useState<CredentialData | null>(null);
   const [obraSocialId, setObraSocialId] = useState<number | null>(null);
@@ -34,6 +37,8 @@ const CredentialScreen: React.FC = () => {
       } catch (err) {
         setCredentialData(null);
         setObraSocialId(null);
+        navigation.navigate('SocialHealth');
+        
       }
     };
     fetchCredential();

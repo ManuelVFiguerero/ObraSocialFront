@@ -38,6 +38,8 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   const [specialities, setSpecialities] = useState<string[]>([]);
   const [allAppointments, setAllAppointments] = useState<object[]>([]);
   const [professionals, setProfessionals] = useState<string[]>([]);
+  const [professionalsObject, setProfessionalsObject] = useState<object[]>([]);
+
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -105,12 +107,20 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   }, [selectedSpecialities, selectedProfessional,]);
 
 
+  useEffect(() => {
+    //tendriamos que obtener los ids de los profesionales que tienen esas especialidades
+    const professionalsFiltered = professionalsObject.filter((professional: any) => selectedSpecialities.length > 0 ? selectedSpecialities.includes(professional.especialidad) : true)
+    setProfessionals(professionalsFiltered.map(prof => prof.nombre));
+
+
+  }, [selectedSpecialities])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get('/api/profesionales');
         const fetchedProfessionals = response.data;
+        setProfessionalsObject(fetchedProfessionals)
         setProfessionals(fetchedProfessionals.map(prof => prof.nombre));
 
         // Extraer especialidades únicas

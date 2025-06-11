@@ -3,7 +3,7 @@ import React from 'react'
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-// appointment.fecha.toLocaleString()
+
 
 const AppointmentCard = ({ appointment, reservable = true, onReserve = () => {}, onCancel }) => {
     return (

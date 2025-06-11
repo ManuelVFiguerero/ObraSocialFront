@@ -33,31 +33,30 @@ const RecoveryTokenForm = () => {
 
   return (
     <View style={styles.formContainer}>
-      <View style={styles.inputView}>
-        <Text style={styles.label}>Ingresa el token recibido por email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Token"
-          value={token}
-          onChangeText={setToken}
-          autoCapitalize="none"
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={[styles.button, styles.cancelButton]}
-            onPress={() => navigation.goBack()}
-            disabled={loading}
-          >
-            <Text style={styles.buttonTextCancel}>Cancelar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.button, styles.submitButton]}
-            onPress={handleValidate}
-            disabled={loading}
-          >
-            <Text style={styles.buttonTextSubmit}>{loading ? 'Validando...' : 'Validar'}</Text>
-          </TouchableOpacity>
-        </View>
+      <Text style={styles.label}>Token recibido por email</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Ingresá el código"
+        value={token}
+        onChangeText={setToken}
+        autoCapitalize="none"
+        placeholderTextColor="#999"
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.cancelButton]}
+          onPress={() => navigation.goBack()}
+          disabled={loading}
+        >
+          <Text style={styles.buttonTextCancel}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton, loading && styles.buttonDisabled]}
+          onPress={handleValidate}
+          disabled={loading}
+        >
+          <Text style={styles.buttonTextSubmit}>{loading ? 'Validando...' : 'Validar'}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -65,49 +64,70 @@ const RecoveryTokenForm = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  inputView: {
-    marginBottom: 20,
+    width: '100%',
+    backgroundColor: '#F3F4F8',
+    borderRadius: 14,
+    padding: 18,
+    shadowColor: '#1226A9',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
+    elevation: 2,
+    alignItems: 'center',
   },
   label: {
     fontSize: 16,
-    marginBottom: 8,
+    color: '#1226A9',
+    fontFamily: 'Inter_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
+    width: '100%',
+    borderBottomWidth: 2,
+    borderColor: '#2D43B3',
+    backgroundColor: '#fff',
     borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    fontSize: 17,
+    fontFamily: 'Inter_400Regular',
+    marginBottom: 22,
+    color: '#000',
   },
   buttonContainer: {
     flexDirection: 'row',
+    width: '100%',
     justifyContent: 'space-between',
+    gap: 10,
   },
   button: {
     flex: 1,
-    height: 50,
+    height: 48,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: 0,
   },
   cancelButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#B32D2F',
+    marginRight: 8,
   },
   submitButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#1226A9',
+    marginLeft: 8,
+  },
+  buttonDisabled: {
+    backgroundColor: '#AAB3D2',
   },
   buttonTextCancel: {
     color: '#fff',
+    fontFamily: 'Inter_700Bold',
     fontSize: 16,
   },
   buttonTextSubmit: {
     color: '#fff',
+    fontFamily: 'Inter_700Bold',
     fontSize: 16,
   },
 });

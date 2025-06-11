@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { API_BASE_URL } from '@env';
+import Header from '../components/Header';
 
 const RecoveryScreenNewPassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -39,65 +40,102 @@ const RecoveryScreenNewPassword = () => {
   };
 
   return (
-    <View style={styles.formContainer}>
-      <Text style={styles.label}>Nueva contraseña</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nueva contraseña"
-        value={newPassword}
-        onChangeText={setNewPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleReset}
-        disabled={loading}
+    <SafeAreaView style={styles.screen}>
+      <Header title="Nueva contraseña" />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <Text style={styles.buttonText}>{loading ? 'Cambiando...' : 'Cambiar contraseña'}</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.card}>
+          <Text style={styles.title}>Restablecer contraseña</Text>
+          <Text style={styles.subtitle}>
+            Ingresá tu nueva contraseña para continuar.
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nueva contraseña"
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+            autoCapitalize="none"
+            placeholderTextColor="#999"
+          />
+          <TouchableOpacity
+            style={[styles.button, loading && styles.buttonDisabled]}
+            onPress={handleReset}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>{loading ? 'Cambiando...' : 'Cambiar contraseña'}</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  formContainer: {
+  screen: {
+    flex: 1,
     backgroundColor: '#F3F4F8',
-    borderRadius: 16,
-    padding: 28,
-    width: '90%',
-    maxWidth: 350,
-    maxHeight: '50%',
+  },
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 6,
+    paddingHorizontal: 24,
+    backgroundColor: 'transparent',
   },
-  label: {
-    fontSize: 16,
+  card: {
+    width: '100%',
+    maxWidth: 380,
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 28,
+    elevation: 8,
+    shadowColor: '#1226A9',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 22,
     color: '#1226A9',
-    marginBottom: 12,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#1226A9',
+    fontFamily: 'Inter_400Regular',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
     width: '100%',
     borderBottomWidth: 2,
     borderColor: '#aaa',
     paddingVertical: 12,
-    marginBottom: 16,
+    marginBottom: 24,
     fontSize: 18,
+    fontFamily: 'Inter_400Regular',
+    color: '#000',
   },
   button: {
     backgroundColor: '#1226A9',
     paddingVertical: 16,
     borderRadius: 10,
-    marginTop: 30,
+    marginTop: 10,
     width: '100%',
     alignItems: 'center',
   },
+  buttonDisabled: {
+    backgroundColor: '#999',
+  },
   buttonText: {
     color: '#F3F4F8',
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },
 });
