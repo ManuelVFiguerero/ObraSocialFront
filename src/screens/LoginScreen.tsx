@@ -1,17 +1,19 @@
 // src/screens/LoginScreen.tsx
 import React from 'react';
 import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeContext';
 import Header from '../components/Header';
 import LoginForm from '../components/LoginForm';
 
 const LoginScreen: React.FC = () => {
+  const { theme } = useTheme();
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <Header title="Iniciar sesión" />
 
       {/* Contenedor centrado para el formulario */}
-      <View style={styles.formWrapper}>
+      <View style={[styles.formWrapper, { backgroundColor: theme.card }]}>
         <LoginForm />
       </View>
     </SafeAreaView>

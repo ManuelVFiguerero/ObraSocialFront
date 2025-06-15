@@ -64,6 +64,7 @@ const RecoveryTokenForm = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
+<<<<<<< HEAD
     width: '100%',
     backgroundColor: '#F3F4F8',
     borderRadius: 14,
@@ -94,16 +95,53 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     marginBottom: 22,
     color: '#000',
+=======
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#F3F4F8',
+  },
+  inputView: {
+    marginBottom: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 18,
+    color: '#2D43B3',
+    marginBottom: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  input: {
+    height: 50,
+    borderColor: '#2D43B3',
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    marginBottom: 18,
+    width: 260,
+    color: '#222',
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
   },
   buttonContainer: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+<<<<<<< HEAD
     gap: 10,
+=======
+    width: 260,
+    marginTop: 10,
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
   },
   button: {
     flex: 1,
     height: 48,
+<<<<<<< HEAD
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -123,12 +161,32 @@ const styles = StyleSheet.create({
   buttonTextCancel: {
     color: '#fff',
     fontFamily: 'Inter_700Bold',
+=======
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+    elevation: 2,
+  },
+  cancelButton: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#B32D2F',
+  },
+  submitButton: {
+    backgroundColor: '#2D43B3',
+  },
+  buttonTextCancel: {
+    color: '#B32D2F',
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
     fontSize: 16,
+    fontWeight: 'bold',
   },
   buttonTextSubmit: {
     color: '#fff',
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

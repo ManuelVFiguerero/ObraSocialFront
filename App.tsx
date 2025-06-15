@@ -37,6 +37,7 @@ import ConsultDetailScreen from './src/screens/ConsultDetailScreen';
 import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 import RecoveryScreenToken from './src/screens/RecoveryScreenToken';
 import RecoveryScreenNewPassword from './src/screens/RecoveryScreenNewPassword';
+import { ThemeProvider } from './src/theme/ThemeContext';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync();
@@ -77,7 +78,7 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <>
+    <ThemeProvider>
       {/* Desactivamos translucent para que la barra de estado herede nuestro fondo */}
       <StatusBar
         barStyle="light-content"
@@ -125,7 +126,7 @@ export default function App() {
       </View>
 
       <Toast />
-    </>
+    </ThemeProvider>
   );
 }
 

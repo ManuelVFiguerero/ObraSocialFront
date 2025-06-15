@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../components/Header';
 import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -21,6 +22,7 @@ const CARD_WIDTH = width - 40;
 type HistorialMedicoScreenProp = NavigationProp<RootStackParamList, 'HistorialMedico'>;
 
 export default function HistorialMedicoScreen() {
+  const { theme } = useTheme();
   const navigation = useNavigation<HistorialMedicoScreenProp>();
 
   // datos de ejemplo:
@@ -44,9 +46,9 @@ export default function HistorialMedicoScreen() {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}> 
       {/* Header con bordes redondeados y botón */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}> 
         <BackButton
           size={CIRCLE_SIZE}
           iconSize={24}
@@ -56,7 +58,7 @@ export default function HistorialMedicoScreen() {
             left: -CIRCLE_SIZE / 4,
           }}
         />
-        <Text style={styles.title}>Historial Médico</Text>
+        <Text style={[styles.title, { color: theme.buttonText }]}>Historial Médico</Text>
       </View>
 
       {/* Scroll de contenido */}
@@ -65,29 +67,29 @@ export default function HistorialMedicoScreen() {
         contentContainerStyle={styles.content}
       >
         {entries.map((e, i) => (
-          <View key={i} style={styles.card}>
+          <View key={i} style={[styles.card, { backgroundColor: theme.card }]}> 
             {/* Fecha */}
-            <View style={styles.dateBadge}>
-              <Text style={styles.dateText}>{e.date}</Text>
+            <View style={[styles.dateBadge, { backgroundColor: theme.primary }]}> 
+              <Text style={[styles.dateText, { color: theme.buttonText }]}>{e.date}</Text>
             </View>
 
             {/* Datos */}
-            <Text style={styles.line}>
+            <Text style={[styles.line, { color: theme.text }]}>
               <Text style={styles.bold}>Profesional: </Text>
               {e.professional}
             </Text>
-            <Text style={styles.line}>
+            <Text style={[styles.line, { color: theme.text }]}>
               <Text style={styles.bold}>Especialidad: </Text>
               {e.speciality}
             </Text>
-            <Text style={styles.line}>
+            <Text style={[styles.line, { color: theme.text }]}>
               <Text style={styles.bold}>Motivo: </Text>
               {e.motive}
             </Text>
 
             {/* Botón acción con navegación */}
             <TouchableOpacity
-              style={styles.actionButton}
+              style={[styles.actionButton, { backgroundColor: theme.primary }]}
               onPress={() => {
                 if (e.type === 'consulta') {
                   navigation.navigate('ConsultDetail', e.params);
@@ -98,12 +100,9 @@ export default function HistorialMedicoScreen() {
             >
               <Icon
                 name={e.type === 'consulta' ? 'stethoscope' : 'file-document'}
-                size={20}
-                color="#fff"
+                size={24}
+                color={theme.buttonText}
               />
-              <Text style={styles.actionText}>
-                {e.type === 'consulta' ? 'CONSULTA' : 'VER ESTUDIO'}
-              </Text>
             </TouchableOpacity>
           </View>
         ))}

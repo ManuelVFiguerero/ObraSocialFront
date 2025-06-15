@@ -6,8 +6,10 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
 import { Endpoints } from '../api/Endpoints';
+import { useTheme } from '../theme/ThemeContext';
 
 const ChangePasswordScreen = () => {
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
@@ -59,13 +61,13 @@ const ChangePasswordScreen = () => {
   };
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}> 
       <Header title="Actualizar contraseña" />
-      <View style={styles.form}>
-        <Text style={styles.label}>Ingrese su contraseña actual</Text>
+      <View style={[styles.form, { backgroundColor: theme.card }]}> 
+        <Text style={[styles.label, { color: theme.text }]}>Ingrese su contraseña actual</Text>
         <View style={styles.passwordContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text, backgroundColor: theme.input, borderColor: theme.border }]}
             value={actualPassword}
             onChangeText={setActualPassword}
             keyboardType="default"
@@ -77,11 +79,10 @@ const ChangePasswordScreen = () => {
             onValueChange={() => setIsPasswordVisible(!isPasswordVisible)}
           />
         </View>
-
-        <Text style={styles.label}>Ingrese su nueva contraseña</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Ingrese su nueva contraseña</Text>
         <View style={styles.passwordContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text, backgroundColor: theme.input, borderColor: theme.border }]}
             value={newPassword}
             onChangeText={setNewPassword}
             keyboardType="default"
@@ -93,11 +94,10 @@ const ChangePasswordScreen = () => {
             onValueChange={() => setIsPasswordVisible2(!isPasswordVisible2)}
           />
         </View>
-
-        <Text style={styles.label}>Ingrese nuevamente su nueva contraseña</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Ingrese nuevamente su nueva contraseña</Text>
         <View style={styles.passwordContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text, backgroundColor: theme.input, borderColor: theme.border }]}
             value={newPassword2}
             onChangeText={setNewPassword2}
             keyboardType="default"
@@ -109,7 +109,6 @@ const ChangePasswordScreen = () => {
             onValueChange={() => setIsPasswordVisible3(!isPasswordVisible3)}
           />
         </View>
-
         <View style={styles.passwordInfo}>
           <Text style={styles.passwordInfoText}>Al menos una letra mayúscula (A–Z).</Text>
           <Text style={styles.passwordInfoText}>Al menos una letra minúscula (a–z).</Text>
@@ -117,11 +116,11 @@ const ChangePasswordScreen = () => {
         </View>
 
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.button, { backgroundColor: '#5163C0' }]} onPress={handleCancel}>
-            <Text style={styles.buttonText}>Cancelar</Text>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={handleConfirm}>
+            <Text style={[styles.buttonText, { color: theme.buttonText }]}>Confirmar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleConfirm}>
-            <Text style={styles.buttonText}>Cambiar</Text>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]} onPress={handleCancel}>
+            <Text style={[styles.buttonText, { color: theme.buttonText }]}>Cancelar</Text>
           </TouchableOpacity>
         </View>
       </View>

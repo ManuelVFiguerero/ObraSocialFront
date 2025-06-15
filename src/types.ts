@@ -1,5 +1,21 @@
 export type RootStackParamList = {
     Login: undefined;
     Register: undefined;
+    Home: undefined;
+    Profile: undefined;
+    SocialHealth: undefined;
+    Credential: undefined;
+    AboutUs: undefined;
+    Notifications: undefined;
     AllNotifications: { type: 'New' | 'Read' | 'Announcement' };
+    ReserveAppointment: undefined;
+    ReserveAppointmentLocation: undefined;
+    ContactUs: undefined;
+    MedicalHistory: undefined;
+    ConsultDetail: any;
+    StudyDetail: any;
+    ChangePasswordScreen: undefined;
+    RecoveryPassword: undefined;
+    RecoveryToken: undefined;
+    RecoveryNewPassword: undefined;
   };

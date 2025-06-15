@@ -14,6 +14,7 @@ import NavBar from '../components/NavBar';
 import { Endpoints } from '../api/Endpoints';
 import { api } from '../api/Client';
 import AppointmentCard from '../components/AppointmentCard';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40;
@@ -21,6 +22,7 @@ const HEADER_HEIGHT = 160;
 const HEADER_RADIUS = 80;
 
 const HomeScreen = () => {
+  const { theme, toggleTheme, isDark } = useTheme();
   const [appointments, setAppointments] = useState([]);
   const [nombreUsuario, setNombreUsuario] = useState<string>('');
 
@@ -46,12 +48,22 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <View style={styles.screen}>
-      <StatusBar barStyle="light-content" backgroundColor="#4D6EC5" />
+    <View style={[styles.screen, { backgroundColor: theme.background }]}> 
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
 
       {/* HEADER */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Hola, {nombreUsuario || 'usuario'}!</Text>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}> 
+        <Text style={[styles.title, { color: theme.buttonText }]}>Hola, {nombreUsuario || 'usuario'}!</Text>
+      </View>
+
+      {/* Banner modo oscuro */}
+      <View style={{ backgroundColor: theme.card, padding: 16, borderRadius: 12, margin: 16, alignItems: 'center' }}>
+        <Text style={{ color: theme.text, fontWeight: 'bold', fontSize: 16 }}>¡Proba el nuevo modo oscuro!</Text>
+        <ActionButton
+          btnName={isDark ? 'Desactivar modo oscuro' : 'Activar modo oscuro'}
+          btnIcon="brightness-6"
+          onPress={toggleTheme}
+        />
       </View>
 
       <ScrollView

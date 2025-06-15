@@ -12,6 +12,9 @@ import Header from '../components/Header'; // opcional si lo quieres usar
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { api } from '../api/Client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../theme/ThemeContext';
 
 type NotificationType = 'New' | 'Read' | 'Announcement';
 
@@ -31,20 +34,25 @@ interface Props {
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
 
-const testDatas: Notification[] = [
-  { message: 'Tienes una nueva cita',        date: new Date(), type: 'New' },
-  { message: 'Actualiza tus datos',           date: new Date(), type: 'Read' },
-  { message: '¡Oferta este mes!',             date: new Date(), type: 'Announcement' },
-];
-
 const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
+  const { theme } = useTheme();
   const { type } = route.params;
   const navigation = useNavigation<AllNotifsNavProp>();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
-    setNotifications(testDatas.filter((n) => n.type === type));
-  }, [type]);
+    const fetchNotifications = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (!userId) return;
+        const res = await api.get(`/api/notificaciones/usuario/${userId}`);
+        setNotifications(res.data);
+      } catch (e) {
+        setNotifications([]);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
   const headerTitle = useMemo(() => {
     if (type === 'New') return 'Notificaciones nuevas';
@@ -53,9 +61,9 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
   }, [type]);
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}> 
       {/* --- HEADER CUSTOM --- */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}> 
         <BackButton
           size={60}
           iconSize={24}
@@ -66,7 +74,7 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
             left: -15,
           }}
         />
-        <Text style={styles.headerTitle}>{headerTitle}</Text>
+        <Text style={[styles.headerTitle, { color: theme.buttonText }]}>{headerTitle}</Text>
       </View>
 
       {/* --- SCROLLVIEW STARTING UNDER HEADER --- */}
@@ -79,16 +87,16 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
       >
         {notifications.length > 0 ? (
           notifications.map((n, i) => (
-            <View key={i} style={styles.card}>
-              <Text style={styles.msg}>{n.message}</Text>
-              <Text style={styles.date}>
-                {n.date.toLocaleDateString()}{' '}
-                {n.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <View key={i} style={[styles.card, { backgroundColor: theme.card }]}> 
+              <Text style={[styles.msg, { color: theme.text }]}>{n.mensaje}</Text>
+              <Text style={[styles.date, { color: theme.placeholder }]}>
+                {n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}{' '}
+                {n.fecha ? new Date(n.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
               </Text>
             </View>
           ))
         ) : (
-          <Text style={styles.empty}>No hay notificaciones</Text>
+          <Text style={[styles.empty, { color: theme.text }]}>No hay notificaciones</Text>
         )}
       </ScrollView>
     </View>

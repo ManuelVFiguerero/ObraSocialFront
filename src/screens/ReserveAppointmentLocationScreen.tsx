@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import BackButton from '../components/BackButton';
 import NavBar from '../components/NavBar';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -21,11 +22,12 @@ const CIRCLE_SIZE = 60;
 
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }] }>
       {/* HEADER */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }] }>
         <BackButton
           size={CIRCLE_SIZE}
           iconSize={24}
@@ -36,20 +38,18 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
           }}
           onPress={() => navigation.goBack()}
         />
-        {/* Ícono central */}
         <Icon
           name="hospital"
           size={32}
-          color="#fff"
+          color={theme.buttonText}
           style={styles.headerIcon}
         />
-        {/* Título */}
-        <Text style={styles.headerTitle}>
+        <Text style={[styles.headerTitle, { color: theme.buttonText }] }>
           Reservar turno por ubicación
         </Text>
       </View>
 
-      {/* CONTENIDO SCROLLABLE (solo en la zona media) */}
+      {/* CONTENIDO SCROLLABLE */}
       <ScrollView
         style={[styles.scrollView, {
           marginTop: HEADER_HEIGHT,
@@ -57,7 +57,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         }]}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.filterContainer}>
+        <View style={[styles.filterContainer, { backgroundColor: theme.card, borderRadius: 16, padding: 16 }] }>
           <TouchableOpacity
             style={styles.filterButton}
             onPress={() => {/* abrir selector de especialidad */}}
@@ -85,7 +85,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
       </ScrollView>
 
       {/* NAV BAR */}
-      <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>
+      <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>      
         <NavBar selectedIcon="home" />
       </View>
     </View>

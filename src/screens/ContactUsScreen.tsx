@@ -10,6 +10,7 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -17,12 +18,13 @@ const CIRCLE_SIZE = 60;
 const SCREEN_PADDING = 20;
 
 const ContactUsScreen: React.FC = () => {
+  const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}>
         <BackButton
           size={CIRCLE_SIZE}
           iconSize={24}
@@ -33,7 +35,7 @@ const ContactUsScreen: React.FC = () => {
             left: -CIRCLE_SIZE / 4,
           }}
         />
-        <Text style={styles.headerTitle}> Contáctanos</Text>
+        <Text style={[styles.headerTitle, { color: theme.buttonText }]}> Contáctanos</Text>
       </View>
 
       {/* Contenido scrollable justo debajo del header */}
@@ -42,29 +44,29 @@ const ContactUsScreen: React.FC = () => {
         contentContainerStyle={styles.content}
       >
         {/* Dirección y contacto */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📍 Dirección</Text>
-          <Text style={styles.cardText}>Av. Hipólito Yrigoyen 3560, Almagro, CABA</Text>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>📍 Dirección</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>Av. Hipólito Yrigoyen 3560, Almagro, CABA</Text>
 
-          <Text style={[styles.cardTitle, styles.sectionSpacing]}>📞 Teléfonos</Text>
-          <Text style={styles.cardText}>(011) 4321-6789</Text>
+          <Text style={[styles.cardTitle, styles.sectionSpacing, { color: theme.text }]}>📞 Teléfonos</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}> (011) 4321-6789</Text>
         </View>
 
         {/* Correo y horarios */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📧 Email</Text>
-          <Text style={styles.cardText}>consultas@vidaplena.com.ar</Text>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>📧 Email</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>consultas@vidaplena.com.ar</Text>
 
-          <Text style={[styles.cardTitle, styles.sectionSpacing]}>⏰ Horarios</Text>
-          <Text style={styles.cardText}>Lun–Vie: 8:00–18:00</Text>
-          <Text style={styles.cardText}>Sáb: 8:00–13:00 (Dom/fer cerrado)</Text>
+          <Text style={[styles.cardTitle, styles.sectionSpacing, { color: theme.text }]}>⏰ Horarios</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>Lun–Vie: 8:00–18:00</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>Sáb: 8:00–13:00 (Dom/fer cerrado)</Text>
         </View>
 
         {/* Redes sociales */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📱 Redes Sociales</Text>
-          <Text style={styles.cardText}>Facebook: facebook.com/VidaPlenaSalud</Text>
-          <Text style={styles.cardText}>Instagram: @vidaplena_salud</Text>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>📱 Redes Sociales</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>Facebook: facebook.com/VidaPlenaSalud</Text>
+          <Text style={[styles.cardText, { color: theme.text }]}>Instagram: @vidaplena_salud</Text>
         </View>
       </ScrollView>
 

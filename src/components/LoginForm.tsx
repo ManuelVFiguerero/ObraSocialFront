@@ -15,6 +15,7 @@ import Logo from '../assets/icons/MainLogo.png';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../theme/ThemeContext';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -28,6 +29,7 @@ const LoginForm: React.FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
+  const { theme, isDark } = useTheme();
 
   const handleLogin = async () => {
     if (!user.trim() || !pass) {
@@ -77,24 +79,22 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <View style={styles.formContainer}>
+    <View style={[styles.formContainer, { backgroundColor: theme.card, shadowColor: isDark ? '#000' : '#aaa' }] }>
       <View style={styles.logoRow}>
-        <Image source={Logo} style={styles.logo} />
+        <Image source={Logo} style={[styles.logo, { backgroundColor: theme.background }]} />
       </View>
-
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
         placeholder="Usuario*"
-        placeholderTextColor="#666"
+        placeholderTextColor={theme.placeholder}
         value={user}
         onChangeText={setUser}
       />
-
       <View style={styles.passwordContainer}>
         <TextInput
-          style={[styles.input, { flex: 1 }]}
+          style={[styles.input, { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
           placeholder="Contraseña*"
-          placeholderTextColor="#666"
+          placeholderTextColor={theme.placeholder}
           secureTextEntry={!isPasswordVisible}
           value={pass}
           onChangeText={setPass}
@@ -104,24 +104,21 @@ const LoginForm: React.FC = () => {
           onValueChange={() => setIsPasswordVisible(v => !v)}
         />
       </View>
-
       <TouchableOpacity
-        style={styles.loginButton}
+        style={[styles.loginButton, { backgroundColor: theme.primary }]}
         onPress={handleLogin}
         disabled={loading}
       >
         {loading
-          ? <ActivityIndicator color="#F3F4F8" />
-          : <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+          ? <ActivityIndicator color={theme.buttonText} />
+          : <Text style={[styles.loginButtonText, { color: theme.buttonText }]}>Iniciar sesión</Text>
         }
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => navigation.navigate('RecoveryPassword')}>
-          <Text style={styles.recoveryLink}>¿Olvidaste tu usuario? recuperar contrasena</Text>
+          <Text style={[styles.recoveryLink, { color: theme.primary }]}>¿Olvidaste tu usuario? recuperar contrasena</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.registerLink}>¿No tienes usuario? Crear nuevo usuario</Text>
+          <Text style={[styles.registerLink, { color: theme.primary }]}>¿No tienes usuario? Crear nuevo usuario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -129,7 +126,6 @@ const LoginForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
-    backgroundColor: '#F3F4F8',
     borderRadius: 16,
     padding: 28,
     width: '90%',
@@ -139,6 +135,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   logoRow: {
     flexDirection: 'row',
@@ -147,7 +146,6 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   logo: {
-    backgroundColor: '#000000',
     width: 80,
     height: 80,
     borderRadius: 60,
@@ -155,7 +153,6 @@ const styles = StyleSheet.create({
   },
   instructionText: {
     flex: 1,
-    color: '#1226A9',
     fontSize: 18,
     fontFamily: 'Inter_700Bold',
     flexWrap: 'wrap',
@@ -165,7 +162,6 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     borderBottomWidth: 2,
-    borderColor: '#aaa',
     paddingVertical: 12,
     marginBottom: 16,
     fontSize: 18,
@@ -177,7 +173,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loginButton: {
-    backgroundColor: '#1226A9',
     paddingVertical: 16,
     borderRadius: 10,
     marginTop: 30,
@@ -185,20 +180,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginButtonText: {
-    color: '#F3F4F8',
     fontFamily: 'Inter_700Bold',
     fontSize: 20,
   },
   recoveryLink: {
     textAlign: 'center',
-    color: '#2D43B3',
     fontFamily: 'Inter_400Regular',
     marginTop: 40,
     marginBottom: 20,
   },
   registerLink: {
     textAlign: 'center',
-    color: '#2D43B3',
     fontFamily: 'Inter_400Regular',
     marginTop: 12,
     marginBottom: 20,

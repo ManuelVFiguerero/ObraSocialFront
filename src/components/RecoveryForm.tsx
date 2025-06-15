@@ -3,12 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { API_BASE_URL } from '@env';
+import { useTheme } from '../theme/ThemeContext';
 
 //TODO: Habría que mostrar un mensaje cuando el usuario de click a "Enviar"
 const RecoveryForm = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const { theme } = useTheme();
 
   const handleSend = async () => {
     if (!email) {
@@ -38,13 +40,13 @@ const RecoveryForm = () => {
   };
 
   return (
-    <View style={styles.formContainer}>
-
+    <View style={[styles.formContainer, { backgroundColor: theme.card, borderRadius: 16, padding: 16 }] }>
       <View style={styles.inputView}>
-        <Text style={styles.label}>Ingresa tu mail *</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Ingresa tu mail *</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
           placeholder="Email"
+          placeholderTextColor={theme.placeholder}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -82,25 +84,7 @@ const RecoveryForm = () => {
 
 const styles = StyleSheet.create({
   formContainer: {
-    backgroundColor: '#F3F4F8',
-    borderRadius: 16,
-    padding: 28,
-    width: '90%',
-    maxWidth: 350,
-    maxHeight: '50%',
-    flex: 1,  
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    elevation: 6,
-    marginTop: 40,
-    flexDirection: 'column'
-  },
-  title: {
-    fontSize: 28,  
-    fontFamily: 'Inter_700Bold',
-    color: '#1226A9',
-    marginBottom: 30,
-    textAlign: 'center',
+    // ...existing code...
   },
   inputView: {
     flexDirection: 'column',
@@ -108,19 +92,14 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#333',
-    fontFamily: 'Inter_400Regular',
-    marginBottom: 5
+    marginBottom: 4,
   },
   input: {
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 8,
     padding: 12,
-    marginBottom: 25,
+    marginBottom: 16,
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-    width: '100%'
   },
   buttonContainer: {
     flexDirection: 'row',

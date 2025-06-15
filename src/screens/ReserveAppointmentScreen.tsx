@@ -21,6 +21,7 @@ import AppointmentCard from '../components/AppointmentCard';
 import { api } from '../api/Client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -30,6 +31,7 @@ const CIRCLE_SIZE = 60;
 
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
   const [isSpecialityModalVisible, setIsSpecialityModalVisible] = useState(false);
   const [isProfessionalModalVisible, setIsProfessionalModalVisible] = useState(false);
   const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>([]);
@@ -49,15 +51,20 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   const handleConfirmationReserve = async () => {
     setLoading(true)
     try {
+      const userId = await AsyncStorage.getItem('userId');
       const res = await api.post('/api/turnos/reservar',{
         turnoId: selectedAppointment.id,
-        usuarioId: await AsyncStorage.getItem('userId')
+        usuarioId: userId
       })
+      // Crear notificación en el backend
+      await api.post('/api/notificaciones', {
+        mensaje: 'Has reservado un nuevo turno',
+        turnoId: selectedAppointment.id,
+        usuarioId: userId
+      });
       setLoading(false)
       setIsConfirmModalVisible(false)
       setIsSuccessModalVisible(true)
-
-
     } catch (error) {
       console.error(error)
     }
@@ -185,21 +192,26 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }] }>
       {/* HEADER */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }] }>
         <BackButton
           size={CIRCLE_SIZE}
           iconSize={24}
-          onPress={() => navigation.goBack()}
           style={{
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
           }}
+          onPress={() => navigation.goBack()}
         />
-        <Icon name="hospital" size={32} color="#fff" style={styles.headerIcon} />
-        <Text style={styles.headerTitle}>
+        <Icon
+          name="hospital"
+          size={32}
+          color={theme.buttonText}
+          style={styles.headerIcon}
+        />
+        <Text style={[styles.headerTitle, { color: theme.buttonText }] }>
           Reservar turno de consulta médica
         </Text>
       </View>
@@ -209,7 +221,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         style={[styles.scrollView, { marginTop: HEADER_HEIGHT - 160, marginBottom: NAVBAR_HEIGHT }]}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.filterContainer}>
+        <View style={[styles.filterContainer, { backgroundColor: theme.card, borderRadius: 16, padding: 16 }] }>
           <TouchableOpacity
             style={styles.filterButton}
             onPress={() => setIsSpecialityModalVisible(true)}
@@ -369,7 +381,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
       </ScrollView>
 
       {/* NAV BAR */}
-      <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>
+      <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>      
         <NavBar selectedIcon="home" />
       </View>
 

@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { API_BASE_URL } from '@env';
+import { useTheme } from '../theme/ThemeContext';
 
 const base = API_BASE_URL.replace(/\/$/, '');
 const CREATE_OBRA_SOCIAL_URL = base.endsWith('/api')
@@ -31,6 +32,7 @@ const SocialHealthForm: React.FC = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
 
   const showDatePicker = () => setShowPicker(true);
 
@@ -90,32 +92,34 @@ const SocialHealthForm: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Ingrese los datos de la obra social</Text>
+      <View style={[styles.formContainer, { backgroundColor: theme.card, borderRadius: 16, padding: 16 }] }>
+        <Text style={[styles.label, { color: theme.text }]}>Ingrese los datos de la obra social</Text>
 
         <View style={styles.inputView}>
-          <Text style={styles.label}>Nombre de la obra social</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Nombre de la obra social</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
+            placeholder="Ej. OSDE"
+            placeholderTextColor={theme.placeholder}
             value={socialHealthName}
             onChangeText={setSocialHealthName}
-            placeholder="Ej. OSDE"
           />
         </View>
 
         <View style={styles.inputView}>
-          <Text style={styles.label}>Número de afiliado</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Número de afiliado</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
             value={affiliateNumber}
             onChangeText={setAffiliateNumber}
             keyboardType="number-pad"
             placeholder="12345678"
+            placeholderTextColor={theme.placeholder}
           />
         </View>
 
         <View style={styles.inputView}>
-          <Text style={styles.label}>Tipo de afiliado</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Tipo de afiliado</Text>
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={tipoAfiliado}
@@ -147,9 +151,9 @@ const SocialHealthForm: React.FC = () => {
         </View>
 
         <View style={styles.inputView}>
-          <Text style={styles.label}>Fecha de alta</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Fecha de alta</Text>
           <Pressable onPress={showDatePicker} style={styles.dateWrapper}>
-            <Text style={styles.dateText}>
+            <Text style={[styles.dateText, { color: theme.text }]}>
               {startDate.toLocaleDateString()}
             </Text>
           </Pressable>
@@ -203,14 +207,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   input: {
-    width: '100%',
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 8,
     padding: 12,
+    marginBottom: 16,
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-    backgroundColor: '#fff',
   },
   pickerContainer: {
     borderWidth: 2,

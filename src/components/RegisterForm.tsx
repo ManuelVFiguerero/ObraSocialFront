@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import { API_BASE_URL } from '@env';
+import { useTheme } from '../theme/ThemeContext';
 
 const RegisterForm: React.FC = () => {
   const [name, setName] = useState('');
@@ -28,6 +29,7 @@ const RegisterForm: React.FC = () => {
   const navigation = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
+  const { theme } = useTheme();
 
   const allFilled =
     !!name && !!surname && !!homeAddress && !!phoneNumber &&
@@ -94,109 +96,107 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <View
-      style={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.header}>
-        <Text style={styles.welcome}>¡Hola!</Text>
-        <Text style={styles.subtitle}>Te damos la bienvenida</Text>
-        <Text style={styles.instructions}>
-          Para registrarte, completa todos los campos.
-        </Text>
-      </View>
-      <ScrollView contentContainerStyle={styles.inputscontainer}>
-        {/* Otros campos */}
-        {[
-          { placeholder: 'Nombre*', value: name, setter: setName },
-          { placeholder: 'Apellido*', value: surname, setter: setSurname },
-          { placeholder: 'Dirección*', value: homeAddress, setter: setHomeAddress },
-          { placeholder: 'Teléfono*', value: phoneNumber, setter: setPhoneNumber, keyboard: 'phone-pad' },
-          { placeholder: 'Usuario*', value: username, setter: setUsername, autoCap: 'none' },
-          { placeholder: 'Email*', value: email, setter: setEmail, keyboard: 'email-address', autoCap: 'none' },
-        ].map((field, i) => (
-          <TextInput
-            key={i}
-            style={styles.input}
-            placeholder={field.placeholder}
-            placeholderTextColor="#999"
-            value={field.value}
-            onChangeText={field.setter}
-            keyboardType={field.keyboard as any}
-            autoCapitalize={field.autoCap as any}
-          />
-        ))}
-
-        {/* Contraseña */}
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Contraseña*"
-            placeholderTextColor="#999"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!isPasswordVisible}
-          />
-          <Switch
-            value={isPasswordVisible}
-            onValueChange={setIsPasswordVisible}
-          />
+    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={[styles.formContainer, { backgroundColor: theme.card, borderRadius: 16, padding: 16 }] }>
+        <View style={styles.header}>
+          <Text style={[styles.welcome, { color: theme.text }]}>¡Hola!</Text>
+          <Text style={[styles.subtitle, { color: theme.text }]}>Te damos la bienvenida</Text>
+          <Text style={[styles.instructions, { color: theme.text }]}>
+            Para registrarte, completa todos los campos.
+          </Text>
         </View>
+        <View style={styles.inputscontainer}>
+          {[
+            { placeholder: 'Nombre*', value: name, setter: setName },
+            { placeholder: 'Apellido*', value: surname, setter: setSurname },
+            { placeholder: 'Dirección*', value: homeAddress, setter: setHomeAddress },
+            { placeholder: 'Teléfono*', value: phoneNumber, setter: setPhoneNumber, keyboard: 'phone-pad' },
+            { placeholder: 'Usuario*', value: username, setter: setUsername, autoCap: 'none' },
+            { placeholder: 'Email*', value: email, setter: setEmail, keyboard: 'email-address', autoCap: 'none' },
+          ].map((field, i) => (
+            <View key={i}>
+              <Text style={[styles.label, { color: theme.text }]}>{field.placeholder.replace('*', '')}</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
+                placeholder={field.placeholder}
+                placeholderTextColor={theme.placeholder}
+                value={field.value}
+                onChangeText={field.setter}
+                keyboardType={field.keyboard as any}
+                autoCapitalize={field.autoCap as any}
+              />
+            </View>
+          ))}
 
-        {/* Confirmar contraseña */}
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Confirmar contraseña*"
-            placeholderTextColor="#999"
-            value={passwordConfirm}
-            onChangeText={setPasswordConfirm}
-            secureTextEntry={!isPasswordVisible2}
-          />
-          <Switch
-            value={isPasswordVisible2}
-            onValueChange={setIsPasswordVisible2}
-          />
+          {/* Contraseña */}
+          <View style={styles.passwordContainer}>
+            <Text style={[styles.label, { color: theme.text }]}>Contraseña*</Text>
+            <TextInput
+              style={[styles.input, { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
+              placeholder="Contraseña*"
+              placeholderTextColor={theme.placeholder}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!isPasswordVisible}
+            />
+            <Switch
+              value={isPasswordVisible}
+              onValueChange={setIsPasswordVisible}
+            />
+          </View>
+
+          {/* Confirmar contraseña */}
+          <View style={styles.passwordContainer}>
+            <Text style={[styles.label, { color: theme.text }]}>Confirmar contraseña*</Text>
+            <TextInput
+              style={[styles.input, { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
+              placeholder="Confirmar contraseña*"
+              placeholderTextColor={theme.placeholder}
+              value={passwordConfirm}
+              onChangeText={setPasswordConfirm}
+              secureTextEntry={!isPasswordVisible2}
+            />
+            <Switch
+              value={isPasswordVisible2}
+              onValueChange={setIsPasswordVisible2}
+            />
+          </View>
+
         </View>
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              (!allFilled || loading) && styles.buttonDisabled,
+            ]}
+            onPress={handleRegister}
+            disabled={!allFilled || loading}
+          >
+            {loading
+              ? <ActivityIndicator color="#fff" />
+              : <Text style={styles.buttonText}>Registrarse</Text>
+            }
+          </TouchableOpacity>
 
-      </ScrollView>
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            (!allFilled || loading) && styles.buttonDisabled,
-          ]}
-          onPress={handleRegister}
-          disabled={!allFilled || loading}
-        >
-          {loading
-            ? <ActivityIndicator color="#fff" />
-            : <Text style={styles.buttonText}>Registrarse</Text>
-          }
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.loginLink}>¿Ya tenés cuenta? Iniciar sesión</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={[styles.loginLink, { color: theme.text }]}>¿Ya tenés cuenta? Iniciar sesión</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default RegisterForm;
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    paddingVertical: 10,
+  formContainer: {
     width: '100%',
-    backgroundColor: '#F3F4F8',
-    borderRadius: 10,
-    borderColor: '#666',
-    borderWidth: 1,
+    maxWidth: 400,
+    padding: 24,
+    borderRadius: 16,
+    elevation: 6,
     marginTop: 180,
-    maxHeight:600, 
-    //paddingBottom: 200,
-    elevation: 6
   },
   header: {
     alignItems: 'center',
@@ -230,14 +230,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   input: {
-    width: '100%',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
     marginBottom: 16,
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 4,
   },
   buttons: {
     width: '100%',

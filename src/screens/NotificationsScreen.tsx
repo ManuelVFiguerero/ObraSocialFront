@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,6 +13,9 @@ import NotificationsPreview from '../components/NotificationsPreview';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { api } from '../api/Client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -21,23 +24,52 @@ const NAVBAR_HEIGHT = 90;
 type AllNotificationsNavProp =
   StackNavigationProp<RootStackParamList, 'AllNotifications'>;
 
-const testMessages: string[] = [
-  'Lorem ipsum dolor sit amet…',
-  'Sed do eiusmod tempor…',
-  'Ut enim ad minim veniam…',
-];
-
 const NotificationsScreen: React.FC = () => {
+  const { theme } = useTheme();
   const navigation = useNavigation<AllNotificationsNavProp>();
+  const [allNotifications, setAllNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (!userId) return;
+        // Marcar todas como leídas al entrar
+        await api.put(`/api/notificaciones/usuario/${userId}/marcar-leidas`);
+        // Obtener todas las notificaciones
+        const res = await api.get(`/api/notificaciones/usuario/${userId}`);
+        setAllNotifications(res.data);
+      } catch (e) {
+        setAllNotifications([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotifications();
+  }, []);
+
+  // Últimas no leídas (máximo 2)
+  const nuevas = allNotifications.filter(n => !n.leida).slice(0, 2);
+  // Últimas notificaciones del usuario (por ejemplo, las 2 más recientes)
+  const ultimas = allNotifications.slice(-2).reverse();
+  // Todas
+  const todas = allNotifications;
+  // Noticias institucionales
+  const noticias = [
+    'Próximamente: modo oscuro para la app',
+    '¡Nuevas funcionalidades en camino!',
+    'Mejoras de rendimiento y seguridad',
+  ];
 
   const handleSeeMore = (type: 'New' | 'Read' | 'Announcement') => {
     navigation.navigate('AllNotifications', { type });
   };
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
       {/* --- HEADER CUSTOM --- */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}>
         <BackButton
           size={60}
           iconSize={24}
@@ -48,7 +80,9 @@ const NotificationsScreen: React.FC = () => {
             left: -15,
           }}
         />
-        <Text style={styles.headerTitle}>Notificaciones</Text>
+        <Text style={[styles.headerTitle, { color: theme.buttonText }]}>
+          Notificaciones
+        </Text>
       </View>
 
       {/* --- CONTENIDO SCROLLABLE --- */}
@@ -59,37 +93,55 @@ const NotificationsScreen: React.FC = () => {
         ]}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.notificationContainer}>
-          <Text style={styles.notificationHeader}>Nuevas notificaciones</Text>
+        <View
+          style={[
+            styles.notificationContainer,
+            { backgroundColor: theme.card },
+          ]}
+        >
+          <Text style={[styles.notificationHeader, { color: theme.text }]}>
+            Nuevas notificaciones
+          </Text>
           <NotificationsPreview
-            defaultMessage="Ya has visto todas las notificaciones"
-            messages={testMessages}
+            defaultMessage="No tienes notificaciones nuevas"
+            messages={ultimas.map(n => n.mensaje)}
             seeMore={() => handleSeeMore('New')}
           />
         </View>
-
-        <View style={styles.notificationContainer}>
-          <Text style={styles.notificationHeader}>Todas las notificaciones</Text>
+        <View
+          style={[
+            styles.notificationContainer,
+            { backgroundColor: theme.card },
+          ]}
+        >
+          <Text style={[styles.notificationHeader, { color: theme.text }]}>
+            Todas las notificaciones
+          </Text>
           <NotificationsPreview
             defaultMessage="No tienes notificaciones"
-            messages={[testMessages[0]]}
+            messages={todas.map(n => n.mensaje)}
             seeMore={() => handleSeeMore('Read')}
           />
         </View>
-
-        <View style={styles.notificationContainer}>
-          <Text style={styles.notificationHeader}>Noticias</Text>
+        <View
+          style={[
+            styles.notificationContainer,
+            { backgroundColor: theme.card },
+          ]}
+        >
+          <Text style={[styles.notificationHeader, { color: theme.text }]}>
+            Noticias
+          </Text>
           <NotificationsPreview
             defaultMessage="No hay noticias para mostrar"
-            messages={testMessages}
-            seeMore={() => handleSeeMore('Announcement')}
+            messages={noticias}
+            seeMore={() => {}}
           />
         </View>
       </ScrollView>
-
       {/* --- NAVBAR --- */}
       <View style={[styles.navContainer, { height: NAVBAR_HEIGHT }]}>
-        <NavBar selectedIcon="notifications" />
+        <NavBar selectedIcon="notifications" clearNotifications />
       </View>
     </View>
   );

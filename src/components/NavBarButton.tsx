@@ -3,6 +3,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../theme/ThemeContext';
 
 interface NavBarButtonProps {
   selected?: boolean;
@@ -16,6 +17,7 @@ const NavBarButton: React.FC<NavBarButtonProps> = ({
   screen,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme, isDark } = useTheme();
 
   const handlePress = () => {
     navigation.navigate(screen);
@@ -24,13 +26,13 @@ const NavBarButton: React.FC<NavBarButtonProps> = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      style={[styles.container, selected && styles.selectedContainer]}
+      style={[styles.container, selected && { backgroundColor: theme.primary, borderRadius: 5 }]}
       activeOpacity={0.7}
     >
       <MaterialIcons
         name={btnIcon}
         size={30}
-        color={selected ? '#F3F4F8' : '#465BC6'}
+        color={selected ? theme.buttonText : (isDark ? theme.text : theme.primary)}
       />
     </TouchableOpacity>
   );
@@ -41,10 +43,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  selectedContainer: {
-    backgroundColor: '#2D43B3',
-    borderRadius: 5,
   },
 });
 

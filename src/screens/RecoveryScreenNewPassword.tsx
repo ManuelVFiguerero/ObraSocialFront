@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
+=======
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { API_BASE_URL } from '@env';
@@ -42,6 +46,7 @@ const RecoveryScreenNewPassword = () => {
   return (
     <SafeAreaView style={styles.screen}>
       <Header title="Nueva contraseña" />
+<<<<<<< HEAD
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -69,6 +74,34 @@ const RecoveryScreenNewPassword = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+=======
+      <View style={styles.formContainer}>
+        <Text style={styles.label}>Nueva contraseña</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nueva contraseña"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+          autoCapitalize="none"
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.cancelButton]}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.buttonTextCancel}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton]}
+            onPress={handleReset}
+            disabled={loading}
+          >
+            <Text style={styles.buttonTextSubmit}>{loading ? 'Cambiando...' : 'Cambiar contraseña'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
     </SafeAreaView>
   );
 };
@@ -78,13 +111,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F3F4F8',
   },
+<<<<<<< HEAD
   container: {
     flex: 1,
+=======
+  formContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 28,
+    width: '90%',
+    maxWidth: 350,
+    alignSelf: 'center',
+    marginTop: 60,
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
     backgroundColor: 'transparent',
   },
+<<<<<<< HEAD
   card: {
     width: '100%',
     maxWidth: 380,
@@ -128,8 +173,43 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     width: '100%',
-    alignItems: 'center',
+=======
+  label: {
+    fontSize: 18,
+    color: '#2D43B3',
+    marginBottom: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
+  input: {
+    height: 50,
+    borderColor: '#2D43B3',
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: '#F3F4F8',
+    marginBottom: 18,
+    width: 260,
+    color: '#222',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 260,
+    marginTop: 10,
+  },
+  button: {
+    flex: 1,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: 'center',
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
+    alignItems: 'center',
+    marginHorizontal: 5,
+    elevation: 2,
+  },
+<<<<<<< HEAD
   buttonDisabled: {
     backgroundColor: '#999',
   },
@@ -137,6 +217,25 @@ const styles = StyleSheet.create({
     color: '#F3F4F8',
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
+=======
+  cancelButton: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#B32D2F',
+  },
+  submitButton: {
+    backgroundColor: '#2D43B3',
+  },
+  buttonTextCancel: {
+    color: '#B32D2F',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonTextSubmit: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+>>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
   },
 });
 
