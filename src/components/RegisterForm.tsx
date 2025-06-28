@@ -7,11 +7,11 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
-  Alert,
-  Switch
+  Alert
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { API_BASE_URL } from '@env';
 import { useTheme } from '../theme/ThemeContext';
@@ -106,60 +106,129 @@ const RegisterForm: React.FC = () => {
           </Text>
         </View>
         <View style={styles.inputscontainer}>
-          {[
-            { placeholder: 'Nombre*', value: name, setter: setName },
-            { placeholder: 'Apellido*', value: surname, setter: setSurname },
-            { placeholder: 'Dirección*', value: homeAddress, setter: setHomeAddress },
-            { placeholder: 'Teléfono*', value: phoneNumber, setter: setPhoneNumber, keyboard: 'phone-pad' },
-            { placeholder: 'Usuario*', value: username, setter: setUsername, autoCap: 'none' },
-            { placeholder: 'Email*', value: email, setter: setEmail, keyboard: 'email-address', autoCap: 'none' },
-          ].map((field, i) => (
-            <View key={i}>
-              <Text style={[styles.label, { color: theme.text }]}>{field.placeholder.replace('*', '')}</Text>
-              <TextInput
-                style={[styles.input, { backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
-                placeholder={field.placeholder}
-                placeholderTextColor={theme.placeholder}
-                value={field.value}
-                onChangeText={field.setter}
-                keyboardType={field.keyboard as any}
-                autoCapitalize={field.autoCap as any}
-              />
+          {/* Campos de texto con icono */}
+          {[{
+            label: 'Nombre*',
+            value: name,
+            setter: setName,
+            icon: 'person-outline',
+            keyboard: 'default',
+            autoCap: 'words',
+          }, {
+            label: 'Apellido*',
+            value: surname,
+            setter: setSurname,
+            icon: 'person-outline',
+            keyboard: 'default',
+            autoCap: 'words',
+          }, {
+            label: 'Dirección*',
+            value: homeAddress,
+            setter: setHomeAddress,
+            icon: 'home',
+            keyboard: 'default',
+            autoCap: 'sentences',
+          }, {
+            label: 'Teléfono*',
+            value: phoneNumber,
+            setter: setPhoneNumber,
+            icon: 'phone',
+            keyboard: 'phone-pad',
+            autoCap: 'none',
+          }, {
+            label: 'Usuario*',
+            value: username,
+            setter: setUsername,
+            icon: 'account-circle',
+            keyboard: 'default',
+            autoCap: 'none',
+          }, {
+            label: 'Email*',
+            value: email,
+            setter: setEmail,
+            icon: 'email',
+            keyboard: 'email-address',
+            autoCap: 'none',
+          }].map((field, i) => (
+            <View key={i} style={styles.inputFieldContainer}>
+              <Text style={[styles.label, { color: theme.text }]}>{field.label}</Text>
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border, marginBottom: 0 },
+                  ]}
+                  placeholder={field.label}
+                  placeholderTextColor={theme.placeholder}
+                  value={field.value}
+                  onChangeText={field.setter}
+                  keyboardType={field.keyboard as any}
+                  autoCapitalize={field.autoCap as any}
+                />
+                <MaterialIcons
+                  name={field.icon as any}
+                  size={22}
+                  color="#B0B3C7"
+                  style={{ marginLeft: 4 }}
+                />
+              </View>
             </View>
           ))}
 
           {/* Contraseña */}
-          <View style={styles.passwordContainer}>
+          <View style={styles.passwordFieldContainer}>
             <Text style={[styles.label, { color: theme.text }]}>Contraseña*</Text>
-            <TextInput
-              style={[styles.input, { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
-              placeholder="Contraseña*"
-              placeholderTextColor={theme.placeholder}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!isPasswordVisible}
-            />
-            <Switch
-              value={isPasswordVisible}
-              onValueChange={setIsPasswordVisible}
-            />
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                style={[
+                  styles.input,
+                  { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border, marginBottom: 0 },
+                ]}
+                placeholder="Contraseña*"
+                placeholderTextColor={theme.placeholder}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!isPasswordVisible}
+              />
+              <TouchableOpacity
+                onPress={() => setIsPasswordVisible((v) => !v)}
+                style={styles.iconButton}
+              >
+                <MaterialIcons
+                  name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+                  size={24}
+                  color="#1226A9"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Confirmar contraseña */}
-          <View style={styles.passwordContainer}>
+          <View style={styles.passwordFieldContainer}>
             <Text style={[styles.label, { color: theme.text }]}>Confirmar contraseña*</Text>
-            <TextInput
-              style={[styles.input, { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border }]}
-              placeholder="Confirmar contraseña*"
-              placeholderTextColor={theme.placeholder}
-              value={passwordConfirm}
-              onChangeText={setPasswordConfirm}
-              secureTextEntry={!isPasswordVisible2}
-            />
-            <Switch
-              value={isPasswordVisible2}
-              onValueChange={setIsPasswordVisible2}
-            />
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                style={[
+                  styles.input,
+                  { flex: 1, backgroundColor: theme.input, color: theme.text, borderColor: theme.border, marginBottom: 0 },
+                ]}
+                placeholder="Confirmar contraseña*"
+                placeholderTextColor={theme.placeholder}
+                value={passwordConfirm}
+                onChangeText={setPasswordConfirm}
+                secureTextEntry={!isPasswordVisible2}
+              />
+              <TouchableOpacity
+                onPress={() => setIsPasswordVisible2((v) => !v)}
+                style={styles.iconButton}
+              >
+                <MaterialIcons
+                  name={isPasswordVisible2 ? 'visibility' : 'visibility-off'}
+                  size={24}
+                  color="#1226A9"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
         </View>
@@ -179,7 +248,7 @@ const RegisterForm: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={[styles.loginLink, { color: theme.text }]}>¿Ya tenés cuenta? Iniciar sesión</Text>
+            <Text style={[styles.loginLink, { color: '#1226A9' }]}>¿Ya tenés cuenta? Iniciar sesión</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -224,10 +293,31 @@ const styles = StyleSheet.create({
   inputscontainer: {
     paddingHorizontal: 10,
   },
-  passwordContainer: {
+  inputFieldContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  passwordFieldContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  inputWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#E0E3ED',
+    backgroundColor: '#F7F8FA',
+    paddingRight: 8,
+    marginBottom: 0,
+    shadowColor: '#1226A9',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+  },
+  iconButton: {
+    padding: 4,
+    marginLeft: 4,
   },
   input: {
     borderWidth: 1,
@@ -262,9 +352,10 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     textAlign: 'center',
-    color: '#2D43B3',
+    
     fontFamily: 'Inter_400Regular',
     marginTop: 12,
     marginBottom: 20,
+    fontSize: 16,
   },
 });

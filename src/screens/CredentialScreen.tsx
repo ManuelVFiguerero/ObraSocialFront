@@ -10,18 +10,13 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
-<<<<<<< HEAD
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
-
-const CredentialScreen: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-=======
 import { useTheme } from '../theme/ThemeContext';
 
 const CredentialScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
->>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
   const [modalVisible, setModalVisible] = useState(false);
   const [credentialData, setCredentialData] = useState<CredentialData | null>(null);
   const [obraSocialId, setObraSocialId] = useState<number | null>(null);

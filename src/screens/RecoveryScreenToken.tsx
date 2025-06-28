@@ -25,7 +25,6 @@ const RecoveryScreenToken = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-<<<<<<< HEAD
     backgroundColor: '#F3F4F8',
   },
   container: {
@@ -68,16 +67,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-=======
-    backgroundColor: '#F3F4F8', // Fondo igual al de los formularios
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  }
->>>>>>> 0baf39d (FOTO PERFIL HECHO, IMPLEMENTACION MODO OSCURO, NOTIFICACIONES Y NUEVAS FUNCIONALIDADES)
 });
 
 export default RecoveryScreenToken;
