@@ -111,9 +111,11 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
     //tendriamos que obtener los ids de los profesionales que tienen esas especialidades
     const professionalsFiltered = professionalsObject.filter((professional: any) => selectedSpecialities.length > 0 ? selectedSpecialities.includes(professional.especialidad) : true)
     setProfessionals(professionalsFiltered.map(prof => prof.nombre));
-
-
   }, [selectedSpecialities])
+
+
+
+  
 
   useEffect(() => {
     const fetchData = async () => {

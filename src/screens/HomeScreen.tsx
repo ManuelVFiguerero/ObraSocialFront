@@ -14,6 +14,7 @@ import NavBar from '../components/NavBar';
 import { Endpoints } from '../api/Endpoints';
 import { api } from '../api/Client';
 import AppointmentCard from '../components/AppointmentCard';
+import { useTheme } from '../contexts/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40;
@@ -23,6 +24,8 @@ const HEADER_RADIUS = 80;
 const HomeScreen = () => {
   const [appointments, setAppointments] = useState([]);
   const [nombreUsuario, setNombreUsuario] = useState<string>('');
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,7 +53,7 @@ const HomeScreen = () => {
       <StatusBar barStyle="light-content" backgroundColor="#4D6EC5" />
 
       {/* HEADER */}
-      <View style={styles.header}>
+      <View style={styles.header }>
         <Text style={styles.title}>Hola, {nombreUsuario || 'usuario'}!</Text>
       </View>
 
@@ -79,9 +82,9 @@ const HomeScreen = () => {
             </View>
           ) : (
             appointments.map((appt, index) => (
-              <AppointmentCard 
-                appointment={appt} 
-                key={index} 
+              <AppointmentCard
+                appointment={appt}
+                key={index}
                 reservable={false}
                 onCancel={async () => {
                   try {
@@ -106,14 +109,14 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) =>  StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.terciary,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     borderBottomLeftRadius: HEADER_RADIUS,
     borderBottomRightRadius: HEADER_RADIUS,
     justifyContent: 'center',
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontSize: 35,
     fontFamily: 'Inter_700Bold',
   },
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
   noAppointments: {
     width: CARD_WIDTH,
     padding: 20,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.terciary,
     borderRadius: 10,
     alignSelf: 'center',
     alignItems: 'center',
