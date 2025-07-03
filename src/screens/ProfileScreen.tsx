@@ -16,6 +16,9 @@ import Toast from 'react-native-toast-message';
 import { RootStackParamList } from '../types';
 import { api } from '../api/Client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Switch } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const HEADER_HEIGHT = 160;
 const NAVBAR_HEIGHT = 90;
@@ -43,6 +46,8 @@ const ProfileScreen: React.FC = () => {
 
   const [deleteVisible, setDeleteVisible] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(theme)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -128,6 +133,15 @@ const ProfileScreen: React.FC = () => {
             </View>
           ))}
         </View>
+        {/*TODO: Cambiar estilos del boton de Lighting Mode*/}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 }}>
+          <Text style={{ fontSize: 16, fontFamily: 'Inter_400Regular' }}>Modo oscuro</Text>
+          <Switch
+            value={isDark}
+            onValueChange={toggleTheme}
+          />
+        </View>
+
 
         <View style={styles.accountOptions}>
           <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
@@ -155,10 +169,10 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) =>  StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.terciary,
   },
   scrollContent: {
     paddingTop: HEADER_HEIGHT + 10,
