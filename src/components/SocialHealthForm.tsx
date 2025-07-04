@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { API_BASE_URL } from '@env';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const base = API_BASE_URL.replace(/\/$/, '');
 const CREATE_OBRA_SOCIAL_URL = base.endsWith('/api')
@@ -31,6 +33,8 @@ const SocialHealthForm: React.FC = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const showDatePicker = () => setShowPicker(true);
 
@@ -100,6 +104,7 @@ const SocialHealthForm: React.FC = () => {
             value={socialHealthName}
             onChangeText={setSocialHealthName}
             placeholder="Ej. OSDE"
+            placeholderTextColor={theme.quaternary}
           />
         </View>
 
@@ -111,6 +116,7 @@ const SocialHealthForm: React.FC = () => {
             onChangeText={setAffiliateNumber}
             keyboardType="number-pad"
             placeholder="12345678"
+            placeholderTextColor={theme.quaternary}
           />
         </View>
 
@@ -120,11 +126,11 @@ const SocialHealthForm: React.FC = () => {
             <Picker
               selectedValue={tipoAfiliado}
               onValueChange={value => setTipoAfiliado(value)}
-              style={[styles.pickerText, {width: '100%'}]}
+              style={[styles.pickerText, { width: '100%' }]}
               itemStyle={{ fontSize: 15 }}
-              dropdownIconColor="#1226A9"
+              dropdownIconColor={theme.neutral}
             >
-              <Picker.Item label="Seleccionar tipo de afiliado..." value="" color="#999" />
+              <Picker.Item label="Seleccionar tipo de afiliado..." value="" color={theme.cuaternary} />
               <Picker.Item label="Titular en relación de dependencia" value="Titular en relación de dependencia" />
               <Picker.Item label="Monotributista" value="Monotributista" />
               <Picker.Item label="Autónomo" value="Autónomo" />
@@ -180,9 +186,9 @@ const SocialHealthForm: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   formContainer: {
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
@@ -190,7 +196,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontFamily: 'Inter_700Bold',
-    color: '#1226A9',
+    color: theme.primary,
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -201,39 +207,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
     marginBottom: 6,
+    color: theme.quaternary
   },
   input: {
     width: '100%',
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
+    color: theme.quaternary
+
   },
   pickerContainer: {
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
   },
   pickerText: {
     fontSize: 15,
     fontFamily: 'Inter_400Regular',
-    color: '#000',
+    color: theme.quaternary,
   },
   dateWrapper: {
     width: '100%',
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
     padding: 12,
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
+    
   },
   dateText: {
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
+    color: theme.quaternary
   },
   buttons: {
     flexDirection: 'row',
@@ -255,7 +266,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
   },

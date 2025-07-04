@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 interface NotificationsPreviewProps {
   defaultMessage: string;
@@ -12,6 +14,8 @@ const NotificationsPreview: React.FC<NotificationsPreviewProps> = ({
   messages,
   seeMore,
 }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   return (
     <View style={styles.container}>
       {messages.length > 0 ? (
@@ -41,17 +45,17 @@ const NotificationsPreview: React.FC<NotificationsPreviewProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     borderRadius: 20,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
     minHeight: 150,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 6,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: theme.neutral,
     padding: 10,
   },
   messageContainer: {
@@ -63,21 +67,21 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: theme.neutral,
     width: '100%',
     marginTop: 8,
     marginBottom: 8,
   },
   textDefault: {
     fontSize: 16,
-    color: '#666',
+    color: theme.neutral,
     textAlign: 'center',
     width: '100%',
     fontFamily: 'Inter_400Regular',
   },
   seeMore: {
     fontSize: 16,
-    color: '#2D43B3',
+    color: theme.primary,
     textAlign: 'center',
     textDecorationLine: 'underline',
   },

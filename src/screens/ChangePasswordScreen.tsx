@@ -6,6 +6,8 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
 import { Endpoints } from '../api/Endpoints';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const ChangePasswordScreen = () => {
   const navigation = useNavigation();
@@ -15,6 +17,8 @@ const ChangePasswordScreen = () => {
   const [actualPassword, setActualPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const passwordMeetsRequirements = () => {
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(newPassword);
@@ -117,7 +121,7 @@ const ChangePasswordScreen = () => {
         </View>
 
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.button, { backgroundColor: '#5163C0' }]} onPress={handleCancel}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]} onPress={handleCancel}>
             <Text style={styles.buttonText}>Cancelar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleConfirm}>
@@ -129,15 +133,15 @@ const ChangePasswordScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#F3F4F8'
+    backgroundColor: theme.background
   },
   form: {
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
     borderRadius: 16,
     padding: 28,
     width: '90%',
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#1226A9',
+    color: theme.primary,
     fontFamily: 'Inter_400Regular',
     marginBottom: 5
   },
@@ -157,8 +161,8 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   input: {
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
     padding: 12,
     marginBottom: 25,
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
   },
   passwordInfoText: {
     fontSize: 12,
-    color: '#333',
+    color: theme.neutral,
     fontFamily: 'Inter_400Regular',
   },
   buttons: {
@@ -183,14 +187,14 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 40,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },

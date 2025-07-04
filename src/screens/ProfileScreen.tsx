@@ -18,6 +18,7 @@ import { api } from '../api/Client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Switch } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 const HEADER_HEIGHT = 160;
@@ -89,6 +90,7 @@ const ProfileScreen: React.FC = () => {
       await api.delete(`/users/${userId}`);
       // Limpiar datos locales y navegar al login
       await AsyncStorage.clear();
+      if (isDark) {toggleTheme()}
       navigation.navigate('Login');
       Toast.show({ type: 'success', text1: 'Cuenta eliminada exitosamente' });
     } catch (error) {
@@ -133,15 +135,21 @@ const ProfileScreen: React.FC = () => {
             </View>
           ))}
         </View>
-        {/*TODO: Cambiar estilos del boton de Lighting Mode*/}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 }}>
-          <Text style={{ fontSize: 16, fontFamily: 'Inter_400Regular' }}>Modo oscuro</Text>
-          <Switch
-            value={isDark}
-            onValueChange={toggleTheme}
-          />
-        </View>
 
+        <View style={styles.section}>
+          <TouchableOpacity onPress={toggleTheme} style={styles.switch}>
+            <MaterialIcons
+              name={isDark ? 'bedtime' : 'light-mode'}
+              size={28}
+              color={theme.background}
+              style={{
+                padding: 8,
+                backgroundColor: theme.quaternary,
+                borderRadius: 100
+              }}
+            />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.accountOptions}>
           <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
@@ -169,10 +177,10 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-const createStyles = (theme) =>  StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: theme.terciary,
+    backgroundColor: theme.background,
   },
   scrollContent: {
     paddingTop: HEADER_HEIGHT + 10,
@@ -181,27 +189,27 @@ const createStyles = (theme) =>  StyleSheet.create({
   },
   generalInfo: { alignItems: 'center', marginBottom: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
-  username: { fontSize: 20, fontFamily: 'Inter_700Bold', color: '#1226A9' },
+  username: { fontSize: 20, fontFamily: 'Inter_700Bold', color: theme.primary },
   section: { marginBottom: 30 },
-  sectionTitle: { fontSize: 20, fontFamily: 'Inter_700Bold', marginBottom: 10 },
+  sectionTitle: { fontSize: 20, fontFamily: 'Inter_700Bold', marginBottom: 10, color: theme.quaternary },
   inputWrapper: {
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
     padding: 12,
     marginBottom: 20,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
   },
   label: {
     fontSize: 14,
-    color: '#888',
+    color: theme.neutral,
     fontFamily: 'Inter_400Regular',
     marginBottom: 4,
   },
   value: {
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
-    color: '#000',
+    color: theme.quaternary,
   },
   accountOptions: {
     flexDirection: 'row',
@@ -209,7 +217,7 @@ const createStyles = (theme) =>  StyleSheet.create({
     marginBottom: 40,
   },
   updatePassword: {
-    color: '#2D43B3',
+    color: theme.secondary,
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
   },
@@ -224,6 +232,12 @@ const createStyles = (theme) =>  StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  switch: {
+    width: 76,
+    alignItems: theme.mode === 'light' ? 'flex-start' : 'flex-end',
+    borderRadius: 50,
+    backgroundColor: '#888888'
+  }
 });
 
 export default ProfileScreen;

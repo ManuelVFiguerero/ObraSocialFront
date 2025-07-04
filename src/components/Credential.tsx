@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 export interface CredentialData {
   fullName: string;
@@ -21,6 +23,8 @@ interface CredentialProps {
 }
 
 const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   return (
     <>
       <View style={styles.container}>
@@ -52,11 +56,11 @@ const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete })
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     width: '100%',
     borderRadius: 15,
-    backgroundColor: '#1226A9',
+    backgroundColor: theme.primary,
     flexDirection: 'column',
     padding: 20,
     elevation: 6,
@@ -86,12 +90,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: theme.terciary,
   },
   organization: {
     fontSize: 24,
     fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: theme.terciary,
   },
   middle: {
     width: '100%',
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
   credNumber: {
     fontSize: 26,
     fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: theme.terciary,
   },
   bottom: {
     width: '100%',
@@ -115,27 +119,27 @@ const styles = StyleSheet.create({
   membNumberText: {
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: theme.terciary,
   },
   dateSince: {
     fontSize: 18,
     fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: theme.terciary,
   },
   tipoAfiliadoBox: {
     marginTop: 10,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: theme.secondary,
     borderRadius: 8,
     padding: 8,
     alignSelf: 'flex-start',
   },
   tipoAfiliadoLabel: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_700Bold',
     fontSize: 14,
   },
   tipoAfiliadoValue: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
   },

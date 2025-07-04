@@ -13,6 +13,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import BackButton from '../components/BackButton';
 import NavBar from '../components/NavBar';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -21,6 +23,8 @@ const CIRCLE_SIZE = 60;
 
 const ReserveAppointmentLocationScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.screen}>
@@ -33,6 +37,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
+            backgroundColor: theme.background
           }}
           onPress={() => navigation.goBack()}
         />
@@ -40,7 +45,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         <Icon
           name="hospital"
           size={32}
-          color="#fff"
+          color={theme.terciary}
           style={styles.headerIcon}
         />
         {/* Título */}
@@ -60,26 +65,26 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         <View style={styles.filterContainer}>
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => {/* abrir selector de especialidad */}}
+            onPress={() => {/* abrir selector de especialidad */ }}
           >
             <Text style={styles.filterText}>Especialidad</Text>
-            <Icon name="plus" size={20} color="#fff" />
+            <Icon name="plus" size={20} color={theme.terciary} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => {/* abrir selector de ubicación */}}
+            onPress={() => {/* abrir selector de ubicación */ }}
           >
             <Text style={styles.filterText}>Ubicación</Text>
-            <Icon name="search" size={20} color="#fff" />
+            <Icon name="search" size={20} color={theme.terciary} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => {/* usar ubicación actual */}}
+            onPress={() => {/* usar ubicación actual */ }}
           >
             <Text style={styles.filterText}>Mi ubicación</Text>
-            <Icon name="sliders-h" size={20} color="#fff" />
+            <Icon name="sliders-h" size={20} color={theme.terciary} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -92,14 +97,14 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     alignItems: 'center',
@@ -108,10 +113,10 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     position: 'absolute',
-    top: HEADER_HEIGHT / 3.5 ,
+    top: HEADER_HEIGHT / 3.5,
   },
   headerTitle: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterText: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 16,
     fontWeight: '600',
   },

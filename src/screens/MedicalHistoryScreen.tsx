@@ -12,6 +12,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../components/Header';
 import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -22,6 +24,8 @@ type HistorialMedicoScreenProp = NavigationProp<RootStackParamList, 'HistorialMe
 
 export default function HistorialMedicoScreen() {
   const navigation = useNavigation<HistorialMedicoScreenProp>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   // datos de ejemplo:
   const entries = [
@@ -54,6 +58,7 @@ export default function HistorialMedicoScreen() {
           style={{
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
+            backgroundColor: theme.background
           }}
         />
         <Text style={styles.title}>Historial Médico</Text>
@@ -99,7 +104,7 @@ export default function HistorialMedicoScreen() {
               <Icon
                 name={e.type === 'consulta' ? 'stethoscope' : 'file-document'}
                 size={20}
-                color="#fff"
+                color={theme.terciary}
               />
               <Text style={styles.actionText}>
                 {e.type === 'consulta' ? 'CONSULTA' : 'VER ESTUDIO'}
@@ -112,14 +117,14 @@ export default function HistorialMedicoScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#f0f0f0' 
+const createStyles = (theme) => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.background
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     justifyContent: 'center',
@@ -127,11 +132,11 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 26,
     fontWeight: 'bold',
   },
-  scroll: { 
+  scroll: {
     flex: 1,
     marginTop: 20, // Ajuste para que el contenido suba un poco
   },
@@ -142,55 +147,51 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#F3F4F8',
-    borderColor: '#2D43B3',
+    backgroundColor: theme.background,
+    borderColor: theme.secondary,
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
     elevation: 4,
   },
   dateBadge: {
     position: 'absolute',
     top: -8,
     left: 12,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  dateText: { 
-    color: '#F3F4F8', 
-    fontSize: 12, 
-    fontWeight: '600' 
+  dateText: {
+    color: theme.terciary,
+    fontSize: 12,
+    fontWeight: '600'
   },
   line: {
     marginTop: 24,
-    color: '#2D43B3',
+    color: theme.secondary,
     fontSize: 16,
     lineHeight: 22,
   },
-  bold: { 
-    fontWeight: '700' 
+  bold: {
+    fontWeight: '700'
   },
   actionButton: {
     flexDirection: 'row',
     alignSelf: 'center',
-    backgroundColor: '#1226A9',
+    backgroundColor: theme.primary,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginTop: 16,
     alignItems: 'center',
   },
-  actionText: { 
-    color: '#fff', 
-    fontWeight: '700', 
-    marginLeft: 8, 
-    fontSize: 14 
+  actionText: {
+    color: theme.terciary,
+    fontWeight: '700',
+    marginLeft: 8,
+    fontSize: 14
   },
 });

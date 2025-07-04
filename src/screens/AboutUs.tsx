@@ -10,11 +10,15 @@ import {
 import BackButton from '../components/BackButton';  // Tu componente reutilizable
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const HEADER_HEIGHT = 160;
 const CIRCLE_SIZE = 60;
 
 const AboutUsScreen = () => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -26,6 +30,7 @@ const AboutUsScreen = () => {
           style={{
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
+            backgroundColor: theme.background
           }}
         />
         <Text style={styles.title}>Acerca de nosotros</Text>
@@ -36,11 +41,11 @@ const AboutUsScreen = () => {
         {/* ¿Quiénes somos? */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Icon name="users" size={20} color="#4D6EC5" />
+            <Icon name="users" size={20} color={theme.secondary} />
             <Text style={styles.cardTitle}>¿Quiénes somos?</Text>
           </View>
           <Text style={styles.cardText}>
-            Somos un equipo de profesionales comprometidos con tu salud y bienestar. 
+            Somos un equipo de profesionales comprometidos con tu salud y bienestar.
             Nuestra organización se basa en la excelencia, la empatía y la innovación.
           </Text>
         </View>
@@ -48,11 +53,11 @@ const AboutUsScreen = () => {
         {/* Nuestra misión */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Icon name="bullseye" size={20} color="#4D6EC5" />
+            <Icon name="bullseye" size={20} color={theme.secondary} />
             <Text style={styles.cardTitle}>Nuestra misión</Text>
           </View>
           <Text style={styles.cardText}>
-            Ofrecer servicios de salud de alta calidad, enfocados en la atención personalizada y accesible para todos. 
+            Ofrecer servicios de salud de alta calidad, enfocados en la atención personalizada y accesible para todos.
             Mejorar la calidad de vida de nuestros afiliados con una atención integral y confiable.
           </Text>
         </View>
@@ -60,11 +65,11 @@ const AboutUsScreen = () => {
         {/* Nuestra visión */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Icon name="eye" size={20} color="#4D6EC5" />
+            <Icon name="eye" size={20} color={theme.secondary} />
             <Text style={styles.cardTitle}>Nuestra visión</Text>
           </View>
           <Text style={styles.cardText}>
-            Ser la red de salud más confiable y accesible, garantizando el bienestar de nuestros afiliados 
+            Ser la red de salud más confiable y accesible, garantizando el bienestar de nuestros afiliados
             mediante la innovación y la mejora continua de nuestros servicios.
           </Text>
         </View>
@@ -72,7 +77,7 @@ const AboutUsScreen = () => {
         {/* Nuestros valores */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Icon name="heart" size={20} color="#4D6EC5" />
+            <Icon name="heart" size={20} color={theme.secondary} />
             <Text style={styles.cardTitle}>Nuestros valores</Text>
           </View>
           <Text style={styles.cardText}>
@@ -89,14 +94,14 @@ const AboutUsScreen = () => {
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40;
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor:'#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     justifyContent: 'center',
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 26,
     fontWeight: 'bold',
   },
@@ -115,7 +120,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -125,6 +130,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 2,
+    borderWidth: 1,
+    borderColor: theme.neutral
   },
   cardHeader: {
     flexDirection: 'row',
@@ -136,13 +143,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 18,
     fontWeight: '600',
-    color: '#1A237E',
+    color: theme.secondary,
     textAlign: 'center',
   },
   cardText: {
     fontSize: 15,
     lineHeight: 22,
-    color: '#444',
+    color: theme.quaternary,
     textAlign: 'center', // centra el texto de la card
   },
 });

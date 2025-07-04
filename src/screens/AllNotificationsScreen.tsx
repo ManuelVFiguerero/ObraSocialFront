@@ -12,6 +12,7 @@ import Header from '../components/Header'; // opcional si lo quieres usar
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
 
 type NotificationType = 'New' | 'Read' | 'Announcement';
 
@@ -41,7 +42,8 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
   const { type } = route.params;
   const navigation = useNavigation<AllNotifsNavProp>();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   useEffect(() => {
     setNotifications(testDatas.filter((n) => n.type === type));
   }, [type]);
@@ -54,7 +56,6 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
 
   return (
     <View style={styles.screen}>
-      {/* --- HEADER CUSTOM --- */}
       <View style={styles.header}>
         <BackButton
           size={60}
@@ -64,6 +65,7 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - 30,
             left: -15,
+            backgroundColor: theme.background
           }}
         />
         <Text style={styles.headerTitle}>{headerTitle}</Text>
@@ -95,14 +97,14 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     justifyContent: 'center',
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerTitle: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 26,
     fontWeight: 'bold',
   },
@@ -119,25 +121,27 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: 10,
     padding: 16,
     marginBottom: 12,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: theme.neutral
   },
   msg: {
     fontSize: 16,
-    color: '#333',
+    color: theme.quaternary,
     marginBottom: 8,
   },
   date: {
     fontSize: 14,
-    color: '#666',
+    color: theme.neutral,
     textAlign: 'right',
   },
   empty: {
     fontSize: 16,
-    color: '#666',
+    color: theme.neutral,
     textAlign: 'center',
     marginTop: 40,
   },

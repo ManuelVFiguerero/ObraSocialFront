@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types'; // Ajusta la ruta según tu proyecto
+import { useTheme } from '../contexts/ThemeContext';
 
 type ActionButtonProps = {
   btnName: string;
@@ -13,7 +14,8 @@ type ActionButtonProps = {
 const ActionButton: React.FC<ActionButtonProps> = ({ btnName, btnIcon, screen }) => {
   // Tipamos la navegación con tu RootStackParamList
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const handleButton = () => {
     navigation.navigate(screen);
   };
@@ -26,9 +28,9 @@ const ActionButton: React.FC<ActionButtonProps> = ({ btnName, btnIcon, screen })
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     borderRadius: 10,
     flexDirection: 'column',
     alignItems: 'center',
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     textAlign: 'center',
     marginTop: 5,
     fontFamily: 'Inter_400Regular',

@@ -8,6 +8,8 @@ import {
   HEADER_TEXT_COLOR,
   HEADER_TITLE_SIZE,
 } from '../utils/theme';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 interface HeaderProps {
   title?: string;
@@ -15,6 +17,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title = 'Iniciar sesión' }) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={[
@@ -26,14 +30,14 @@ const Header: React.FC<HeaderProps> = ({ title = 'Iniciar sesión' }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   headerContainer: {
     position: 'absolute',       // para solaparse bajo el formulario
     top: 0,
     left: 0,
     right: 0,
     height: HEADER_HEIGHT,
-    backgroundColor: HEADER_BG_COLOR,
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: HEADER_RADIUS,
     borderBottomRightRadius: HEADER_RADIUS,
     alignItems: 'center',
@@ -41,7 +45,7 @@ const styles = StyleSheet.create({
     zIndex: 0,                  // detrás del formulario
   },
   headerText: {
-    color: HEADER_TEXT_COLOR,
+    color: theme.terciary,
     fontSize: HEADER_TITLE_SIZE,
     fontWeight: 'bold',
     marginTop: 20,

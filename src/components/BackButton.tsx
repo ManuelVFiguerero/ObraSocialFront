@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface BackButtonProps {
   /** Si quieres personalizar la acción en lugar de goBack */
@@ -30,6 +31,8 @@ const BackButton: React.FC<BackButtonProps> = ({
     if (onPress) return onPress(e);
     navigation.goBack();
   };
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <TouchableOpacity
@@ -41,12 +44,12 @@ const BackButton: React.FC<BackButtonProps> = ({
       ]}
       activeOpacity={0.7}
     >
-      <Icon name="chevron-left" size={iconSize} color="#4D6EC5" />
+      <Icon name="chevron-left" size={iconSize} color={theme.primary} />
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   button: {
     backgroundColor: '#fff',
     justifyContent: 'center',

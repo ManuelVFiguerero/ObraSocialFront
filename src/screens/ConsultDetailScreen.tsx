@@ -5,6 +5,8 @@ import BackButton from '../components/BackButton';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 type RouteProps = RouteProp<RootStackParamList, 'ConsultDetail'>;
 type NavProp = StackNavigationProp<RootStackParamList, 'ConsultDetail'>;
@@ -13,6 +15,8 @@ const ConsultDetailScreen: React.FC = () => {
   const route = useRoute<RouteProps>();
   const navigation = useNavigation<NavProp>();
   const { date, professional, specialty, reason } = route.params;
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
@@ -31,8 +35,8 @@ const ConsultDetailScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
+const createStyles = (theme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.background },
   header: { height: 160 },
   content: { flex: 1, padding: 20 },
 });

@@ -12,12 +12,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const CredentialScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const [credentialData, setCredentialData] = useState<CredentialData | null>(null);
   const [obraSocialId, setObraSocialId] = useState<number | null>(null);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   useEffect(() => {
     const fetchCredential = async () => {
@@ -38,7 +42,7 @@ const CredentialScreen: React.FC = () => {
         setCredentialData(null);
         setObraSocialId(null);
         navigation.navigate('SocialHealth');
-        
+
       }
     };
     fetchCredential();
@@ -91,10 +95,10 @@ const CredentialScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   content: {
     flex: 1,

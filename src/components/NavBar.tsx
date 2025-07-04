@@ -15,6 +15,8 @@ import {
 import { RootStackParamList } from '../types';
 import ConfirmationModal from './ConfirmationModal';
 import Toast from 'react-native-toast-message';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width / 5;
@@ -34,6 +36,8 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
   const [deleteVisible, setDeleteVisible] = useState(false);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme, isDark, toggleTheme } = useTheme();
+  const styles = createStyles(theme);
 
   const handleDelete = () => {
     setDeleteVisible(false);
@@ -43,6 +47,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
         routes: [{ name: 'Login' }],
       })
     );
+    if (isDark) {toggleTheme()}
     Toast.show({ type: 'success', text1: 'Sesión cerrada exitosamente' });
   };
 
@@ -52,15 +57,16 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
     label: string;
     screen?: keyof RootStackParamList;
   }> = [
-    { key: 'home', icon: 'home', label: 'Inicio', screen: 'Home' },
-    { key: 'person', icon: 'person', label: 'Perfil', screen: 'Profile' },
-    { key: 'credential', icon: 'badge', label: 'Credencial', screen: 'Credential' },
-    { key: 'notifications', icon: 'notifications', label: 'Alertas', screen: 'Notifications' },
-    { key: 'logout', icon: 'logout', label: 'Cerrar sesión' },
-  ];
+      { key: 'home', icon: 'home', label: 'Inicio', screen: 'Home' },
+      { key: 'person', icon: 'person', label: 'Perfil', screen: 'Profile' },
+      { key: 'credential', icon: 'badge', label: 'Credencial', screen: 'Credential' },
+      { key: 'notifications', icon: 'notifications', label: 'Alertas', screen: 'Notifications' },
+      { key: 'logout', icon: 'logout', label: 'Cerrar sesión' },
+    ];
 
   const handlePress = (itemKey: NavBarKey, screen?: keyof RootStackParamList) => {
     if (itemKey === 'logout') {
+      
       setDeleteVisible(true);
     } else if (screen) {
       navigation.navigate(screen);
@@ -95,14 +101,14 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
                   <MaterialIcons
                     name={item.icon}
                     size={isSelected ? 36 : 32}
-                    color="#fff"
+                    color={theme.terciary}
                   />
                 </View>
               ) : (
                 <MaterialIcons
                   name={item.icon}
                   size={isSelected ? 32 : 28}
-                  color={isSelected ? '#2D43B3' : '#777'}
+                  color={isSelected ? theme.secondary : theme.neutral}
                 />
               )}
               <Text
@@ -133,12 +139,12 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
 const BAR_HEIGHT = 100;   // antes 90
 const CIRCLE_SIZE = 60;
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    backgroundColor: theme.background,
+    borderTopWidth: 0.2,
+    borderTopColor: theme.neutral,
     height: BAR_HEIGHT,
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -151,11 +157,11 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: '#777',
+    color: theme.neutral,
     marginTop: 4,
   },
   labelSelected: {
-    color: '#2D43B3',
+    color: theme.secondary,
     fontWeight: '600',
   },
   underline: {
@@ -163,7 +169,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
   },
 
   // --- Credencial destacado ---
@@ -174,7 +180,7 @@ const styles = StyleSheet.create({
     width: CIRCLE_SIZE,
     height: CIRCLE_SIZE,
     borderRadius: CIRCLE_SIZE / 2,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
@@ -184,7 +190,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   credentialCircleSelected: {
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
   },
 });
 

@@ -21,6 +21,8 @@ import AppointmentCard from '../components/AppointmentCard';
 import { api } from '../api/Client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -45,11 +47,14 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [successModal, setIsSuccessModalVisible] = useState(false);
 
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
 
   const handleConfirmationReserve = async () => {
     setLoading(true)
     try {
-      const res = await api.post('/api/turnos/reservar',{
+      const res = await api.post('/api/turnos/reservar', {
         turnoId: selectedAppointment.id,
         usuarioId: await AsyncStorage.getItem('userId')
       })
@@ -115,7 +120,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
 
 
 
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,9 +203,10 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
+            backgroundColor: theme.background
           }}
         />
-        <Icon name="hospital" size={32} color="#fff" style={styles.headerIcon} />
+        <Icon name="hospital" size={32} color={theme.terciary} style={styles.headerIcon} />
         <Text style={styles.headerTitle}>
           Reservar turno de consulta médica
         </Text>
@@ -219,7 +225,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             <Text style={styles.filterText}>
               Especialidad
             </Text>
-            <Icon name="plus" size={20} color="#F3F4F8" />
+            <Icon name="plus" size={20} color={theme.terciary} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -227,7 +233,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
             onPress={() => setIsProfessionalModalVisible(true)}
           >
             <Text style={styles.filterText}>Profesional</Text>
-            <Icon name="plus" size={20} color="#F3F4F8" />
+            <Icon name="plus" size={20} color={theme.terciary} />
           </TouchableOpacity>
         </View>
         <View style={styles.tagsContainer}>
@@ -243,7 +249,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
                 }
                 }
               >
-                <MaterialIcons name='close' size={20} color='#F3F4F8' />
+                <MaterialIcons name='close' size={20} color={theme.terciary} />
               </TouchableOpacity>
             </View>
           ))
@@ -260,7 +266,7 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
                 }
                 }
               >
-                <MaterialIcons name='close' size={20} color='#F3F4F8' />
+                <MaterialIcons name='close' size={20} color={theme.terciary} />
               </TouchableOpacity>
             </View>
           ))
@@ -283,64 +289,64 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent2}>
               <View style={styles.modalTop}>
-                <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: '600' }}>¡Estas por reservar tu turno!</Text>
+                <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: '600', color: theme.quaternary }}>¡Estas por reservar tu turno!</Text>
               </View>
               <View style={styles.modalMiddle}>
                 <View style={styles.modalMiddleInfo}>
                   <View style={styles.modalMiddleSection}>
                     <View style={styles.modalMiddleInfoText}>
-                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center', color: theme.quaternary }}>
                         Profesional:
                       </Text>
-                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center', color: theme.quaternary }}>
                         {selectedAppointment?.nombreProfesional}
                       </Text>
                     </View>
                     <View style={styles.modalMiddleInfoEmote}>
-                      <MaterialIcons name='person' size={20} color='#1226A9' />
+                      <MaterialIcons name='person' size={20} color={theme.primary} />
                     </View>
                   </View>
                   <View style={styles.modalMiddleSection}>
                     <View style={styles.modalMiddleInfoText}>
-                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center', color: theme.quaternary }}>
                         Fecha:
                       </Text>
-                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center', color: theme.quaternary }}>
                         {selectedAppointment?.fecha}
                       </Text>
                     </View>
                     <View style={styles.modalMiddleInfoEmote}>
-                      <MaterialIcons name='event' size={20} color='#1226A9' />
+                      <MaterialIcons name='event' size={20} color={theme.primary} />
                     </View>
                   </View>
 
                   <View style={styles.modalMiddleSection}>
                     <View style={styles.modalMiddleInfoText}>
 
-                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center', color: theme.quaternary }}>
                         Ubicacion:
                       </Text>
-                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center', color: theme.quaternary }}>
                         Clinica Santa Clara
                       </Text>
                     </View>
                     <View style={styles.modalMiddleInfoEmote}>
-                      <MaterialIcons name='location-on' size={20} color='#1226A9' />
+                      <MaterialIcons name='location-on' size={20} color={theme.primary} />
                     </View>
                   </View>
 
                   <View style={styles.modalMiddleSection}>
                     <View style={styles.modalMiddleInfoText}>
 
-                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '600', textAlignVertical: 'center', color: theme.quaternary }}>
                         Especialidad:
                       </Text>
-                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '400', textAlignVertical: 'center', color: theme.quaternary }}>
                         {selectedAppointment?.especialidadProfesional}
                       </Text>
                     </View>
                     <View style={styles.modalMiddleInfoEmote}>
-                      <MaterialIcons name='medication' size={20} color='#1226A9' />
+                      <MaterialIcons name='medication' size={20} color={theme.primary} />
                     </View>
                   </View>
                 </View>
@@ -350,12 +356,12 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
                     <Text style={styles.buttonText}>Cancelar</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.button, { backgroundColor: '#2D43B3' }]}
+                    style={[styles.button, { backgroundColor: theme.secondary }]}
                     onPress={() => { handleConfirmationReserve() }}
                     disabled={loading}
                   >
                     {loading
-                      ? <ActivityIndicator color="#F3F4F8" />
+                      ? <ActivityIndicator color={theme.terciary} />
                       : <Text style={styles.buttonText}>Aceptar</Text>
                     }
 
@@ -391,31 +397,31 @@ const ReserveAppointmentLocationScreen: React.FC = () => {
         isProfessionalModalVisible
       )}
 
-      {successModal 
-      ? <ConfirmationModal 
-      visible={successModal} 
-      type={'success'} 
-      title={'Tu turno fue reservado con éxito!'}
-      message={'El dia del turno, recorda presentarte una hora antes\nLos detalles del turno estan en la seccion “Mis turnos”'}
-      onConfirm={() => {
-        setIsSuccessModalVisible(false)
-        navigation.navigate('Home')
-      }}
-      onClose={() => {
-        setIsSuccessModalVisible(false)
-        navigation.navigate('Home')
-      }}/>
-      : <></>
-    }
+      {successModal
+        ? <ConfirmationModal
+          visible={successModal}
+          type={'success'}
+          title={'Tu turno fue reservado con éxito!'}
+          message={'El dia del turno, recorda presentarte una hora antes\nLos detalles del turno estan en la seccion “Mis turnos”'}
+          onConfirm={() => {
+            setIsSuccessModalVisible(false)
+            navigation.navigate('Home')
+          }}
+          onClose={() => {
+            setIsSuccessModalVisible(false)
+            navigation.navigate('Home')
+          }} />
+        : <></>
+      }
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F3F4F8' },
+const createStyles = (theme) => StyleSheet.create({
+  screen: { flex: 1, backgroundColor: theme.background },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     alignItems: 'center',
@@ -427,7 +433,7 @@ const styles = StyleSheet.create({
     top: HEADER_HEIGHT / 3.5,
   },
   headerTitle: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -449,7 +455,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#1226A9',
+    backgroundColor:  theme.primary,
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -457,7 +463,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterText: {
-    color: '#F3F4F8',
+    color:  theme.terciary,
     fontSize: 20,
     fontWeight: '600',
   },
@@ -471,18 +477,18 @@ const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#000000aa',
+    backgroundColor:'#000000aa',
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: 10,
     padding: 20,
     maxHeight: '80%',
   },
   modalContent2: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: 10,
     padding: 20,
     height: '50%',
@@ -506,7 +512,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   modalCloseText: {
-    color: '#2D43B3',
+    color: theme.secondary,
     fontWeight: 'bold',
   },
   tagsContainer: {
@@ -515,7 +521,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   tag: {
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     padding: 8,
     borderRadius: 6,
     marginBottom: 5,
@@ -525,7 +531,7 @@ const styles = StyleSheet.create({
   },
   tagText: {
     marginRight: 10,
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontSize: 16
   },
   appointmentsContainer: {
@@ -584,7 +590,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },

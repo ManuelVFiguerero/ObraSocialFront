@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 export type ModalType = 'warning' | 'success';
 
@@ -48,6 +50,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     onConfirm();
     onClose();
   };
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <Modal transparent visible={visible} animationType="fade">
@@ -78,8 +82,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dialog: {
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
     padding: 20,
     borderRadius: 10,
     width: 300,
@@ -105,6 +108,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     marginVertical: 20,
     textAlign: 'center',
+    color: theme.quaternary
   },
   buttons: {
     flexDirection: 'row',
@@ -113,14 +117,14 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.secondary,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 40,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontFamily: 'Inter_700Bold',
     fontSize: 18,
   },

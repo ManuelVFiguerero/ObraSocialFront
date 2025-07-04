@@ -3,6 +3,8 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../api/Client';
 import Logo from '../assets/icons/MainLogo.png';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const BOX_WIDTH = width - 40;
@@ -10,50 +12,52 @@ const BOX_WIDTH = width - 40;
 const UserDetails = () => {
   const [fullName, setFullName] = useState('');
   const [obraSocialNro, setObraSocialNro] = useState<string | null>(null);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
-useEffect(() => {
-  const fetchUserData = async () => {
-    try {
-      const username = await AsyncStorage.getItem('username');
-      const userId = await AsyncStorage.getItem('userId');
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const username = await AsyncStorage.getItem('username');
+        const userId = await AsyncStorage.getItem('userId');
 
-      console.log('📦 Username:', username);
-      console.log('🧠 User ID:', userId);
+        console.log('📦 Username:', username);
+        console.log('🧠 User ID:', userId);
 
-      // Si hay username, obtenemos nombre + apellido
-      if (username) {
-        const res = await api.get(`/users/get-user-by-username?username=${username}`);
-        const user = res.data;
-        setFullName(`${user.name} ${user.surname}`);
-      }
-
-      // Si hay userId, consultamos obra social
-      if (userId) {
-        try {
-          const resOS = await api.get(`/api/obras-sociales/usuario/${userId}`);
-          setObraSocialNro(resOS.data.numeroAfiliado || null);
-        } catch (error: any) {
-          if (error.response && error.response.status === 404) {
-            // No tiene obra social, no mostrar error
-            setObraSocialNro(null);
-          } else {
-            // Otros errores sí se muestran
-            console.error('❌ Error cargando obra social:', error);
-            setObraSocialNro(null);
-          }
+        // Si hay username, obtenemos nombre + apellido
+        if (username) {
+          const res = await api.get(`/users/get-user-by-username?username=${username}`);
+          const user = res.data;
+          setFullName(`${user.name} ${user.surname}`);
         }
-      } else {
-        setObraSocialNro(null); // Si no hay userId, mostramos "Cargar obra social"
+
+        // Si hay userId, consultamos obra social
+        if (userId) {
+          try {
+            const resOS = await api.get(`/api/obras-sociales/usuario/${userId}`);
+            setObraSocialNro(resOS.data.numeroAfiliado || null);
+          } catch (error: any) {
+            if (error.response && error.response.status === 404) {
+              // No tiene obra social, no mostrar error
+              setObraSocialNro(null);
+            } else {
+              // Otros errores sí se muestran
+              console.error('❌ Error cargando obra social:', error);
+              setObraSocialNro(null);
+            }
+          }
+        } else {
+          setObraSocialNro(null); // Si no hay userId, mostramos "Cargar obra social"
+        }
+
+      } catch (error) {
+        console.error('❌ Error cargando datos del usuario:', error);
+        setObraSocialNro(null);
       }
+    };
 
-    } catch (error) {
-      console.error('❌ Error cargando datos del usuario:', error);
-      setObraSocialNro(null);
-    }
-  };
-
-  fetchUserData();
-}, []);
+    fetchUserData();
+  }, []);
 
 
   return (
@@ -76,7 +80,7 @@ useEffect(() => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     marginTop: 10,
     marginBottom: 20,
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     width: BOX_WIDTH,
-    backgroundColor: '#1226A9',
+    backgroundColor: theme.primary,
     borderRadius: 16,
     paddingVertical: 24,
     paddingHorizontal: 20,
@@ -98,22 +102,22 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   name: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 4,
   },
   dni: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 16,
   },
   placeholder: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 14,
     fontStyle: 'italic',
   },
   subPlaceholder: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 14,
     fontStyle: 'italic',
     marginTop: 4,

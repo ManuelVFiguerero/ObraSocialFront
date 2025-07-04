@@ -13,6 +13,7 @@ import NotificationsPreview from '../components/NotificationsPreview';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -33,10 +34,11 @@ const NotificationsScreen: React.FC = () => {
   const handleSeeMore = (type: 'New' | 'Read' | 'Announcement') => {
     navigation.navigate('AllNotifications', { type });
   };
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.screen}>
-      {/* --- HEADER CUSTOM --- */}
       <View style={styles.header}>
         <BackButton
           size={60}
@@ -46,12 +48,12 @@ const NotificationsScreen: React.FC = () => {
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - 30,
             left: -15,
+            backgroundColor: theme.background 
           }}
         />
         <Text style={styles.headerTitle}>Notificaciones</Text>
       </View>
 
-      {/* --- CONTENIDO SCROLLABLE --- */}
       <ScrollView
         style={[
           styles.scrollView,
@@ -95,14 +97,14 @@ const NotificationsScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     justifyContent: 'center',
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerTitle: {
-    color: '#F3F4F8',
+    color: theme.terciary,
     fontSize: 26,
     fontWeight: 'bold',
   },
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   notificationContainer: {
-    backgroundColor: '#F3F4F8',
+    backgroundColor: theme.background,
     borderRadius: 10,
     padding: 12,
     marginBottom: 20,
@@ -132,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 8,
+    color: theme.quaternary
   },
   navContainer: {
     position: 'absolute',

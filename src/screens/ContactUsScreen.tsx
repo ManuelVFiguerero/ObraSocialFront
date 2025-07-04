@@ -10,6 +10,8 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -18,6 +20,8 @@ const SCREEN_PADDING = 20;
 
 const ContactUsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.screen}>
@@ -31,6 +35,7 @@ const ContactUsScreen: React.FC = () => {
             position: 'absolute',
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
+            backgroundColor: theme.background
           }}
         />
         <Text style={styles.headerTitle}> Contáctanos</Text>
@@ -72,14 +77,14 @@ const ContactUsScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: '#2D43B3',
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
     alignItems: 'center',
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerTitle: {
-    color: '#fff',
+    color: theme.terciary,
     fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -113,16 +118,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 2,
+    borderWidth: 1,
+    borderColor: theme.neutral
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1A237E',
+    color: theme.secondary,
     textAlign: 'center',
   },
   cardText: {
     fontSize: 14,
-    color: '#444',
+    color: theme.neutral,
     textAlign: 'center',
     marginTop: 4,
   },

@@ -109,14 +109,14 @@ const HomeScreen = () => {
   );
 };
 
-const createStyles = (theme) =>  StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: theme.terciary,
+    backgroundColor: theme.background,
   },
   header: {
     height: HEADER_HEIGHT,
-    backgroundColor: theme.secondary,
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: HEADER_RADIUS,
     borderBottomRightRadius: HEADER_RADIUS,
     justifyContent: 'center',
@@ -148,7 +148,7 @@ const createStyles = (theme) =>  StyleSheet.create({
   appointmentTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#111',
+    color: theme.quaternary,
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -158,14 +158,14 @@ const createStyles = (theme) =>  StyleSheet.create({
   noAppointments: {
     width: CARD_WIDTH,
     padding: 20,
-    backgroundColor: theme.terciary,
+    backgroundColor: theme.background,
     borderRadius: 10,
     alignSelf: 'center',
     alignItems: 'center',
   },
   noAppointmentsText: {
     fontSize: 16,
-    color: '#666',
+    color: theme.neutral,
     textAlign: 'center',
   },
 });
