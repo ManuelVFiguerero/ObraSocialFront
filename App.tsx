@@ -14,6 +14,7 @@ import { useFonts, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/in
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -78,55 +79,58 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <ThemeProvider>
-      {/* Desactivamos translucent para que la barra de estado herede nuestro fondo */}
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#4D6EC5"
-        translucent={false}
-      />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        {/* Desactivamos translucent para que la barra de estado herede nuestro fondo */}
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="#4D6EC5"
+          translucent={false}
+        />
 
-      <View style={{ flex: 1 }}>
-        {showLoader && !appIsReady && (
-          <View style={styles.loader}>
-            <View style={styles.logoWrapper}>
-              <Image source={Logo} style={styles.logo} />
+        <View style={{ flex: 1 }}>
+          {showLoader && !appIsReady && (
+            <View style={styles.loader}>
+              <View style={styles.logoWrapper}>
+                <Image source={Logo} style={styles.logo} />
+              </View>
+              <Animated.Text style={[styles.loaderText, { opacity: textAnim }]}>
+                Tu obra social
+              </Animated.Text>
             </View>
-            <Animated.Text style={[styles.loaderText, { opacity: textAnim }]}>
-              Tu obra social
-            </Animated.Text>
-          </View>
-        )}
+          )}
 
-        {appIsReady && (
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="RecoveryPassword" component={RecoveryScreen} />
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="SocialHealth" component={SocialHealthScreen} />
-              <Stack.Screen name="Credential" component={CredentialScreen} />
-              <Stack.Screen name="Notifications" component={NotificationsScreen} />
-              <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-              <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen} />
-              <Stack.Screen name="ReserveAppointment" component={ReserveAppointmentScreen} />
-              <Stack.Screen name="ContactUs" component={ContactUsScreen} />
-              <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
-              <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
-              <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
-              <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
-              <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
-              <Stack.Screen name="RecoveryToken" component={RecoveryScreenToken} />
-              <Stack.Screen name="RecoveryNewPassword" component={RecoveryScreenNewPassword} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
-      </View>
+          {appIsReady && (
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Register" component={RegisterScreen} />
+                <Stack.Screen name="RecoveryPassword" component={RecoveryScreen} />
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="SocialHealth" component={SocialHealthScreen} />
+                <Stack.Screen name="Credential" component={CredentialScreen} />
+                <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+                <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen} />
+                <Stack.Screen name="ReserveAppointment" component={ReserveAppointmentScreen} />
+                <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+                <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
+                <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
+                <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
+                <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
+                <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
+                <Stack.Screen name="RecoveryToken" component={RecoveryScreenToken} />
+                <Stack.Screen name="RecoveryNewPassword" component={RecoveryScreenNewPassword} />
+                <Stack.Screen name="TurnoDetail" component={require('./src/screens/TurnoDetailScreen').default} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          )}
+        </View>
 
-      <Toast />
-    </ThemeProvider>
+        <Toast />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 

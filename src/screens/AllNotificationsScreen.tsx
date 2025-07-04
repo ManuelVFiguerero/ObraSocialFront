@@ -1,28 +1,14 @@
+
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import BackButton from '../components/BackButton';
-import Header from '../components/Header'; // opcional si lo quieres usar
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { api } from '../api/Client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../theme/ThemeContext';
-
-type NotificationType = 'New' | 'Read' | 'Announcement';
-
-interface Notification {
-  message: string;
-  date: Date;
-  type: NotificationType;
-}
+import SwipeableNotificationList, { NotificationItem } from '../components/SwipeableNotificationList';
 
 type AllNotifsRouteProp = RouteProp<RootStackParamList, 'AllNotifications'>;
 type AllNotifsNavProp = StackNavigationProp<RootStackParamList, 'AllNotifications'>;
@@ -60,6 +46,28 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
     return 'Noticias';
   }, [type]);
 
+  // Mapear notificaciones a formato NotificationItem
+  const notificationItems: NotificationItem[] = notifications.map((n: any) => {
+    const fecha = n.fecha ? new Date(n.fecha) : new Date();
+    return {
+      id: n.id?.toString() || Math.random().toString(),
+      date: fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }),
+      hour: fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      title: n.titulo || 'Notificación',
+      description: n.mensaje,
+    };
+  });
+
+  const handlePressItem = (item: NotificationItem) => {
+    // Navegar a pantalla de detalle (puedes crearla o mostrar un modal)
+    navigation.navigate('ConsultDetail', { notification: item });
+  };
+
+  const handleDeleteItem = (id: string) => {
+    setNotifications(prev => prev.filter((n: any) => (n.id?.toString() || '') !== id));
+    // Aquí puedes llamar a la API para eliminar la notificación si lo deseas
+  };
+
   return (
     <View style={[styles.screen, { backgroundColor: theme.background }]}> 
       {/* --- HEADER CUSTOM --- */}
@@ -77,28 +85,13 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
         <Text style={[styles.headerTitle, { color: theme.buttonText }]}>{headerTitle}</Text>
       </View>
 
-      {/* --- SCROLLVIEW STARTING UNDER HEADER --- */}
-      <ScrollView
-        style={{ marginTop: HEADER_HEIGHT - 150 }}
-        contentContainerStyle={[
-          styles.content,
-          { minHeight: SCREEN_HEIGHT - HEADER_HEIGHT },
-        ]}
-      >
-        {notifications.length > 0 ? (
-          notifications.map((n, i) => (
-            <View key={i} style={[styles.card, { backgroundColor: theme.card }]}> 
-              <Text style={[styles.msg, { color: theme.text }]}>{n.mensaje}</Text>
-              <Text style={[styles.date, { color: theme.placeholder }]}>
-                {n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}{' '}
-                {n.fecha ? new Date(n.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-              </Text>
-            </View>
-          ))
-        ) : (
-          <Text style={[styles.empty, { color: theme.text }]}>No hay notificaciones</Text>
-        )}
-      </ScrollView>
+      <View style={{ flex: 1, marginTop: HEADER_HEIGHT - 150 }}>
+        <SwipeableNotificationList
+          data={notificationItems}
+          onPressItem={handlePressItem}
+          onDeleteItem={handleDeleteItem}
+        />
+      </View>
     </View>
   );
 };
@@ -106,7 +99,7 @@ const AllNotificationsScreen: React.FC<Props> = ({ route }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F3F4F8',
+    backgroundColor: '#181A20',
   },
   header: {
     height: HEADER_HEIGHT,
@@ -120,34 +113,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: '#fff',
     fontSize: 26,
+
     fontWeight: 'bold',
-  },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 2,
-  },
-  msg: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 8,
-  },
-  date: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'right',
-  },
-  empty: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
   },
 });
 

@@ -8,6 +8,7 @@ export type RootStackParamList = {
     AboutUs: undefined;
     Notifications: undefined;
     AllNotifications: { type: 'New' | 'Read' | 'Announcement' };
+    TurnoDetail: { turnoId: number };
     ReserveAppointment: undefined;
     ReserveAppointmentLocation: undefined;
     ContactUs: undefined;
