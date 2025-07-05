@@ -3,8 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Keyb
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import Header from '../components/Header';
-
-const API_BASE_URL = 'http://192.168.0.23:4002'; // Usar valor directo del .env
+import { API_BASE_URL } from '@env';
 
 const RecoveryScreenNewPassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -21,6 +20,11 @@ const RecoveryScreenNewPassword = () => {
     }
     setLoading(true);
     try {
+      if (!API_BASE_URL) {
+        Toast.show({ type: 'error', text1: 'No se encuentra la URL base de la API.' });
+        setLoading(false);
+        return;
+      }
       const res = await fetch(`${API_BASE_URL}/api/password-reset/reset?token=${token}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
