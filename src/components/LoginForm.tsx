@@ -68,7 +68,11 @@ const LoginForm: React.FC = () => {
         console.log('👤 Username guardado en AsyncStorage:', user);
         navigation.navigate('Home');
       } else {
-        Alert.alert('Login fallido', body.message || 'Credenciales inválidas');
+        let errorMsg = body.message;
+        if (!errorMsg && res.status === 401) {
+          errorMsg = 'Usuario o contraseña incorrectos';
+        }
+        Alert.alert('Login fallido', errorMsg || 'Credenciales inválidas');
       }
     } catch (err) {
       console.error(err);
