@@ -498,14 +498,17 @@ const createStyles = (theme) => StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 12,
+    color: theme.quaternary
   },
   modalItem: {
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    
   },
   modalItemText: {
     fontSize: 16,
+    color: theme.quaternary
   },
   modalCloseButton: {
     marginTop: 10,

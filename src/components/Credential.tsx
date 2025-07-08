@@ -29,22 +29,27 @@ const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete })
     <>
       <View style={styles.container}>
         <View style={styles.top}>
-          <Text style={styles.name}>{credentialData.fullName}</Text>
           <Text style={styles.organization}>{credentialData.organization}</Text>
         </View>
         <View style={styles.middle}>
-          <Text style={styles.credNumber}>{credentialData.memberNumber}</Text>
+          <View style={styles.socialNumber}>
+            <Text style={styles.credNumber}>{credentialData.memberNumber}</Text>
+            <Text style={styles.membNumberText}>NRO. SOCIO</Text>
+          </View>
+          {credentialData.tipoAfiliado && (
+            <View style={styles.tipoAfiliadoBox}>
+              <Text style={styles.tipoAfiliadoLabel}>Tipo de afiliado:</Text>
+              <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado}</Text>
+            </View>
+          )}
         </View>
         <View style={styles.bottom}>
-          <Text style={styles.membNumberText}>NRO. SOCIO</Text>
-          <Text style={styles.dateSince}>{credentialData.dateSince}</Text>
-        </View>
-        {credentialData.tipoAfiliado && (
-          <View style={styles.tipoAfiliadoBox}>
-            <Text style={styles.tipoAfiliadoLabel}>Tipo de afiliado:</Text>
-            <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado}</Text>
+          <View style={styles.date}>
+            <Text style={styles.dateSinceText}>Alta</Text>
+            <Text style={styles.dateSince}>{credentialData.dateSince}</Text>
           </View>
-        )}
+
+        </View>
       </View>
       <View style={styles.delete}>
         <TouchableOpacity onPress={handleDelete} style={styles.deleteTouchable}>
@@ -100,15 +105,19 @@ const createStyles = (theme) => StyleSheet.create({
   middle: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 15,
     marginBottom: 15,
   },
+  socialNumber: {
+    flexDirection: 'column'
+  },
   credNumber: {
     fontSize: 26,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Inter_700Bold',
     color: theme.terciary,
+    letterSpacing: 5,
   },
   bottom: {
     width: '100%',
@@ -116,8 +125,14 @@ const createStyles = (theme) => StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  date: {
+    flexDirection: 'column'
+  },
+  dateSinceText: {
+    color: theme.terciary
+  },
   membNumberText: {
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'Inter_400Regular',
     color: theme.terciary,
   },

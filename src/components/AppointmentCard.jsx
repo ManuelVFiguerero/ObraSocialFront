@@ -4,6 +4,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 
 
+function formatDate(date) {
+  if (!date) return '';
+  
+  const d = new Date(date);
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Enero es 0
+  const year = d.getFullYear();
+
+  return `${day}/${month}/${year}`; // formato: DD/MM/YYYY
+}
+
+
 
 const AppointmentCard = ({ appointment, reservable = true, onReserve = () => { }, onCancel }) => {
     const { theme } = useTheme();
@@ -29,7 +41,7 @@ const AppointmentCard = ({ appointment, reservable = true, onReserve = () => { }
             <View style={styles.bottomView}>
                 <View style={styles.viewContent}>
                     <MaterialIcons name='event' size={20} color={theme.secondary} />
-                    <Text style={styles.textIcon}>{appointment.fecha}</Text>
+                    <Text style={styles.textIcon}>{formatDate(appointment.fecha)}</Text>
                 </View>
                 {reservable ?
                     <TouchableOpacity style={styles.button} onPress={onReserve}>
