@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export interface CredentialData {
@@ -22,122 +17,143 @@ interface CredentialProps {
 
 const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete }) => {
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <Text style={styles.name}>{credentialData.fullName}</Text>
+    <View style={styles.wrapper}>
+      <View style={styles.card}>
+        <View style={styles.row}>
           <Text style={styles.organization}>{credentialData.organization}</Text>
         </View>
-        <View style={styles.middle}>
-          <Text style={styles.credNumber}>{credentialData.memberNumber}</Text>
-        </View>
-        <View style={styles.bottom}>
-          <Text style={styles.membNumberText}>NRO. SOCIO</Text>
-          <Text style={styles.dateSince}>{credentialData.dateSince}</Text>
-        </View>
-        {credentialData.tipoAfiliado && (
+        <View style={styles.memberRow}>
+          <Text style={styles.memberNumber}>{credentialData.memberNumber}</Text>
           <View style={styles.tipoAfiliadoBox}>
-            <Text style={styles.tipoAfiliadoLabel}>Tipo de afiliado:</Text>
-            <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado}</Text>
+            <Text style={styles.labelSmall}>Tipo de afiliado</Text>
+            <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado || '-'}</Text>
           </View>
-        )}
+        </View>
+        <View style={styles.nroSocioRow}>
+          <Text style={styles.label}>NRO. SOCIO</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <View style={styles.infoBlock}>
+            <Text style={styles.labelSmall}>Afiliado</Text>
+            <Text style={styles.value}>{credentialData.fullName}</Text>
+          </View>
+          <View style={styles.infoBlockRight}>
+            <Text style={styles.labelSmall}>Alta</Text>
+            <Text style={styles.value}>{credentialData.dateSince}</Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.delete}>
-        <TouchableOpacity onPress={handleDelete} style={styles.deleteTouchable}>
-          <Text style={styles.deleteText}>Eliminar</Text>
-          <MaterialIcons name="delete" size={30} color="#B32D2F" />
-        </TouchableOpacity>
-      </View>
-    </>
+      <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+        <MaterialIcons name="delete" size={20} color="#D32F2F" />
+        <Text style={styles.deleteText}>Eliminar</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    borderRadius: 15,
-    backgroundColor: '#1226A9',
-    flexDirection: 'column',
-    padding: 20,
-    elevation: 6,
-  },
-  delete: {
-    width: '100%',
-    marginBottom: 40,
-    paddingLeft: 20,
-    paddingRight: 20,
-    flexDirection: 'row-reverse',
-  },
-  deleteTouchable: {
-    flexDirection: 'row',
+  wrapper: {
     alignItems: 'center',
+    marginVertical: 24,
   },
-  deleteText: {
-    color: '#B32D2F',
-    fontFamily: 'Inter_700Bold',
-    fontSize: 14,
+  card: {
+    width: 340,
+    height: 160,
+    borderRadius: 18,
+    padding: 20,
+    backgroundColor: '#2D43B3', // azul oscuro
+    borderWidth: 1.5,
+    borderColor: '#3A7BFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 10,
+    justifyContent: 'space-between',
   },
-  top: {
-    width: '100%',
+  row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  name: {
-    fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    marginBottom: 8,
   },
   organization: {
-    fontSize: 24,
-    fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    letterSpacing: 1,
   },
-  middle: {
-    width: '100%',
+  memberRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  credNumber: {
-    fontSize: 26,
-    fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
-  },
-  bottom: {
-    width: '100%',
-    flexDirection: 'row',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    marginBottom: 0,
   },
-  membNumberText: {
-    fontSize: 18,
-    fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
-  },
-  dateSince: {
-    fontSize: 18,
-    fontFamily: 'Inter_400Regular',
-    color: '#F3F4F8',
+  memberNumber: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '600',
+    letterSpacing: 1.5,
+    fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif-medium',
+    marginBottom: 0,
   },
   tipoAfiliadoBox: {
-    marginTop: 10,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 8,
-    padding: 8,
-    alignSelf: 'flex-start',
-  },
-  tipoAfiliadoLabel: {
-    color: '#F3F4F8',
-    fontFamily: 'Inter_700Bold',
-    fontSize: 14,
+    alignItems: 'flex-end',
   },
   tipoAfiliadoValue: {
-    color: '#F3F4F8',
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'right',
+  },
+  nroSocioRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 8,
+  },
+  label: {
+    color: '#E3E6F0',
+    fontSize: 13,
+    letterSpacing: 1,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  infoBlock: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  infoBlockRight: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+  },
+  labelSmall: {
+    color: '#B3B8D6',
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  value: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    padding: 4,
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderRadius: 6,
+  },
+  deleteText: {
+    color: '#D32F2F',
+    fontSize: 15,
+    marginLeft: 4,
+    fontWeight: 'bold',
   },
 });
 
