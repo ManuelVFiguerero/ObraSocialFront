@@ -38,7 +38,10 @@ import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 import RecoveryScreenToken from './src/screens/RecoveryScreenToken';
 import RecoveryScreenNewPassword from './src/screens/RecoveryScreenNewPassword';
 
-import {ThemeProvider} from './src/contexts/ThemeContext';
+import { ThemeProvider } from './src/contexts/ThemeContext';
+
+import TurnoDetailScreen from './src/screens/TurnoDetailScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 SplashScreen.preventAutoHideAsync();
@@ -79,85 +82,88 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
+      <>
     <ThemeProvider>
-    <>
-      {/* Desactivamos translucent para que la barra de estado herede nuestro fondo */}
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#4D6EC5"
-        translucent={false}
-      />
+        <GestureHandlerRootView>
+          {/* Desactivamos translucent para que la barra de estado herede nuestro fondo */}
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="#4D6EC5"
+            translucent={false}
+          />
 
-      <View style={{ flex: 1 }}>
-        {showLoader && !appIsReady && (
-          <View style={styles.loader}>
-            <View style={styles.logoWrapper}>
-              <Image source={Logo} style={styles.logo} />
-            </View>
-            <Animated.Text style={[styles.loaderText, { opacity: textAnim }]}>
-              Tu obra social
-            </Animated.Text>
+          <View style={{ flex: 1 }}>
+            {showLoader && !appIsReady && (
+              <View style={styles.loader}>
+                <View style={styles.logoWrapper}>
+                  <Image source={Logo} style={styles.logo} />
+                </View>
+                <Animated.Text style={[styles.loaderText, { opacity: textAnim }]}>
+                  Tu obra social
+                </Animated.Text>
+              </View>
+            )}
+
+            {appIsReady && (
+              <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="Login" component={LoginScreen} />
+                  <Stack.Screen name="Register" component={RegisterScreen} />
+                  <Stack.Screen name="RecoveryPassword" component={RecoveryScreen} />
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                  <Stack.Screen name="Profile" component={ProfileScreen} />
+                  <Stack.Screen name="SocialHealth" component={SocialHealthScreen} />
+                  <Stack.Screen name="Credential" component={CredentialScreen} />
+                  <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                  <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+                  <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen} />
+                  <Stack.Screen name="ReserveAppointment" component={ReserveAppointmentScreen} />
+                  <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+                  <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
+                  <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
+                  <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
+                  <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
+                  <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+                  <Stack.Screen name="RecoveryToken" component={RecoveryScreenToken} />
+                  <Stack.Screen name="RecoveryNewPassword" component={RecoveryScreenNewPassword} />
+                  <Stack.Screen name="TurnoDetail" component={TurnoDetailScreen} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            )}
           </View>
-        )}
 
-        {appIsReady && (
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="RecoveryPassword" component={RecoveryScreen} />
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="SocialHealth" component={SocialHealthScreen} />
-              <Stack.Screen name="Credential" component={CredentialScreen} />
-              <Stack.Screen name="Notifications" component={NotificationsScreen} />
-              <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-              <Stack.Screen name="ReserveAppointmentLocation" component={ReserveAppointmentLocationScreen} />
-              <Stack.Screen name="ReserveAppointment" component={ReserveAppointmentScreen} />
-              <Stack.Screen name="ContactUs" component={ContactUsScreen} />
-              <Stack.Screen name="AllNotifications" component={AllNotificationsScreen} />
-              <Stack.Screen name="MedicalHistory" component={MedicalHistoryScreen} />
-              <Stack.Screen name="ConsultDetail" component={ConsultDetailScreen} />
-              <Stack.Screen name="StudyDetail" component={StudyDetailScreen} />
-              <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
-              <Stack.Screen name="RecoveryToken" component={RecoveryScreenToken} />
-              <Stack.Screen name="RecoveryNewPassword" component={RecoveryScreenNewPassword} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
-      </View>
-
-      <Toast />
-    </>
-    </ThemeProvider>
-  );
+          <Toast />
+        </GestureHandlerRootView>
+      </ThemeProvider>
+        </>
+      );
 }
 
-const styles = StyleSheet.create({
-  loader: {
-    ...StyleSheet.absoluteFillObject,  // cubre TODO, incluso la barra de estado
-    backgroundColor: '#2D43B3',
-    justifyContent: 'center',
-    alignItems: 'center',
+      const styles = StyleSheet.create({
+        loader: {
+        ...StyleSheet.absoluteFillObject,  // cubre TODO, incluso la barra de estado
+        backgroundColor: '#2D43B3',
+      justifyContent: 'center',
+      alignItems: 'center',
   },
-  logoWrapper: {
-    width: 150,
-    height: 150,
-    borderRadius: 100,
-    backgroundColor: '#2D43B3',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    elevation: 6,
+      logoWrapper: {
+        width: 150,
+      height: 150,
+      borderRadius: 100,
+      backgroundColor: '#2D43B3',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      elevation: 6,
   },
-  logo: {
-    width: 100,
-    height: 100,
-    borderRadius: 100
+      logo: {
+        width: 100,
+      height: 100,
+      borderRadius: 100
   },
-  loaderText: {
-    color: '#fff',
-    fontSize: 20,
-    fontFamily: 'Inter_700Bold',
+      loaderText: {
+        color: '#fff',
+      fontSize: 20,
+      fontFamily: 'Inter_700Bold',
   },
 });
