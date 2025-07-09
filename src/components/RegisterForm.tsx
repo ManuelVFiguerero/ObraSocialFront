@@ -7,12 +7,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
-  Alert,
   Switch
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-
 import { API_BASE_URL } from '@env';
 
 const RegisterForm: React.FC = () => {
@@ -25,79 +23,112 @@ const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
+  const navigation = useNavigation();
 
   const allFilled =
     !!name && !!surname && !!homeAddress && !!phoneNumber &&
     !!username && !!email && !!password && !!passwordConfirm;
 
-  const handleRegister = async () => {
-    if (!allFilled) {
-      return Alert.alert('Error', 'Todos los campos son obligatorios');
-    }
-    else if (password !== passwordConfirm) {
-      return Alert.alert('Error', 'Las contraseñas deben coincidir');
-    } else {
-      setLoading(true);
-    }
+const handleRegister = async () => {
+  if (!allFilled) {
+    return Toast.show({
+      type: 'error',
+      text1: 'Campos obligatorios',
+      text2: 'Completá todos los campos.',
+    });
+  }
 
-    // Construyo la URL completa para debug, evitando doble "/api"
-    const base = API_BASE_URL.replace(/\/$/, '');
-    const endpoint = base.endsWith('/api')
-      ? `${base}/auth/register`
-      : `${base}/api/auth/register`;
-    console.log('Registrando en:', endpoint);
+  if (password !== passwordConfirm) {
+    return Toast.show({
+      type: 'error',
+      text1: 'Contraseñas no coinciden',
+      text2: 'Verificá que ambas contraseñas sean iguales.',
+    });
+  }
 
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          surname,
-          home_address: homeAddress,
-          phone_number: phoneNumber,
-          username,
-          email,
-          password,
-        }),
-      });
+  setLoading(true);
 
-      let data = null;
-      let text = await res.text();
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch (jsonErr) {
-        console.error('Respuesta no es JSON:', text);
-        data = {};
-      }
+  const base = API_BASE_URL.replace(/\/$/, '');
+  const endpoint = base.endsWith('/api')
+    ? `${base}/auth/register`
+    : `${base}/api/auth/register`;
 
-      if (!res.ok) {
-        console.error('Respuesta completa del backend:', data, text);
-        throw new Error(data.message || `Error ${res.status}`);
-      }
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        surname,
+        home_address: homeAddress,
+        phone_number: phoneNumber,
+        username,
+        email,
+        password,
+      }),
+    });
 
-      if (data.access_token) {
-        Toast.show({ type: 'success', text1: 'Registro exitoso' });
-        navigation.navigate('Login');
+    const data = await res.json(); // ✅ usar directamente json()
+console.log('📦 Respuesta del backend:', data);
+    if (!res.ok) {
+      const msg = data?.message?.toLowerCase?.() || '';
+
+      if (msg.includes('usuario')) {
+        Toast.show({
+          type: 'error',
+          text1: 'Usuario en uso',
+          text2: data.message,
+        });
+      } else if (msg.includes('email') || msg.includes('correo')) {
+        Toast.show({
+          type: 'error',
+          text1: 'Email ya registrado',
+          text2: data.message,
+        });
       } else {
-        throw new Error('No recibimos token de registro');
+        Toast.show({
+          type: 'error',
+          text1: 'Error en el registro',
+          text2: data.message || `Error ${res.status}`,
+        });
       }
-    } catch (err: any) {
-      console.warn('Error en registro:', err);
-      Alert.alert('Error', err.message || 'Falló el registro');
-    } finally {
-      setLoading(false);
+
+      return;
     }
-  };
+
+    // ✅ Registro exitoso
+    if (data.access_token) {
+      Toast.show({
+        type: 'success',
+        text1: 'Registro exitoso',
+        text2: 'Podés iniciar sesión ahora.',
+      });
+      navigation.navigate('Login');
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Error inesperado',
+        text2: 'No se recibió token del servidor.',
+      });
+    }
+
+  } catch (err: any) {
+    console.error('Error en registro:', err);
+    Toast.show({
+      type: 'error',
+      text1: 'Error de red',
+      text2: err.message || 'No se pudo conectar al servidor.',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
-    <View
-      style={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.scrollContent}>
       <View style={styles.header}>
         <Text style={styles.welcome}>¡Hola!</Text>
         <Text style={styles.subtitle}>Te damos la bienvenida</Text>
@@ -105,8 +136,8 @@ const RegisterForm: React.FC = () => {
           Para registrarte, completa todos los campos.
         </Text>
       </View>
-      <ScrollView contentContainerStyle={styles.inputscontainer}>
-        {/* Otros campos */}
+
+      <ScrollView contentContainerStyle={styles.inputscontainer} showsVerticalScrollIndicator={false}>
         {[
           { placeholder: 'Nombre*', value: name, setter: setName },
           { placeholder: 'Apellido*', value: surname, setter: setSurname },
@@ -127,7 +158,6 @@ const RegisterForm: React.FC = () => {
           />
         ))}
 
-        {/* Contraseña */}
         <View style={styles.passwordContainer}>
           <TextInput
             style={[styles.input, { flex: 1 }]}
@@ -143,7 +173,6 @@ const RegisterForm: React.FC = () => {
           />
         </View>
 
-        {/* Confirmar contraseña */}
         <View style={styles.passwordContainer}>
           <TextInput
             style={[styles.input, { flex: 1 }]}
@@ -158,21 +187,17 @@ const RegisterForm: React.FC = () => {
             onValueChange={setIsPasswordVisible2}
           />
         </View>
-
       </ScrollView>
+
       <View style={styles.buttons}>
         <TouchableOpacity
-          style={[
-            styles.button,
-            (!allFilled || loading) && styles.buttonDisabled,
-          ]}
+          style={[styles.button, (!allFilled || loading) && styles.buttonDisabled]}
           onPress={handleRegister}
           disabled={!allFilled || loading}
         >
           {loading
             ? <ActivityIndicator color="#fff" />
-            : <Text style={styles.buttonText}>Registrarse</Text>
-          }
+            : <Text style={styles.buttonText}>Registrarse</Text>}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -184,6 +209,7 @@ const RegisterForm: React.FC = () => {
 };
 
 export default RegisterForm;
+
 
 const styles = StyleSheet.create({
   scrollContent: {

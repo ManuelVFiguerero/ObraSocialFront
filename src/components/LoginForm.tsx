@@ -15,7 +15,7 @@ import Logo from '../assets/icons/MainLogo.png';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-
+import Toast from 'react-native-toast-message';
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 import { API_BASE_URL } from '@env';
@@ -29,56 +29,101 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  const handleLogin = async () => {
-    if (!user.trim() || !pass) {
-      return Alert.alert('Error', 'Usuario y contraseña son obligatorios');
-    }
-    setLoading(true);
-    try {
-      const res = await fetch(LOGIN_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: user, password: pass }),
-      });
-      const body = await res.json();
-      if (res.ok && body.access_token) {
-        await AsyncStorage.setItem('accessToken', body.access_token);
-        await AsyncStorage.setItem('username', user);
-        if (body.id) {
-          await AsyncStorage.setItem('userId', String(body.id));
-          console.log('💾 userId guardado en AsyncStorage:', body.id);
-        } else {
-          // Si no viene el id, lo buscamos con el username
-          try {
-            const profileRes = await fetch(`${API_BASE_URL}/users/get-user-by-username?username=${user}`, {
-              headers: { 'Authorization': `Bearer ${body.access_token}` }
-            });
-            const profile = await profileRes.json();
-            if (profile.id) {
-              await AsyncStorage.setItem('userId', String(profile.id));
-              console.log('💾 userId obtenido y guardado:', profile.id);
-            }
-          } catch (e) {
-            console.warn('No se pudo obtener el userId después del login:', e);
-          }
-        }
-        console.log('🔥 Token guardado en AsyncStorage:', body.access_token);
-        console.log('👤 Username guardado en AsyncStorage:', user);
-        navigation.navigate('Home');
+const handleLogin = async () => {
+  if (!user.trim() || !pass) {
+    Toast.show({
+      type: 'error',
+      text1: 'Campos requeridos',
+      text2: 'Usuario y contraseña son obligatorios',
+    });
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch(LOGIN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: user, password: pass }),
+    });
+
+    const body = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        Toast.show({
+          type: 'error',
+          text1: 'Credenciales inválidas',
+          text2: 'Usuario o contraseña incorrectos.',
+        });
+      } else if (res.status === 500) {
+        Toast.show({
+          type: 'error',
+          text1: 'Credenciales inválidas',
+          text2: 'Ingrese datos validos.',
+        });
       } else {
-        let errorMsg = body.message;
-        if (!errorMsg && res.status === 401) {
-          errorMsg = 'Usuario o contraseña incorrectos';
-        }
-        Alert.alert('Login fallido', errorMsg || 'Credenciales inválidas');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: body?.message || 'No se pudo iniciar sesión.',
+        });
       }
-    } catch (err) {
-      console.error(err);
-      Alert.alert('Error', 'No pudo conectarse al servidor');
-    } finally {
-      setLoading(false);
+
+      return;
     }
-  };
+
+    // ✅ Login exitoso
+    if (body.access_token) {
+      await AsyncStorage.setItem('accessToken', body.access_token);
+      await AsyncStorage.setItem('username', user);
+
+      if (body.id) {
+        await AsyncStorage.setItem('userId', String(body.id));
+        console.log('💾 userId guardado en AsyncStorage:', body.id);
+      } else {
+        try {
+          const profileRes = await fetch(`${API_BASE_URL}/users/get-user-by-username?username=${user}`, {
+            headers: { 'Authorization': `Bearer ${body.access_token}` }
+          });
+          const profile = await profileRes.json();
+
+          if (profile.id) {
+            await AsyncStorage.setItem('userId', String(profile.id));
+            console.log('💾 userId obtenido y guardado:', profile.id);
+          }
+        } catch (e) {
+          console.warn('❗ No se pudo obtener el userId:', e);
+        }
+      }
+
+      Toast.show({
+        type: 'success',
+        text1: 'Bienvenido',
+        text2: `¡Hola, ${user}!`,
+      });
+
+      navigation.navigate('Home');
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Error inesperado',
+        text2: 'No se recibió un token de acceso',
+      });
+    }
+
+  } catch (err) {
+    console.error('❌ Error de red o conexión:', err);
+    Toast.show({
+      type: 'error',
+      text1: 'Error de conexión',
+      text2: 'No se pudo conectar con el servidor',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <View style={styles.formContainer}>
