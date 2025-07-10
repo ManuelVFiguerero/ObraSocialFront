@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +14,7 @@ import Header from '../components/Header';
 import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+import { api } from '../api/Client';
 
 
 const { width } = Dimensions.get('window');
@@ -22,34 +24,60 @@ const CARD_WIDTH = width - 40;
 
 type HistorialMedicoScreenProp = NavigationProp<RootStackParamList, 'HistorialMedico'>;
 
+type EntryType = {
+  id: number;
+  fecha: string;
+  profesional: string;
+  motivo: string;
+  descripcion: string;
+  userId: number;
+  fotoUrl?: string;
+};
+
 export default function HistorialMedicoScreen() {
   const navigation = useNavigation<HistorialMedicoScreenProp>();
   const { theme } = useTheme();
   const styles = createStyles(theme);
 
-  // datos de ejemplo:
-  const entries = [
-    {
-      date: '07/03/2025',
-      professional: 'Carretto Lucas',
-      speciality: 'Ergometrías/Cardiología',
-      motive: '-',
-      type: 'consulta' as const,
-      params: { entryId: 1 },
-    },
-    {
-      date: '17/10/2024',
-      professional: 'Ferrario Lorenzo',
-      speciality: 'Ortopedia y Traumatología',
-      motive: 'DIP',
-      type: 'estudio' as const,
-      params: { entryId: 2 },
-    },
-  ];
+  const [entries, setEntries] = useState<EntryType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHistorial = async () => {
+      try {
+        const response = await api.get('/api/historial-medico');
+        const data = response.data;
+
+
+        // Filtramos por user_id = 3
+        const filtered = data.filter((entry: EntryType) => entry.userId === 3);
+        setEntries(filtered);
+      } catch (error) {
+        console.error('Error al obtener historial médico:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHistorial();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')
+      }/${date.getFullYear()}`;
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {/* Header con bordes redondeados y botón */}
       <View style={styles.header}>
         <BackButton
           size={CIRCLE_SIZE}
@@ -58,62 +86,56 @@ export default function HistorialMedicoScreen() {
           style={{
             top: HEADER_HEIGHT / 2 - CIRCLE_SIZE / 2,
             left: -CIRCLE_SIZE / 4,
-            backgroundColor: theme.background
+            backgroundColor: theme.background,
           }}
         />
         <Text style={styles.title}>Historial Médico</Text>
       </View>
 
-      {/* Scroll de contenido */}
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-      >
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {entries.map((e, i) => (
           <View key={i} style={styles.card}>
-            {/* Fecha */}
             <View style={styles.dateBadge}>
-              <Text style={styles.dateText}>{e.date}</Text>
+              <Text style={styles.dateText}>{formatDate(e.fecha)}</Text>
             </View>
 
-            {/* Datos */}
             <Text style={styles.line}>
               <Text style={styles.bold}>Profesional: </Text>
-              {e.professional}
-            </Text>
-            <Text style={styles.line}>
-              <Text style={styles.bold}>Especialidad: </Text>
-              {e.speciality}
+              {e.profesional}
             </Text>
             <Text style={styles.line}>
               <Text style={styles.bold}>Motivo: </Text>
-              {e.motive}
+              {e.motivo}
+            </Text>
+            <Text numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.line}>
+              <Text style={styles.bold}>Descripción: </Text>
+              {e.descripcion}
             </Text>
 
-            {/* Botón acción con navegación */}
             <TouchableOpacity
               style={styles.actionButton}
               onPress={() => {
-                if (e.type === 'consulta') {
-                  navigation.navigate('ConsultDetail', e.params);
-                } else {
-                  navigation.navigate('StudyDetail', e.params);
-                }
+                navigation.navigate('ConsultDetail', {
+                  id: e.id,
+                  fecha: e.fecha,
+                  profesional: e.profesional,
+                  motivo: e.motivo,
+                  descripcion: e.descripcion,
+                  userId: e.userId,
+                  fotoUrl: e.fotoUrl,
+                });
               }}
             >
-              <Icon
-                name={e.type === 'consulta' ? 'stethoscope' : 'file-document'}
-                size={20}
-                color={theme.terciary}
-              />
-              <Text style={styles.actionText}>
-                {e.type === 'consulta' ? 'CONSULTA' : 'VER ESTUDIO'}
-              </Text>
+              <Icon name="stethoscope" size={20} color={theme.terciary} />
+              <Text style={styles.actionText}>CONSULTA</Text>
             </TouchableOpacity>
           </View>
-        ))}
-      </ScrollView>
-    </View>
+        ))
+        }
+      </ScrollView >
+    </View >
   );
 }
 

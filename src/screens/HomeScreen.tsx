@@ -68,7 +68,7 @@ const HomeScreen = () => {
           <ActionButton btnName="Historial médico" btnIcon="folder-open" screen="MedicalHistory" />
           <ActionButton btnName="Acerca de nosotros" btnIcon="info" screen="AboutUs" />
           <ActionButton btnName="Reservar turnos" btnIcon="add" screen="ReserveAppointment" />
-          <ActionButton btnName="Buscar por ubicación" btnIcon="search" screen="ReserveAppointmentLocation" />
+      
           <ActionButton btnName="Contáctanos" btnIcon="mail" screen="ContactUs" />
         </View>
 

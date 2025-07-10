@@ -88,7 +88,7 @@ const createStyles = (theme) => StyleSheet.create({
   },
   infoBox: {
     width: BOX_WIDTH,
-    backgroundColor: theme.primary,
+    backgroundColor: theme.secondary,
     borderRadius: 16,
     paddingVertical: 24,
     paddingHorizontal: 20,
