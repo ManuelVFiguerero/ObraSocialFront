@@ -15,7 +15,7 @@ import BackButton from '../components/BackButton';
 import { RootStackParamList } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { api } from '../api/Client';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 const HEADER_HEIGHT = 160;
@@ -47,10 +47,10 @@ export default function HistorialMedicoScreen() {
       try {
         const response = await api.get('/api/historial-medico');
         const data = response.data;
-
+        const userId = await AsyncStorage.getItem('userId')
 
         // Filtramos por user_id = 3
-        const filtered = data.filter((entry: EntryType) => entry.userId === 3);
+        const filtered = data.filter((entry: EntryType) => userId);
         setEntries(filtered);
       } catch (error) {
         console.error('Error al obtener historial médico:', error);
