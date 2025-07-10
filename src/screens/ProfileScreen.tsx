@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  TextInput,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Header from '../components/Header';
@@ -46,6 +47,8 @@ const ProfileScreen: React.FC = () => {
   });
 
   const [deleteVisible, setDeleteVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState<UserData>(data);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = createStyles(theme)
@@ -79,6 +82,10 @@ const ProfileScreen: React.FC = () => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    setEditData(data);
+  }, [data]);
+
   const handleDelete = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
@@ -99,6 +106,31 @@ const ProfileScreen: React.FC = () => {
     }
   };
 
+const handleSave = async () => {
+  try {
+    const userId = await AsyncStorage.getItem('userId');
+    if (!userId) {
+      Toast.show({ type: 'error', text1: 'Usuario no identificado' });
+      return;
+    }
+
+    await api.put(`/users/${userId}`, {
+      name: editData.nombres,
+      surname: editData.apellidos,
+      email: editData.mail,
+      home_address: editData.domicilio,
+      phone_number: editData.telefono,
+    });
+
+    setData(editData);
+    setIsEditing(false);
+    Toast.show({ type: 'success', text1: 'Perfil actualizado' });
+  } catch (error) {
+    console.error('❌ Error al actualizar perfil:', error);
+    Toast.show({ type: 'error', text1: 'Error al actualizar el perfil' });
+  }
+};
+
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -109,15 +141,44 @@ const ProfileScreen: React.FC = () => {
           <Text style={styles.username}>{data.username}</Text>
         </View>
 
+        <TouchableOpacity
+          style={{ alignSelf: 'flex-end', marginBottom: 10 }}
+          onPress={() => {
+            if (isEditing) setEditData(data);
+            setIsEditing(!isEditing);
+          }}
+        >
+          <Text
+            style={{
+              color: isEditing ? '#B32D2F' : theme.secondary,
+              fontFamily: 'Inter_700Bold',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {isEditing ? 'Cancelar' : <>Editar <Text style={{fontSize: 18}}></Text></>}
+          </Text>
+        </TouchableOpacity>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datos personales</Text>
           {[
-            { label: 'Nombre', value: data.nombres },
-            { label: 'Apellido', value: data.apellidos },
-          ].map(({ label, value }) => (
+            { label: 'Nombre', key: 'nombres', editable: true },
+            { label: 'Apellido', key: 'apellidos', editable: true },
+          ].map(({ label, key, editable }) => (
             <View key={label} style={styles.inputWrapper}>
               <Text style={styles.label}>{label}</Text>
-              <Text style={styles.value}>{value}</Text>
+              {isEditing && editable ? (
+                <TextInput
+                  style={[styles.value, styles.editableInput]}
+                  value={editData[key]}
+                  onChangeText={text => setEditData({ ...editData, [key]: text })}
+                  placeholder={label}
+                  placeholderTextColor={theme.neutral}
+                />
+              ) : (
+                <Text style={styles.value}>{data[key]}</Text>
+              )}
             </View>
           ))}
         </View>
@@ -125,16 +186,50 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datos de contacto</Text>
           {[
-            { label: 'Teléfono', value: data.telefono },
-            { label: 'Correo electrónico', value: data.mail },
-            { label: 'Domicilio', value: data.domicilio },
-          ].map(({ label, value }) => (
+            { label: 'Teléfono', key: 'telefono', editable: true },
+            { label: 'Correo electrónico', key: 'mail', editable: false },
+            { label: 'Domicilio', key: 'domicilio', editable: true },
+          ].map(({ label, key, editable }) => (
             <View key={label} style={styles.inputWrapper}>
               <Text style={styles.label}>{label}</Text>
-              <Text style={styles.value}>{value}</Text>
+              {isEditing && editable ? (
+                <TextInput
+                  style={[styles.value, styles.editableInput]}
+                  value={editData[key]}
+                  onChangeText={text => setEditData({ ...editData, [key]: text })}
+                  placeholder={label}
+                  placeholderTextColor={theme.neutral}
+                  keyboardType={key === 'telefono' ? 'phone-pad' : 'default'}
+                  autoCapitalize="none"
+                />
+              ) : (
+                <Text
+                  style={[
+                    styles.value,
+                    !editable && isEditing ? styles.readOnlyInput : null
+                  ]}
+                >
+                  {data[key]}
+                </Text>
+              )}
             </View>
           ))}
         </View>
+
+        {isEditing && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.secondary,
+              padding: 12,
+              borderRadius: 8,
+              marginBottom: 20,
+              alignItems: 'center'
+            }}
+            onPress={handleSave}
+          >
+            <Text style={{ color: '#fff', fontFamily: 'Inter_700Bold' }}>Guardar cambios</Text>
+          </TouchableOpacity>
+        )}
 
         <View style={styles.section}>
           <TouchableOpacity onPress={toggleTheme} style={styles.switch}>
@@ -237,7 +332,20 @@ const createStyles = (theme) => StyleSheet.create({
     alignItems: theme.mode === 'light' ? 'flex-start' : 'flex-end',
     borderRadius: 50,
     backgroundColor: '#888888'
-  }
+  },
+  editableInput: {
+    backgroundColor: '#F0F8FF', // azul claro para destacar editable
+    borderRadius: 8,
+    color: theme.quaternary,
+    // Sin borde
+  },
+  readOnlyInput: {
+    backgroundColor: '#F5F5F5',
+    color: theme.neutral,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
 });
 
 export default ProfileScreen;
