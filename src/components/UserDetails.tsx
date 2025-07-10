@@ -103,13 +103,14 @@ const createStyles = (theme) => StyleSheet.create({
   },
   name: {
     color: theme.terciary,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     marginBottom: 4,
   },
   dni: {
     color: theme.terciary,
     fontSize: 16,
+    letterSpacing: 2
   },
   placeholder: {
     color: theme.terciary,
