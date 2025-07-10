@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -16,6 +16,8 @@ import { RootStackParamList } from '../types';
 import ConfirmationModal from './ConfirmationModal';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../contexts/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../api/Client';
 
 
 const { width } = Dimensions.get('window');
@@ -34,10 +36,10 @@ interface NavBarProps {
 
 export default function NavBar({ selectedIcon }: NavBarProps) {
   const [deleteVisible, setDeleteVisible] = useState(false);
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = createStyles(theme);
+  const [notifications, setNotifications] = useState([]);
 
   const handleDelete = () => {
     setDeleteVisible(false);
@@ -47,7 +49,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
         routes: [{ name: 'Login' }],
       })
     );
-    if (isDark) {toggleTheme()}
+    if (isDark) { toggleTheme() }
     Toast.show({ type: 'success', text1: 'Sesión cerrada exitosamente' });
   };
 
@@ -66,12 +68,28 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
 
   const handlePress = (itemKey: NavBarKey, screen?: keyof RootStackParamList) => {
     if (itemKey === 'logout') {
-      
+
       setDeleteVisible(true);
     } else if (screen) {
       navigation.navigate(screen);
     }
   };
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await api.get('/api/notificaciones');
+        const noLeidas = res.data.filter((notif) => notif.leida === false);
+        setNotifications(noLeidas);
+      } catch (error) {
+        console.error('Error al obtener notificaciones:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+
+
 
   return (
     <>
@@ -91,7 +109,18 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
               onPress={() => handlePress(item.key, item.screen)}
               activeOpacity={0.7}
             >
-              {isCred ? (
+              {item.key === 'notifications' ? (
+                <View style={styles.notificationIconWrapper}>
+                  <MaterialIcons
+                    name={item.icon}
+                    size={isSelected ? 32 : 28}
+                    color={isSelected ? theme.secondary : theme.neutral}
+                  />
+                  {notifications.length > 0 && (
+                    <View style={styles.notificationDot} />
+                  )}
+                </View>
+              ) : isCred ? (
                 <View
                   style={[
                     styles.credentialCircle,
@@ -192,6 +221,21 @@ const createStyles = (theme) => StyleSheet.create({
   credentialCircleSelected: {
     backgroundColor: theme.secondary,
   },
+  notificationIconWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: -2,
+    right: -6,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'red',
+  },
+
 });
 
 
