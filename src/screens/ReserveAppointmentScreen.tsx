@@ -524,7 +524,7 @@ const createStyles = (theme) => StyleSheet.create({
     marginBottom: 5
   },
   tag: {
-    backgroundColor: theme.secondary,
+    backgroundColor: theme.primary,
     padding: 8,
     borderRadius: 6,
     marginBottom: 5,

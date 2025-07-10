@@ -31,7 +31,7 @@ const NotificationsScreen: React.FC = () => {
 
         if (!userId) return;
         // Marcar todas como leídas al entrar
-        //await api.put(`/api/notificaciones/usuario/${userId}/marcar-leidas`);
+        await api.put(`/api/notificaciones/usuario/${userId}/marcar-leidas`);
         // Obtener todas las notificaciones
         const res = await api.get(`/api/notificaciones/usuario/${userId}`);
         setAllNotifications(res.data);

@@ -334,13 +334,13 @@ const createStyles = (theme) => StyleSheet.create({
     backgroundColor: '#888888'
   },
   editableInput: {
-    backgroundColor: '#F0F8FF', // azul claro para destacar editable
+    //backgroundColor: theme.neutral, // azul claro para destacar editable
     borderRadius: 8,
-    color: theme.quaternary,
-    // Sin borde
+    color: theme.primary,
+    fontWeight: 600
   },
   readOnlyInput: {
-    backgroundColor: '#F5F5F5',
+    
     color: theme.neutral,
     borderRadius: 8,
     paddingVertical: 8,
