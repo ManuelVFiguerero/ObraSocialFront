@@ -1,12 +1,11 @@
-// __tests__/LoginForm.test.js
+// __tests__/Login.test.js
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginForm from '../src/components/LoginForm';
-import { Alert } from 'react-native'; // 👈 importás Alert para mockear
 
-// Mock de useTheme
-jest.mock('../src/theme/ThemeContext', () => ({
+// Mock de ThemeContext
+jest.mock('../src/contexts/ThemeContext', () => ({
   useTheme: () => ({
     theme: {
       card: '#fff',
@@ -38,6 +37,13 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+// ✅ Mock de Toast
+jest.mock('react-native-toast-message', () => ({
+  show: jest.fn(),
+}));
+
+import Toast from 'react-native-toast-message';
+
 describe('LoginForm', () => {
   it('renderiza los inputs y el botón', () => {
     const { getByPlaceholderText, getByText } = render(
@@ -51,8 +57,7 @@ describe('LoginForm', () => {
     expect(getByText('Iniciar sesión')).toBeTruthy();
   });
 
-  it('muestra alerta si campos están vacíos', () => {
-    const alertMock = jest.spyOn(Alert, 'alert'); // 👈 mock correcto
+  it('muestra TOAST si los campos están vacíos', () => {
     const { getByText } = render(
       <NavigationContainer>
         <LoginForm />
@@ -60,8 +65,12 @@ describe('LoginForm', () => {
     );
 
     fireEvent.press(getByText('Iniciar sesión'));
-    expect(alertMock).toHaveBeenCalled();
-    alertMock.mockRestore();
+
+    expect(Toast.show).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'error',
+        text1: 'Campos requeridos',
+      })
+    );
   });
 });
-

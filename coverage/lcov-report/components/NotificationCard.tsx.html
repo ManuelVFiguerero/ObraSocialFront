@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
@@ -154,7 +154,10 @@
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,6 +184,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,7 +207,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -248,6 +252,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
 &nbsp;
 interface NotificationCardProps {
   date: string;
@@ -271,13 +276,15 @@ const NotificationCard: React.FC&lt;NotificationCardProps&gt; = ({
   onPress,
   animatedValue,
 }) =&gt; {
+  const { theme } = useTheme();
+  const styles = createStyles(theme)
   return (
     &lt;View style={styles.card}&gt;
       &lt;View style={styles.left}&gt;
         &lt;Text style={styles.date}&gt;{date}&lt;/Text&gt;
         &lt;Text style={styles.hour}&gt;{hour}&lt;/Text&gt;
       &lt;/View&gt;
-      &lt;MaterialCommunityIcons name="file-document-outline" size={28} color="#B3B3B3" style={styles.icon} /&gt;
+      &lt;MaterialCommunityIcons name="file-document-outline" size={28} color={theme.neutral} style={styles.icon} /&gt;
       &lt;View style={styles.textContainer}&gt;
         &lt;Text style={styles.title}&gt;{title}&lt;/Text&gt;
         &lt;Text style={styles.description} numberOfLines={2}&gt;{description}&lt;/Text&gt;
@@ -292,11 +299,11 @@ const NotificationCard: React.FC&lt;NotificationCardProps&gt; = ({
   );
 };
 &nbsp;
-const styles = StyleSheet.create({
+const createStyles = (theme) =&gt; StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#23242A',
+    backgroundColor: theme.background,
     borderRadius: 12,
     marginVertical: 6,
     marginHorizontal: 10,
@@ -309,12 +316,12 @@ const styles = StyleSheet.create({
     minWidth: 45,
   },
   date: {
-    color: '#E0E0E0',
+    color: theme.neutral,
     fontWeight: 'bold',
     fontSize: 15,
   },
   hour: {
-    color: '#B3B3B3',
+    color: theme.neutral,
     fontSize: 12,
   },
   icon: {
@@ -324,26 +331,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: '#fff',
+    color: theme.quaternary,
     fontWeight: 'bold',
     fontSize: 15,
     marginBottom: 2,
   },
   description: {
-    color: '#B3B3B3',
+    color: theme.neutral,
     fontSize: 13,
   },
 });
 &nbsp;
-export default NotificationCard;
-&nbsp;</pre></td></tr></table></pre>
+export default NotificationCard;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-06T15:26:11.394Z
+                at 2025-07-10T00:15:32.982Z
             </div>
         <script src="../prettify.js"></script>
         <script>

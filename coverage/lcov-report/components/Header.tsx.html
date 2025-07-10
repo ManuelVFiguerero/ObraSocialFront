@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">28.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>2/7</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>2/6</span>
             </div>
         
             
@@ -117,7 +117,11 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,19 +129,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,6 +139,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,7 +182,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../theme/ThemeContext';
 import {
   HEADER_HEIGHT,
   HEADER_RADIUS,
@@ -182,6 +189,8 @@ import {
   HEADER_TEXT_COLOR,
   HEADER_TITLE_SIZE,
 } from '../utils/theme';
+import { useTheme } from '../contexts/ThemeContext';
+&nbsp;
 &nbsp;
 interface HeaderProps {
   title?: string;
@@ -190,24 +199,26 @@ interface HeaderProps {
 const Header: React.FC&lt;HeaderProps&gt; = <span class="fstat-no" title="function not covered" >({</span> title = <span class="branch-0 cbranch-no" title="branch not covered" >'Iniciar sesión' </span>}) =&gt; {
   const insets = <span class="cstat-no" title="statement not covered" >useSafeAreaInsets();</span>
   const { theme } = <span class="cstat-no" title="statement not covered" >useTheme();</span>
+  const styles = <span class="cstat-no" title="statement not covered" >createStyles(theme);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;View style={[
       styles.headerContainer,
-      { paddingTop: insets.top + 20, backgroundColor: theme.primary },
+      { paddingTop: insets.top + 20 },
     ]}&gt;
-      &lt;Text style={[styles.headerText, { color: theme.buttonText }]}&gt;{title}&lt;/Text&gt;
+      &lt;Text style={styles.headerText}&gt;{title}&lt;/Text&gt;
     &lt;/View&gt;
   );
 };
 &nbsp;
-const styles = StyleSheet.create({
+const createStyles = <span class="fstat-no" title="function not covered" >(t</span>heme) =&gt; <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
   headerContainer: {
     position: 'absolute',       // para solaparse bajo el formulario
     top: 0,
     left: 0,
     right: 0,
     height: HEADER_HEIGHT,
+    backgroundColor: theme.primary,
     borderBottomLeftRadius: HEADER_RADIUS,
     borderBottomRightRadius: HEADER_RADIUS,
     alignItems: 'center',
@@ -215,6 +226,7 @@ const styles = StyleSheet.create({
     zIndex: 0,                  // detrás del formulario
   },
   headerText: {
+    color: theme.terciary,
     fontSize: HEADER_TITLE_SIZE,
     fontWeight: 'bold',
     marginTop: 20,
@@ -232,7 +244,7 @@ export default Header;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-06T15:26:11.394Z
+                at 2025-07-10T00:15:32.982Z
             </div>
         <script src="../prettify.js"></script>
         <script>
