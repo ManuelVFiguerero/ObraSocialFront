@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// src/components/NavBar.tsx
+
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -12,11 +14,12 @@ import {
   CommonActions,
   NavigationProp,
 } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../types';
 import ConfirmationModal from './ConfirmationModal';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../contexts/ThemeContext';
-
+import { api } from '../api/Client';
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width / 5;
@@ -34,10 +37,28 @@ interface NavBarProps {
 
 export default function NavBar({ selectedIcon }: NavBarProps) {
   const [deleteVisible, setDeleteVisible] = useState(false);
-
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = createStyles(theme);
+
+  // Al montar, traemos el count de notificaciones no leídas
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const userId = await AsyncStorage.getItem('userId');
+      if (!userId) return;
+      try {
+        const res = await api.get(`/api/notificaciones/usuario/${userId}`);
+        if (mounted && Array.isArray(res.data)) {
+          setUnreadCount(res.data.filter((n: any) => !n.leida).length);
+        }
+      } catch {
+        // ignore
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const handleDelete = () => {
     setDeleteVisible(false);
@@ -47,7 +68,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
         routes: [{ name: 'Login' }],
       })
     );
-    if (isDark) {toggleTheme()}
+    if (isDark) toggleTheme();
     Toast.show({ type: 'success', text1: 'Sesión cerrada exitosamente' });
   };
 
@@ -57,16 +78,15 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
     label: string;
     screen?: keyof RootStackParamList;
   }> = [
-      { key: 'home', icon: 'home', label: 'Inicio', screen: 'Home' },
-      { key: 'person', icon: 'person', label: 'Perfil', screen: 'Profile' },
-      { key: 'credential', icon: 'badge', label: 'Credencial', screen: 'Credential' },
-      { key: 'notifications', icon: 'notifications', label: 'Alertas', screen: 'Notifications' },
-      { key: 'logout', icon: 'logout', label: 'Cerrar sesión' },
-    ];
+    { key: 'home', icon: 'home', label: 'Inicio', screen: 'Home' },
+    { key: 'person', icon: 'person', label: 'Perfil', screen: 'Profile' },
+    { key: 'credential', icon: 'badge', label: 'Credencial', screen: 'Credential' },
+    { key: 'notifications', icon: 'notifications', label: 'Alertas', screen: 'Notifications' },
+    { key: 'logout', icon: 'logout', label: 'Cerrar sesión' },
+  ];
 
   const handlePress = (itemKey: NavBarKey, screen?: keyof RootStackParamList) => {
     if (itemKey === 'logout') {
-      
       setDeleteVisible(true);
     } else if (screen) {
       navigation.navigate(screen);
@@ -78,20 +98,31 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
       <View style={styles.container}>
         {navItems.map(item => {
           const isSelected = item.key === selectedIcon;
-          const label = item.label;
           const isCred = item.key === 'credential';
 
           return (
             <TouchableOpacity
               key={item.key}
-              style={[
-                styles.item,
-                isCred && styles.credentialWrapper,
-              ]}
+              style={[styles.item, isCred && styles.credentialWrapper]}
               onPress={() => handlePress(item.key, item.screen)}
               activeOpacity={0.7}
             >
-              {isCred ? (
+              {item.key === 'notifications' ? (
+                <View style={{ position: 'relative' }}>
+                  <MaterialIcons
+                    name={item.icon}
+                    size={isSelected ? 32 : 28}
+                    color={isSelected ? theme.secondary : theme.neutral}
+                  />
+                  {unreadCount > 0 && (
+                    <View style={styles.badge}>
+                      <Text style={styles.badgeText}>
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              ) : isCred ? (
                 <View
                   style={[
                     styles.credentialCircle,
@@ -111,18 +142,14 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
                   color={isSelected ? theme.secondary : theme.neutral}
                 />
               )}
-              <Text
-                style={[styles.label, isSelected && styles.labelSelected]}
-                numberOfLines={1}
-              >
-                {label}
+              <Text style={[styles.label, isSelected && styles.labelSelected]}>
+                {item.label}
               </Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
-      {/* Modal de confirmación */}
       <ConfirmationModal
         visible={deleteVisible}
         type="warning"
@@ -135,8 +162,7 @@ export default function NavBar({ selectedIcon }: NavBarProps) {
   );
 }
 
-
-const BAR_HEIGHT = 100;   // antes 90
+const BAR_HEIGHT = 100;
 const CIRCLE_SIZE = 60;
 
 const createStyles = (theme) => StyleSheet.create({
@@ -149,7 +175,7 @@ const createStyles = (theme) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     paddingHorizontal: 10,
-    paddingBottom: 10,   // espacio inferior extra
+    paddingBottom: 10,
   },
   item: {
     flex: 1,
@@ -164,17 +190,27 @@ const createStyles = (theme) => StyleSheet.create({
     color: theme.secondary,
     fontWeight: '600',
   },
-  underline: {
-    marginTop: 4,
-    width: 24,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: theme.secondary,
+  // badge
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -10,
+    backgroundColor: 'red',
+    borderRadius: 6,
+    minWidth: 12,
+    height: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 2,
   },
-
-  // --- Credencial destacado ---
+  badgeText: {
+    color: '#fff',
+    fontSize: 8,
+    fontWeight: 'bold',
+  },
+  // credential
   credentialWrapper: {
-    top: -20, // flota por encima de la barra
+    top: -20,
   },
   credentialCircle: {
     width: CIRCLE_SIZE,
@@ -193,6 +229,7 @@ const createStyles = (theme) => StyleSheet.create({
     backgroundColor: theme.secondary,
   },
 });
+
 
 
 
