@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
-import { api } from '../api/Client'; // 👈 asegurate que coincida mayúscula/minúscula
+import { View, Text, StyleSheet, TextInput, Switch, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import Header from '../components/Header';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../api/Client';
+import { Endpoints } from '../api/Endpoints';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 const ChangePasswordScreen = () => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const navigation = useNavigation();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
+  const [isPasswordVisible3, setIsPasswordVisible3] = useState(false);
+  const [currentPassword, setActualPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setNewPassword2] = useState('');
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
+  const passwordMeetsRequirements = () => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(newPassword);
+  };
+
+  const handleCancel = () => {
+    navigation.navigate('Profile');
+  };
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmNewPassword) {
-      Alert.alert('Error', 'Las nuevas contraseñas no coinciden');
+      Toast.show({ type: 'error', text1: 'Las nuevas contraseñas no coinciden' });
+      return;
+    }
+    if (!passwordMeetsRequirements()) {
+      Toast.show({ type: 'error', text1: 'La contraseña no cumple los requisitos' });
       return;
     }
 
@@ -22,114 +45,150 @@ const ChangePasswordScreen = () => {
         confirmNewPassword,
       });
 
-      Alert.alert('Éxito', 'Contraseña actualizada correctamente');
+      Toast.show({ type: 'success', text1: 'Contraseña actualizada correctamente' });
       navigation.goBack();
     } catch (error) {
-      console.error('❌ Error en resetPassword:', error);
-      Alert.alert('Error', 'No se pudo actualizar la contraseña');
+      Toast.show({ type: 'error', text1: 'No se pudo actualizar la contraseña' });
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Actualizar contraseña</Text>
+    <View style={styles.screen}>
+      <Header title="Actualizar contraseña" />
+      <View style={styles.form}>
+        <Text style={styles.label}>Ingrese su contraseña actual</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            value={currentPassword}
+            onChangeText={setActualPassword}
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry={!isPasswordVisible}
+          />
+          <Switch
+            value={isPasswordVisible}
+            onValueChange={() => setIsPasswordVisible(!isPasswordVisible)}
+          />
+        </View>
 
-      <Text style={styles.label}>Ingrese su contraseña actual</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={currentPassword}
-        onChangeText={setCurrentPassword}
-      />
+        <Text style={styles.label}>Ingrese su nueva contraseña</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry={!isPasswordVisible2}
+          />
+          <Switch
+            value={isPasswordVisible2}
+            onValueChange={() => setIsPasswordVisible2(!isPasswordVisible2)}
+          />
+        </View>
 
-      <Text style={styles.label}>Ingrese su nueva contraseña</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
+        <Text style={styles.label}>Ingrese nuevamente su nueva contraseña</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            value={confirmNewPassword}
+            onChangeText={setNewPassword2}
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry={!isPasswordVisible3}
+          />
+          <Switch
+            value={isPasswordVisible3}
+            onValueChange={() => setIsPasswordVisible3(!isPasswordVisible3)}
+          />
+        </View>
 
-      <Text style={styles.label}>Ingrese nuevamente su nueva contraseña</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={confirmNewPassword}
-        onChangeText={setConfirmNewPassword}
-      />
+        <View style={styles.passwordInfo}>
+          <Text style={styles.passwordInfoText}>Al menos una letra mayúscula (A–Z).</Text>
+          <Text style={styles.passwordInfoText}>Al menos una letra minúscula (a–z).</Text>
+          <Text style={styles.passwordInfoText}>Al menos un número (0–9).</Text>
+        </View>
 
-      <Text style={styles.requisitos}>
-        Al menos una letra mayúscula (A-Z).{'\n'}
-        Al menos una letra minúscula (a-z).{'\n'}
-        Al menos un número (0-9).
-      </Text>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.changeButton} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Cambiar</Text>
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]} onPress={handleCancel}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+            <Text style={styles.buttonText}>Cambiar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
-export default ChangePasswordScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#f6f7fb',
-    flexGrow: 1,
+const createStyles = (theme) => StyleSheet.create({
+  screen: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: theme.background
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1f3c88',
-    marginBottom: 20,
-    textAlign: 'center',
+  form: {
+    backgroundColor: theme.background,
+    borderRadius: 16,
+    padding: 28,
+    width: '90%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    elevation: 6,
   },
   label: {
-    color: '#1f3c88',
-    marginBottom: 5,
     fontSize: 16,
+    color: theme.primary,
+    fontFamily: 'Inter_400Regular',
+    marginBottom: 5
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '90%'
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
     borderWidth: 1,
+    borderColor: theme.neutral,
     borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 15,
+    padding: 12,
+    marginBottom: 25,
+    fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+    width: '100%',
+    color: theme.quaternary
   },
-  requisitos: {
-    color: '#555',
-    fontSize: 13,
-    marginBottom: 20,
+  passwordInfo: {
+    marginTop: 5,
+    marginBottom: 30,
+    alignItems: 'flex-start'
   },
-  buttonContainer: {
+  passwordInfoText: {
+    fontSize: 12,
+    color: theme.neutral,
+    fontFamily: 'Inter_400Regular',
+  },
+  buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-  cancelButton: {
-    backgroundColor: '#1f3c88',
-    padding: 12,
-    borderRadius: 20,
-    width: '40%',
-    alignItems: 'center',
-  },
-  changeButton: {
-    backgroundColor: '#1f3c88',
-    padding: 12,
-    borderRadius: 20,
-    width: '40%',
+  button: {
+    flex: 1,
+    backgroundColor: theme.secondary,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 40,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: theme.terciary,
+    fontFamily: 'Inter_700Bold',
+    fontSize: 18,
   },
 });
+
+export default ChangePasswordScreen;
