@@ -29,7 +29,8 @@ const Credential: React.FC<CredentialProps> = ({ credentialData, handleDelete })
           <Text style={styles.memberNumber}>{credentialData.memberNumber}</Text>
           <View style={styles.tipoAfiliadoBox}>
             <Text style={styles.labelSmall}>Tipo de afiliado</Text>
-            <Text style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado || '-'}</Text>
+            <Text numberOfLines={1}
+              ellipsizeMode="tail" style={styles.tipoAfiliadoValue}>{credentialData.tipoAfiliado || '-'}</Text>
           </View>
         </View>
         <View style={styles.nroSocioRow}>
@@ -102,6 +103,7 @@ const createStyles = (theme) => StyleSheet.create({
   },
   tipoAfiliadoBox: {
     alignItems: 'flex-end',
+    width: '50%'
   },
   tipoAfiliadoValue: {
     color: theme.terciary,
